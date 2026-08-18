@@ -4,10 +4,12 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-import medications from "../data/medications";
 import MedicationCard from "../components/MedicationCard";
+import useMedications from "../hooks/useMedications";
 
 function MedicationsPage() {
+  const { medications } = useMedications();
+
   return (
     <Box padding="8">
       <Heading>Medikamentenübersicht</Heading>

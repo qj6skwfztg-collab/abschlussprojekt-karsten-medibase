@@ -1,4 +1,5 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
+import MedicationForm from "../components/MedicationForm";
 
 function AddMedicationPage() {
   return (
@@ -6,8 +7,10 @@ function AddMedicationPage() {
       <Heading>Medikament hinzufügen</Heading>
 
       <Text marginTop="4">
-        Hier entsteht später das Formular für einen neuen Medikamenteneintrag.
+        Trage nur Informationen aus einer verlässlichen Quelle ein.
       </Text>
+
+      <MedicationForm />
     </Box>
   );
 }

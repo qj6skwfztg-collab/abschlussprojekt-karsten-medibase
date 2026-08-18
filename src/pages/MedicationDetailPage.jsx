@@ -1,9 +1,10 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
-import medications from "../data/medications";
+import useMedications from "../hooks/useMedications";
 
 function MedicationDetailPage() {
   const { id } = useParams();
+  const { medications } = useMedications();
 
   const medication = medications.find(
     (item) => item.id === id
@@ -53,3 +54,4 @@ function MedicationDetailPage() {
 }
 
 export default MedicationDetailPage;
+

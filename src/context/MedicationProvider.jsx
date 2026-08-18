@@ -3,25 +3,31 @@ import initialMedications from "../data/medications";
 import MedicationContext from "./MedicationContext";
 
 function MedicationProvider({ children }) {
-  const [medications, setMedications] = useState(() => {
-    const savedMedications = localStorage.getItem("medications");
+  const [customMedications, setCustomMedications] = useState(() => {
+    const savedMedications =
+      localStorage.getItem("customMedications");
 
     if (savedMedications) {
       return JSON.parse(savedMedications);
     }
 
-    return initialMedications;
+    return [];
   });
+
+  const medications = [
+    ...initialMedications,
+    ...customMedications,
+  ];
 
   useEffect(() => {
     localStorage.setItem(
-      "medications",
-      JSON.stringify(medications)
+      "customMedications",
+      JSON.stringify(customMedications)
     );
-  }, [medications]);
+  }, [customMedications]);
 
   function addMedication(newMedication) {
-    setMedications((currentMedications) => [
+    setCustomMedications((currentMedications) => [
       ...currentMedications,
       newMedication,
     ]);
@@ -37,3 +43,4 @@ function MedicationProvider({ children }) {
 }
 
 export default MedicationProvider;
+

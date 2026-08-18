@@ -1,9 +1,10 @@
 import { Route, Routes } from "react-router-dom";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
-import HomePage from "./pages/HomePage";
-import MedicationsPage from "./pages/MedicationsPage";
-import MedicationDetailPage from "./pages/MedicationDetailPage";
 import AddMedicationPage from "./pages/AddMedicationPage";
+import HomePage from "./pages/HomePage";
+import MedicationDetailPage from "./pages/MedicationDetailPage";
+import MedicationsPage from "./pages/MedicationsPage";
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
           element={<AddMedicationPage />}
         />
       </Routes>
+
+      <Footer />
     </>
   );
 }

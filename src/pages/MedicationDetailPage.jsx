@@ -1,5 +1,6 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
+import SafetyNotice from "../components/SafetyNotice";
 import useMedications from "../hooks/useMedications";
 
 function MedicationDetailPage() {
@@ -40,6 +41,8 @@ function MedicationDetailPage() {
         {medication.description}
       </Text>
 
+      <SafetyNotice />
+
       {medication.sourceUrl ? (
         <Text marginTop="6" color="teal.700">
           <a
@@ -66,4 +69,5 @@ function MedicationDetailPage() {
 }
 
 export default MedicationDetailPage;
+
 

@@ -1,12 +1,52 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
+import { Link, useParams } from "react-router-dom";
+import medications from "../data/medications";
 
 function MedicationDetailPage() {
+  const { id } = useParams();
+
+  const medication = medications.find(
+    (item) => item.id === id
+  );
+
+  if (!medication) {
+    return (
+      <Box padding="8">
+        <Heading>Medikament nicht gefunden</Heading>
+
+        <Text marginTop="4">
+          Zu dieser Adresse wurde kein Medikament gefunden.
+        </Text>
+
+        <Text marginTop="4" color="teal.700">
+          <Link to="/medikamente">
+            Zurück zur Übersicht
+          </Link>
+        </Text>
+      </Box>
+    );
+  }
+
   return (
     <Box padding="8">
-      <Heading>Medikamentendetails</Heading>
+      <Heading>{medication.name}</Heading>
+
+      <Text marginTop="4" fontWeight="bold" color="teal.700">
+        {medication.category}
+      </Text>
 
       <Text marginTop="4">
-        Hier werden später Informationen zu einem einzelnen Medikament angezeigt.
+        {medication.description}
+      </Text>
+
+      <Text marginTop="6" fontSize="sm" color="gray.600">
+        Informationsquelle: {medication.source}
+      </Text>
+
+      <Text marginTop="6" color="teal.700">
+        <Link to="/medikamente">
+          Zurück zur Übersicht
+        </Link>
       </Text>
     </Box>
   );

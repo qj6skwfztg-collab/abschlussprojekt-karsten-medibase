@@ -7,20 +7,37 @@ import {
 import { useState } from "react";
 import MedicationCard from "../components/MedicationCard";
 import MedicationSearch from "../components/MedicationSearch";
+import MedicationCategoryFilter from "../components/MedicationCategoryFilter";
 import useMedications from "../hooks/useMedications";
 
 function MedicationsPage() {
   const { medications } = useMedications();
+
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] =
+    useState("Alle");
+
+  const categories = [
+    ...new Set(
+      medications.map(
+        (medication) => medication.category
+      )
+    ),
+  ];
 
   const filteredMedications = medications.filter(
     (medication) => {
       const search = searchTerm.toLowerCase();
 
-      return (
+      const matchesSearch =
         medication.name.toLowerCase().includes(search) ||
-        medication.category.toLowerCase().includes(search)
-      );
+        medication.category.toLowerCase().includes(search);
+
+      const matchesCategory =
+        selectedCategory === "Alle" ||
+        medication.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
     }
   );
 
@@ -35,6 +52,12 @@ function MedicationsPage() {
       <MedicationSearch
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
+      />
+
+      <MedicationCategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
       />
 
       {filteredMedications.length === 0 ? (
@@ -60,3 +83,4 @@ function MedicationsPage() {
 }
 
 export default MedicationsPage;
+

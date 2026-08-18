@@ -40,9 +40,21 @@ function MedicationDetailPage() {
         {medication.description}
       </Text>
 
-      <Text marginTop="6" fontSize="sm" color="gray.600">
-        Informationsquelle: {medication.source}
-      </Text>
+      {medication.sourceUrl ? (
+        <Text marginTop="6" color="teal.700">
+          <a
+            href={medication.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Informationsquelle: {medication.source}
+          </a>
+        </Text>
+      ) : (
+        <Text marginTop="6" fontSize="sm" color="gray.600">
+          Informationsquelle: {medication.source}
+        </Text>
+      )}
 
       <Text marginTop="6" color="teal.700">
         <Link to="/medikamente">

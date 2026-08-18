@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
 import HomePage from "./pages/HomePage";
 import MedicationsPage from "./pages/MedicationsPage";
 import MedicationDetailPage from "./pages/MedicationDetailPage";
@@ -6,24 +7,28 @@ import AddMedicationPage from "./pages/AddMedicationPage";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
+    <>
+      <Header />
 
-      <Route
-        path="/medikamente"
-        element={<MedicationsPage />}
-      />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
 
-      <Route
-        path="/medikamente/:id"
-        element={<MedicationDetailPage />}
-      />
+        <Route
+          path="/medikamente"
+          element={<MedicationsPage />}
+        />
 
-      <Route
-        path="/neuer-eintrag"
-        element={<AddMedicationPage />}
-      />
-    </Routes>
+        <Route
+          path="/medikamente/:id"
+          element={<MedicationDetailPage />}
+        />
+
+        <Route
+          path="/neuer-eintrag"
+          element={<AddMedicationPage />}
+        />
+      </Routes>
+    </>
   );
 }
 

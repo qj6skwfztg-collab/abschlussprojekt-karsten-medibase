@@ -1,9 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import ProtectedRoute from "./components/ProtectedRoute";
 import AboutPage from "./pages/AboutPage";
 import AddMedicationPage from "./pages/AddMedicationPage";
 import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
 import MedicationDetailPage from "./pages/MedicationDetailPage";
 import MedicationsPage from "./pages/MedicationsPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -28,7 +30,16 @@ function App() {
 
         <Route
           path="/neuer-eintrag"
-          element={<AddMedicationPage />}
+          element={
+            <ProtectedRoute>
+              <AddMedicationPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/login"
+          element={<LoginPage />}
         />
 
         <Route
@@ -48,4 +59,3 @@ function App() {
 }
 
 export default App;
-

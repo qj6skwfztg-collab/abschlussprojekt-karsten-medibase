@@ -20,11 +20,10 @@ function Footer() {
       </Text>
 
       <Text marginTop="2" fontSize="sm">
-        © 2026 MediBase
+        © 2026 MediBase – entwickelt von Karsten Rabeneck-Ketme
       </Text>
     </Box>
   );
 }
 
 export default Footer;
-

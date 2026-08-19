@@ -19,6 +19,7 @@ function MedicationForm() {
   });
 
   const [error, setError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   const { addMedication } = useMedications();
   const navigate = useNavigate();
@@ -32,31 +33,42 @@ function MedicationForm() {
     }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setError("");
 
-    const hasEmptyField = Object.values(formData).some(
-      (value) => value.trim() === ""
-    );
+    const cleanedFormData = {
+      name: formData.name.trim(),
+      category: formData.category.trim(),
+      description: formData.description.trim(),
+      source: formData.source.trim(),
+    };
 
-    if (hasEmptyField) {
-      setError("Bitte fülle alle Felder aus.");
+    if (
+      cleanedFormData.name.length < 2 ||
+      cleanedFormData.category.length < 2 ||
+      cleanedFormData.description.length < 5 ||
+      cleanedFormData.source.length < 5
+    ) {
+      setError(
+        "Bitte fülle alle Felder vollständig aus."
+      );
       return;
     }
 
-    const id =
-      formData.name
-        .toLowerCase()
-        .replaceAll(" ", "-") +
-      "-" +
-      Date.now();
+    try {
+      setIsSaving(true);
 
-    addMedication({
-      id,
-      ...formData,
-    });
+      await addMedication(cleanedFormData);
 
-    navigate("/medikamente");
+      navigate("/medikamente");
+    } catch {
+      setError(
+        "Das Medikament konnte nicht gespeichert werden."
+      );
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -109,8 +121,14 @@ function MedicationForm() {
           </Text>
         )}
 
-        <Button type="submit" colorPalette="teal">
-          Medikament speichern
+        <Button
+          type="submit"
+          colorPalette="teal"
+          disabled={isSaving}
+        >
+          {isSaving
+            ? "Wird gespeichert ..."
+            : "Medikament speichern"}
         </Button>
       </Stack>
     </Box>

@@ -1,36 +1,49 @@
 # MediBase
 
-MediBase ist eine mit React entwickelte Webanwendung zur übersichtlichen Darstellung allgemeiner Medikamenteninformationen.
+MediBase ist eine React-Webanwendung zur übersichtlichen Darstellung allgemeiner Informationen über Medikamente.
 
-Das Projekt wurde von Karsten Rabeneck-Ketme als Abschlussprojekt im Bereich Webentwicklung erstellt.
+Die Anwendung dient ausschließlich der allgemeinen Orientierung. Sie ersetzt weder die Packungsbeilage noch eine medizinische Beratung.
 
 ## Funktionen
 
-- Übersicht mit verschiedenen Medikamenten
-- Suche nach Name oder Kategorie
-- Filterung nach Medikamentenkategorie
-- Detailseite für jedes Medikament
+- Startseite mit Einführung und medizinischem Hinweis
+- Medikamentenübersicht als Grid
+- Suche nach Medikamentennamen
+- Filterung nach Kategorien
+- Detailansicht für einzelne Medikamente
 - Formular zum Erstellen eigener Einträge
 - Validierung der Formulareingaben
-- Speicherung eigener Einträge im localStorage
-- medizinische Quellen und Sicherheitshinweise
-- responsive Darstellung für Computer und Smartphone
+- Speicherung eigener Medikamente in Firebase Firestore
+- Navigation zwischen mehreren Seiten
+- responsive Darstellung für unterschiedliche Bildschirmgrößen
 - Fehlerseite für unbekannte Adressen
 
 ## Verwendete Technologien
 
 - React
 - Vite
-- JavaScript
+- JavaScript und JSX
 - React Router
 - Chakra UI
-- React Context
-- Custom Hook
-- localStorage
+- Firebase Firestore
+- Git und GitHub
 
-## Projekt starten
+## Technische Anforderungen
 
-Zuerst werden die benötigten Pakete installiert:
+Das Projekt enthält:
+
+- mehrere Seiten mit React Router
+- eine Masteransicht und mehrere Detailansichten
+- mindestens fünf wiederverwendbare Komponenten
+- einen eigenen React Hook
+- ein Formular mit Validierung
+- `useState`, `useEffect` und `useContext`
+- dauerhafte Speicherung mit Firebase Firestore
+- eine Benutzeroberfläche mit Chakra UI
+
+## Projekt lokal starten
+
+Zuerst müssen die benötigten Pakete installiert werden:
 
 ```bash
 npm install

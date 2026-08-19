@@ -3,14 +3,43 @@ import { Link } from "react-router-dom";
 
 function Header() {
   return (
-    <Box as="header" background="teal.700" color="white" padding="4">
-      <Flex align="center" justify="space-between">
-        <Heading size="lg">MediBase</Heading>
+    <Box
+      as="header"
+      background="teal.700"
+      color="white"
+      padding={{ base: "4", md: "5" }}
+    >
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        align="center"
+        justify="space-between"
+        gap="4"
+      >
+        <Heading size="lg" color="white">
+          MediBase
+        </Heading>
 
-        <Flex gap="6">
-          <Link to="/">Startseite</Link>
-          <Link to="/medikamente">Medikamente</Link>
-          <Link to="/neuer-eintrag">Neuer Eintrag</Link>
+        <Flex
+          as="nav"
+          gap={{ base: "3", md: "6" }}
+          justify="center"
+          flexWrap="wrap"
+        >
+          <Link to="/">
+            Startseite
+          </Link>
+
+          <Link to="/medikamente">
+            Medikamente
+          </Link>
+
+          <Link to="/neuer-eintrag">
+            Neuer Eintrag
+          </Link>
+
+          <Link to="/ueber">
+            Über MediBase
+          </Link>
         </Flex>
       </Flex>
     </Box>

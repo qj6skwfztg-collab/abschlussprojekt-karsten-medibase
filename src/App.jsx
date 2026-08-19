@@ -1,10 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import AboutPage from "./pages/AboutPage";
 import AddMedicationPage from "./pages/AddMedicationPage";
 import HomePage from "./pages/HomePage";
 import MedicationDetailPage from "./pages/MedicationDetailPage";
 import MedicationsPage from "./pages/MedicationsPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -28,6 +30,16 @@ function App() {
           path="/neuer-eintrag"
           element={<AddMedicationPage />}
         />
+
+        <Route
+          path="/ueber"
+          element={<AboutPage />}
+        />
+
+        <Route
+          path="*"
+          element={<NotFoundPage />}
+        />
       </Routes>
 
       <Footer />
@@ -36,3 +48,4 @@ function App() {
 }
 
 export default App;
+

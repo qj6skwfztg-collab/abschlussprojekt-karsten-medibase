@@ -1,16 +1,36 @@
-# React + Vite
+# MediBase
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MediBase ist eine mit React entwickelte Webanwendung zur übersichtlichen Darstellung allgemeiner Medikamenteninformationen.
 
-Currently, two official plugins are available:
+Das Projekt wurde von Karsten Rabeneck-Ketme als Abschlussprojekt im Bereich Webentwicklung erstellt.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Funktionen
 
-## React Compiler
+- Übersicht mit verschiedenen Medikamenten
+- Suche nach Name oder Kategorie
+- Filterung nach Medikamentenkategorie
+- Detailseite für jedes Medikament
+- Formular zum Erstellen eigener Einträge
+- Validierung der Formulareingaben
+- Speicherung eigener Einträge im localStorage
+- medizinische Quellen und Sicherheitshinweise
+- responsive Darstellung für Computer und Smartphone
+- Fehlerseite für unbekannte Adressen
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Verwendete Technologien
 
-## Expanding the ESLint configuration
+- React
+- Vite
+- JavaScript
+- React Router
+- Chakra UI
+- React Context
+- Custom Hook
+- localStorage
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Projekt starten
+
+Zuerst werden die benötigten Pakete installiert:
+
+```bash
+npm install

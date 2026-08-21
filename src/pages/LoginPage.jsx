@@ -1,24 +1,69 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { Box, Button, Heading, Input, Stack, Text } from "@chakra-ui/react";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import {
+  Box,
+  Button,
+  Heading,
+  Input,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   async function handleSubmit(event) {
     event.preventDefault();
     setMessage("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setMessage("Anmeldung erfolgreich.");
-      setEmail("");
-      setPassword("");
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (!userCredential.user.emailVerified) {
+        await signOut(auth);
+        setMessage("Bitte bestätige zuerst deine E-Mail-Adresse.");
+        return;
+      }
+
+      navigate("/meine-medikamente");
     } catch {
       setMessage("E-Mail-Adresse oder Passwort ist falsch.");
+    }
+  }
+
+  async function handlePasswordReset() {
+    setMessage("");
+
+    if (!email) {
+      setMessage(
+        "Bitte trage zuerst deine E-Mail-Adresse ein."
+      );
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+
+      setMessage(
+        "Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet."
+      );
+    } catch {
+      setMessage(
+        "Die E-Mail zum Zurücksetzen konnte nicht gesendet werden."
+      );
     }
   }
 
@@ -47,6 +92,21 @@ function LoginPage() {
           <Button type="submit" colorPalette="teal">
             Anmelden
           </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handlePasswordReset}
+          >
+            Passwort vergessen
+          </Button>
+
+          <Text>
+            Noch kein Konto?{" "}
+            <Link to="/registrieren">
+              Konto erstellen
+            </Link>
+          </Text>
 
           {message && <Text>{message}</Text>}
         </Stack>

@@ -8,7 +8,9 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import MedicationDetailPage from "./pages/MedicationDetailPage";
 import MedicationsPage from "./pages/MedicationsPage";
+import MyMedicationsPage from "./pages/MyMedicationsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
@@ -16,7 +18,10 @@ function App() {
       <Header />
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={<HomePage />}
+        />
 
         <Route
           path="/medikamente"
@@ -29,17 +34,31 @@ function App() {
         />
 
         <Route
+          path="/login"
+          element={<LoginPage />}
+        />
+
+        <Route
+          path="/registrieren"
+          element={<RegisterPage />}
+        />
+
+        <Route
+          path="/meine-medikamente"
+          element={
+            <ProtectedRoute>
+              <MyMedicationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/neuer-eintrag"
           element={
             <ProtectedRoute>
               <AddMedicationPage />
             </ProtectedRoute>
           }
-        />
-
-        <Route
-          path="/login"
-          element={<LoginPage />}
         />
 
         <Route

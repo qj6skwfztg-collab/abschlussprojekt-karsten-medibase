@@ -8,9 +8,11 @@ function Header() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const stopListening = auth.onAuthStateChanged((currentUser) => {
-      setUser(currentUser);
-    });
+    const stopListening = auth.onAuthStateChanged(
+      (currentUser) => {
+        setUser(currentUser);
+      }
+    );
 
     return stopListening;
   }, []);
@@ -52,6 +54,12 @@ function Header() {
           </Link>
 
           {user && (
+            <Link to="/meine-medikamente">
+              Meine Medikamente
+            </Link>
+          )}
+
+          {user && (
             <Link to="/neuer-eintrag">
               Neuer Eintrag
             </Link>
@@ -72,9 +80,15 @@ function Header() {
               Abmelden
             </Button>
           ) : (
-            <Link to="/login">
-              Anmelden
-            </Link>
+            <Flex gap="4" align="center">
+              <Link to="/login">
+                Anmelden
+              </Link>
+
+              <Link to="/registrieren">
+                Konto erstellen
+              </Link>
+            </Flex>
           )}
         </Flex>
       </Flex>

@@ -11,6 +11,7 @@ import MedicationsPage from "./pages/MedicationsPage";
 import MyMedicationsPage from "./pages/MyMedicationsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import RegisterPage from "./pages/RegisterPage";
+import EmergencyPage from "./pages/EmergencyPage";
 
 function App() {
   return (
@@ -59,6 +60,11 @@ function App() {
               <AddMedicationPage />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/notfall"
+          element={<EmergencyPage />}
         />
 
         <Route

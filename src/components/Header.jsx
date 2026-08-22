@@ -69,6 +69,19 @@ function Header() {
             Über MediBase
           </Link>
 
+          <Link
+            to="/notfall"
+            style={{
+            backgroundColor: "#c53030",
+            color: "white",
+            padding: "10px 16px",
+            borderRadius: "8px",
+            fontWeight: "bold",
+  }}
+>
+  Notfallhilfe
+</Link>
+
           {user ? (
             <Button
               size="sm"

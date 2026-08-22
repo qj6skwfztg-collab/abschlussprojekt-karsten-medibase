@@ -3,6 +3,7 @@ import { signOut } from "firebase/auth";
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { auth } from "../firebase";
+import AccessibilityControls from "./AccessibilityControls";
 
 function Header() {
   const [user, setUser] = useState(null);
@@ -105,6 +106,10 @@ function Header() {
           )}
         </Flex>
       </Flex>
+
+      <Box marginTop="4" paddingTop="4" borderTop="1px solid" borderColor="whiteAlpha.400">
+        <AccessibilityControls />
+      </Box>
     </Box>
   );
 }

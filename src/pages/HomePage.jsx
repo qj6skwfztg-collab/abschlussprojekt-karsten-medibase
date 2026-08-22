@@ -45,9 +45,13 @@ function HomePage() {
             marginTop="4"
             fontSize={{ base: "md", md: "lg" }}
           >
-            MediBase bietet dir eine schnelle Übersicht über häufig
-            verwendete Medikamente und ihre allgemeinen
-            Anwendungsbereiche.
+            Verwalte deine persönlichen Medikamente, behalte
+            Einnahmezeiten im Blick und hinterlege wichtige
+            Notfallkontakte – sicher getrennt in deinem Benutzerkonto.
+            In einer Notfallsituation kannst du direkt die Telefonfunktion
+            für den Rettungsdienst unter 112 oder die Polizei unter 110
+            öffnen und deine Notfallkontakte über eine vorbereitete
+            Nachricht informieren.
           </Text>
 
           <Flex

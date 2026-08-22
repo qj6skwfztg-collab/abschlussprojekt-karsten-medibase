@@ -50,3 +50,47 @@ h3,
 p {
   overflow-wrap: anywhere;
 }
+
+html.high-contrast body,
+html.high-contrast #root {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+html.high-contrast header,
+html.high-contrast footer,
+html.high-contrast main,
+html.high-contrast section,
+html.high-contrast article,
+html.high-contrast form {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+html.high-contrast a {
+  color: #fff !important;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+html.high-contrast a:hover {
+  color: #9fe8df !important;
+}
+
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+html.high-contrast button {
+  border-color: #fff !important;
+}
+
+html.high-contrast *:focus-visible {
+  outline: 4px solid #9fe8df !important;
+  outline-offset: 3px;
+}

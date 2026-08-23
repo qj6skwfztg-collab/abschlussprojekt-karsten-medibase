@@ -10,6 +10,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import useUserMedications from "../hooks/useUserMedications";
+import useLanguage from "../hooks/useLanguage";
 
 const emptyForm = {
   name: "",
@@ -53,6 +54,7 @@ function normalizeTime(value) {
 }
 
 function MyMedicationsPage() {
+  const { isEnglish } = useLanguage();
   const {
     userMedications,
     isLoading,
@@ -61,6 +63,102 @@ function MyMedicationsPage() {
     updateUserMedication,
     deleteUserMedication,
   } = useUserMedications();
+
+  const text = isEnglish
+    ? {
+        title: "My medications",
+        description:
+          "Here you can manage your personal medications and intake times.",
+        reminders: "Reminders",
+        allowNotifications: "Allow notifications",
+        testNotification: "Send test notification",
+        status: "Status",
+        editTitle: "Edit personal medication",
+        addTitle: "Add personal medication",
+        name: "Medication name",
+        namePlaceholder: "For example, ibuprofen",
+        dosage: "Dosage according to your medication plan",
+        dosagePlaceholder: "For example, 400 mg",
+        intakeTime: "Intake time",
+        notes: "Personal note",
+        notesPlaceholder: "For example: after breakfast",
+        saveChanges: "Save changes",
+        save: "Save personal medication",
+        cancel: "Cancel editing",
+        savedHeading: "My saved medications",
+        loading: "Loading medications …",
+        empty: "You have not saved any medications yet.",
+        dosageShort: "Dosage:",
+        timeShort: "Intake time:",
+        noteShort: "Note:",
+        noNote: "No note",
+        edit: "Edit",
+        delete: "Delete",
+        invalidTime: "Please enter the intake time in the format 13:00.",
+        savedChanges: "The changes were saved.",
+        saved: "Medication was saved.",
+        saveError: "The medication could not be saved.",
+        editing: "You are now editing this medication.",
+        cancelled: "Editing was cancelled.",
+        deleteConfirm: "Do you really want to delete this medication?",
+        deleted: "Medication was deleted.",
+        deleteError: "The medication could not be deleted.",
+        unsupported: "This browser does not support notifications.",
+        allowed: "Notifications were allowed.",
+        notAllowed: "Notifications were not allowed.",
+        allowFirst: "Allow notifications first.",
+        testBody: "The medication reminder is working.",
+        testTriggered: "Test notification was triggered.",
+        reminderTitle: "MediPervin – Medication reminder",
+        testTitle: "MediPervin – Test",
+      }
+    : {
+        title: "Meine Medikamente",
+        description:
+          "Hier kannst du deine persönlichen Medikamente und Einnahmezeiten verwalten.",
+        reminders: "Erinnerungen",
+        allowNotifications: "Benachrichtigungen erlauben",
+        testNotification: "Testbenachrichtigung senden",
+        status: "Status",
+        editTitle: "Persönliches Medikament bearbeiten",
+        addTitle: "Persönliches Medikament hinzufügen",
+        name: "Name des Medikaments",
+        namePlaceholder: "Zum Beispiel Ibuprofen",
+        dosage: "Dosierung laut deinem Medikamentenplan",
+        dosagePlaceholder: "Zum Beispiel 400 mg",
+        intakeTime: "Einnahmezeit",
+        notes: "Persönliche Notiz",
+        notesPlaceholder: "Zum Beispiel: nach dem Frühstück",
+        saveChanges: "Änderungen speichern",
+        save: "Persönliches Medikament speichern",
+        cancel: "Bearbeitung abbrechen",
+        savedHeading: "Meine gespeicherten Medikamente",
+        loading: "Medikamente werden geladen …",
+        empty: "Du hast noch keine Medikamente gespeichert.",
+        dosageShort: "Dosierung:",
+        timeShort: "Einnahmezeit:",
+        noteShort: "Notiz:",
+        noNote: "Keine Notiz",
+        edit: "Bearbeiten",
+        delete: "Löschen",
+        invalidTime: "Bitte gib die Einnahmezeit im Format 13:00 ein.",
+        savedChanges: "Die Änderungen wurden gespeichert.",
+        saved: "Medikament wurde gespeichert.",
+        saveError: "Das Medikament konnte nicht gespeichert werden.",
+        editing: "Du bearbeitest jetzt dieses Medikament.",
+        cancelled: "Bearbeitung wurde abgebrochen.",
+        deleteConfirm: "Möchtest du dieses Medikament wirklich löschen?",
+        deleted: "Medikament wurde gelöscht.",
+        deleteError: "Das Medikament konnte nicht gelöscht werden.",
+        unsupported: "Dieser Browser unterstützt keine Benachrichtigungen.",
+        allowed: "Benachrichtigungen wurden erlaubt.",
+        notAllowed: "Benachrichtigungen wurden nicht erlaubt.",
+        allowFirst: "Erlaube zuerst die Benachrichtigungen.",
+        testBody: "Die Medikamentenerinnerung funktioniert.",
+        testTriggered: "Testbenachrichtigung wurde ausgelöst.",
+        reminderTitle: "MediPervin – Medikamentenerinnerung",
+        testTitle: "MediPervin – Test",
+      };
 
   const [formData, setFormData] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
@@ -98,7 +196,7 @@ function MyMedicationsPage() {
           medicationTime === currentTime &&
           !sentReminders.current.has(reminderKey)
         ) {
-          new Notification("MediPervin – Medikamentenerinnerung", {
+          new Notification(text.reminderTitle, {
             body: `${medication.name} – ${medication.dosage}`,
           });
 
@@ -117,7 +215,7 @@ function MyMedicationsPage() {
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [userMedications]);
+  }, [isEnglish, text.reminderTitle, userMedications]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -140,7 +238,7 @@ function MyMedicationsPage() {
     const normalizedTime = normalizeTime(formData.intakeTime);
 
     if (!normalizedTime) {
-      setMessage("Bitte gib die Einnahmezeit im Format 13:00 ein.");
+      setMessage(text.invalidTime);
       return;
     }
 
@@ -152,15 +250,15 @@ function MyMedicationsPage() {
     try {
       if (editingId) {
         await updateUserMedication(editingId, medicationData);
-        setMessage("Die Änderungen wurden gespeichert.");
+        setMessage(text.savedChanges);
       } else {
         await addUserMedication(medicationData);
-        setMessage("Medikament wurde gespeichert.");
+        setMessage(text.saved);
       }
 
       resetForm();
     } catch {
-      setMessage("Das Medikament konnte nicht gespeichert werden.");
+      setMessage(text.saveError);
     }
   }
 
@@ -174,17 +272,17 @@ function MyMedicationsPage() {
       notes: medication.notes || "",
     });
 
-    setMessage("Du bearbeitest jetzt dieses Medikament.");
+    setMessage(text.editing);
   }
 
   function handleCancelEdit() {
     resetForm();
-    setMessage("Bearbeitung wurde abgebrochen.");
+    setMessage(text.cancelled);
   }
 
   async function handleDelete(medicationId) {
     const shouldDelete = window.confirm(
-      "Möchtest du dieses Medikament wirklich löschen?"
+      text.deleteConfirm
     );
 
     if (!shouldDelete) {
@@ -198,16 +296,16 @@ function MyMedicationsPage() {
         resetForm();
       }
 
-      setMessage("Medikament wurde gelöscht.");
+      setMessage(text.deleted);
     } catch {
-      setMessage("Das Medikament konnte nicht gelöscht werden.");
+      setMessage(text.deleteError);
     }
   }
 
   async function requestNotifications() {
     if (typeof Notification === "undefined") {
       setMessage(
-        "Dieser Browser unterstützt keine Benachrichtigungen."
+        text.unsupported
       );
       return;
     }
@@ -216,9 +314,9 @@ function MyMedicationsPage() {
     setNotificationPermission(permission);
 
     if (permission === "granted") {
-      setMessage("Benachrichtigungen wurden erlaubt.");
+      setMessage(text.allowed);
     } else {
-      setMessage("Benachrichtigungen wurden nicht erlaubt.");
+      setMessage(text.notAllowed);
     }
   }
 
@@ -227,25 +325,22 @@ function MyMedicationsPage() {
       typeof Notification === "undefined" ||
       Notification.permission !== "granted"
     ) {
-      setMessage("Erlaube zuerst die Benachrichtigungen.");
+      setMessage(text.allowFirst);
       return;
     }
 
-    new Notification("MediPervin – Test", {
-      body: "Die Medikamentenerinnerung funktioniert.",
+    new Notification(text.testTitle, {
+      body: text.testBody,
     });
 
-    setMessage("Testbenachrichtigung wurde ausgelöst.");
+    setMessage(text.testTriggered);
   }
 
   return (
     <Box maxW="1200px" mx="auto" p="6">
-      <Heading mb="4">Meine Medikamente</Heading>
+      <Heading mb="4">{text.title}</Heading>
 
-      <Text mb="8">
-        Hier kannst du deine persönlichen Medikamente und
-        Einnahmezeiten verwalten.
-      </Text>
+      <Text mb="8">{text.description}</Text>
 
       <Box
         borderWidth="1px"
@@ -255,7 +350,7 @@ function MyMedicationsPage() {
         mb="8"
       >
         <Heading size="md" mb="4">
-          Erinnerungen
+          {text.reminders}
         </Heading>
 
         <Stack direction={{ base: "column", md: "row" }} gap="3">
@@ -263,7 +358,7 @@ function MyMedicationsPage() {
             colorPalette="teal"
             onClick={requestNotifications}
           >
-            Benachrichtigungen erlauben
+            {text.allowNotifications}
           </Button>
 
           <Button
@@ -271,12 +366,12 @@ function MyMedicationsPage() {
             onClick={sendTestNotification}
             disabled={notificationPermission !== "granted"}
           >
-            Testbenachrichtigung senden
+            {text.testNotification}
           </Button>
         </Stack>
 
         <Text mt="3" fontSize="sm">
-          Status: {notificationPermission}
+          {text.status}: {notificationPermission}
         </Text>
       </Box>
 
@@ -289,21 +384,21 @@ function MyMedicationsPage() {
       >
         <Heading size="md" mb="6">
           {editingId
-            ? "Persönliches Medikament bearbeiten"
-            : "Persönliches Medikament hinzufügen"}
+            ? text.editTitle
+            : text.addTitle}
         </Heading>
 
         <form onSubmit={handleSubmit}>
           <Stack gap="5">
             <Box>
               <Text as="label" htmlFor="name" display="block" mb="2">
-                Name des Medikaments
+                {text.name}
               </Text>
 
               <Input
                 id="name"
                 name="name"
-                placeholder="Zum Beispiel Ibuprofen"
+                placeholder={text.namePlaceholder}
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -312,13 +407,13 @@ function MyMedicationsPage() {
 
             <Box>
               <Text as="label" htmlFor="dosage" display="block" mb="2">
-                Dosierung laut deinem Medikamentenplan
+                {text.dosage}
               </Text>
 
               <Input
                 id="dosage"
                 name="dosage"
-                placeholder="Zum Beispiel 400 mg"
+                placeholder={text.dosagePlaceholder}
                 value={formData.dosage}
                 onChange={handleChange}
                 required
@@ -332,7 +427,7 @@ function MyMedicationsPage() {
                 display="block"
                 mb="2"
               >
-                Einnahmezeit
+                {text.intakeTime}
               </Text>
 
               <Input
@@ -356,13 +451,13 @@ function MyMedicationsPage() {
 
             <Box>
               <Text as="label" htmlFor="notes" display="block" mb="2">
-                Persönliche Notiz
+                {text.notes}
               </Text>
 
               <Textarea
                 id="notes"
                 name="notes"
-                placeholder="Zum Beispiel: nach dem Frühstück"
+                placeholder={text.notesPlaceholder}
                 value={formData.notes}
                 onChange={handleChange}
               />
@@ -370,8 +465,8 @@ function MyMedicationsPage() {
 
             <Button type="submit" colorPalette="teal">
               {editingId
-                ? "Änderungen speichern"
-                : "Persönliches Medikament speichern"}
+                ? text.saveChanges
+                : text.save}
             </Button>
 
             {editingId && (
@@ -380,7 +475,7 @@ function MyMedicationsPage() {
                 variant="outline"
                 onClick={handleCancelEdit}
               >
-                Bearbeitung abbrechen
+                {text.cancel}
               </Button>
             )}
 
@@ -390,17 +485,17 @@ function MyMedicationsPage() {
       </Box>
 
       <Heading size="lg" mb="6">
-        Meine gespeicherten Medikamente
+        {text.savedHeading}
       </Heading>
 
-      {isLoading && <Text>Medikamente werden geladen …</Text>}
+      {isLoading && <Text>{text.loading}</Text>}
 
       {error && <Text color="red.600">{error}</Text>}
 
       {!isLoading &&
         !error &&
         userMedications.length === 0 && (
-          <Text>Du hast noch keine Medikamente gespeichert.</Text>
+          <Text>{text.empty}</Text>
         )}
 
       <SimpleGrid minChildWidth="280px" gap="6">
@@ -417,17 +512,17 @@ function MyMedicationsPage() {
             </Heading>
 
             <Text mb="2">
-              <strong>Dosierung:</strong> {medication.dosage}
+              <strong>{text.dosageShort}</strong> {medication.dosage}
             </Text>
 
             <Text mb="2">
-              <strong>Einnahmezeit:</strong>{" "}
+              <strong>{text.timeShort}</strong>{" "}
               {normalizeTime(medication.intakeTime) || medication.intakeTime} Uhr
             </Text>
 
             <Text mb="5">
-              <strong>Notiz:</strong>{" "}
-              {medication.notes || "Keine Notiz"}
+              <strong>{text.noteShort}</strong>{" "}
+              {medication.notes || text.noNote}
             </Text>
 
             <Stack direction={{ base: "column", sm: "row" }} gap="3">
@@ -436,7 +531,7 @@ function MyMedicationsPage() {
                 variant="outline"
                 onClick={() => handleEdit(medication)}
               >
-                Bearbeiten
+                {text.edit}
               </Button>
 
               <Button
@@ -444,7 +539,7 @@ function MyMedicationsPage() {
                 variant="outline"
                 onClick={() => handleDelete(medication.id)}
               >
-                Löschen
+                {text.delete}
               </Button>
             </Stack>
           </Box>

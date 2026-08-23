@@ -18,6 +18,40 @@ const emptyForm = {
   notes: "",
 };
 
+function normalizeTime(value) {
+  const time = String(value ?? "").trim();
+
+  if (/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(time)) {
+    return time;
+  }
+
+  const twelveHourMatch = time.match(
+    /^(\d{1,2}):([0-5]\d)\s*(AM|PM)$/i
+  );
+
+  if (!twelveHourMatch) {
+    return "";
+  }
+
+  let hour = Number(twelveHourMatch[1]);
+  const minutes = twelveHourMatch[2];
+  const period = twelveHourMatch[3].toUpperCase();
+
+  if (hour < 1 || hour > 12) {
+    return "";
+  }
+
+  if (period === "PM" && hour !== 12) {
+    hour += 12;
+  }
+
+  if (period === "AM" && hour === 12) {
+    hour = 0;
+  }
+
+  return `${String(hour).padStart(2, "0")}:${minutes}`;
+}
+
 function MyMedicationsPage() {
   const {
     userMedications,
@@ -58,9 +92,10 @@ function MyMedicationsPage() {
       userMedications.forEach((medication) => {
         const reminderKey =
           `${medication.id}-${currentDay}-${currentTime}`;
+        const medicationTime = normalizeTime(medication.intakeTime);
 
         if (
-          medication.intakeTime === currentTime &&
+          medicationTime === currentTime &&
           !sentReminders.current.has(reminderKey)
         ) {
           new Notification("MediPervin – Medikamentenerinnerung", {
@@ -102,12 +137,24 @@ function MyMedicationsPage() {
     event.preventDefault();
     setMessage("");
 
+    const normalizedTime = normalizeTime(formData.intakeTime);
+
+    if (!normalizedTime) {
+      setMessage("Bitte gib die Einnahmezeit im Format 13:00 ein.");
+      return;
+    }
+
+    const medicationData = {
+      ...formData,
+      intakeTime: normalizedTime,
+    };
+
     try {
       if (editingId) {
-        await updateUserMedication(editingId, formData);
+        await updateUserMedication(editingId, medicationData);
         setMessage("Die Änderungen wurden gespeichert.");
       } else {
-        await addUserMedication(formData);
+        await addUserMedication(medicationData);
         setMessage("Medikament wurde gespeichert.");
       }
 
@@ -123,7 +170,7 @@ function MyMedicationsPage() {
     setFormData({
       name: medication.name || "",
       dosage: medication.dosage || "",
-      intakeTime: medication.intakeTime || "",
+      intakeTime: normalizeTime(medication.intakeTime),
       notes: medication.notes || "",
     });
 
@@ -291,9 +338,18 @@ function MyMedicationsPage() {
               <Input
                 id="intakeTime"
                 name="intakeTime"
-                type="time"
+                type="text"
+                inputMode="numeric"
+                placeholder="13:00"
+                maxLength={8}
                 value={formData.intakeTime}
                 onChange={handleChange}
+                onBlur={() =>
+                  setFormData((previousData) => ({
+                    ...previousData,
+                    intakeTime: normalizeTime(previousData.intakeTime),
+                  }))
+                }
                 required
               />
             </Box>
@@ -366,7 +422,7 @@ function MyMedicationsPage() {
 
             <Text mb="2">
               <strong>Einnahmezeit:</strong>{" "}
-              {medication.intakeTime} Uhr
+              {normalizeTime(medication.intakeTime) || medication.intakeTime} Uhr
             </Text>
 
             <Text mb="5">

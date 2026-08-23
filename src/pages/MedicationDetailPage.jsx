@@ -2,8 +2,10 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 import SafetyNotice from "../components/SafetyNotice";
 import useMedications from "../hooks/useMedications";
+import useLanguage from "../hooks/useLanguage";
 
 function MedicationDetailPage() {
+  const { isEnglish } = useLanguage();
   const { id } = useParams();
   const { medications } = useMedications();
 
@@ -14,15 +16,15 @@ function MedicationDetailPage() {
   if (!medication) {
     return (
       <Box padding="8">
-        <Heading>Medikament nicht gefunden</Heading>
+        <Heading>{isEnglish ? "Medication not found" : "Medikament nicht gefunden"}</Heading>
 
         <Text marginTop="4">
-          Zu dieser Adresse wurde kein Medikament gefunden.
+          {isEnglish ? "No medication was found at this address." : "Zu dieser Adresse wurde kein Medikament gefunden."}
         </Text>
 
         <Text marginTop="4" color="teal.700">
           <Link to="/medikamente">
-            Zurück zur Übersicht
+            {isEnglish ? "Back to overview" : "Zurück zur Übersicht"}
           </Link>
         </Text>
       </Box>
@@ -34,11 +36,11 @@ function MedicationDetailPage() {
       <Heading>{medication.name}</Heading>
 
       <Text marginTop="4" fontWeight="bold" color="teal.700">
-        {medication.category}
+        {isEnglish ? medication.categoryEn ?? medication.category : medication.category}
       </Text>
 
       <Text marginTop="4">
-        {medication.description}
+        {isEnglish ? medication.descriptionEn ?? medication.description : medication.description}
       </Text>
 
       <SafetyNotice />
@@ -50,18 +52,18 @@ function MedicationDetailPage() {
             target="_blank"
             rel="noreferrer"
           >
-            Informationsquelle: {medication.source}
+            {isEnglish ? "Information source" : "Informationsquelle"}: {medication.source}
           </a>
         </Text>
       ) : (
         <Text marginTop="6" fontSize="sm" color="gray.600">
-          Informationsquelle: {medication.source}
+          {isEnglish ? "Information source" : "Informationsquelle"}: {medication.source}
         </Text>
       )}
 
       <Text marginTop="6" color="teal.700">
         <Link to="/medikamente">
-          Zurück zur Übersicht
+          {isEnglish ? "Back to overview" : "Zurück zur Übersicht"}
         </Link>
       </Text>
     </Box>
@@ -69,5 +71,4 @@ function MedicationDetailPage() {
 }
 
 export default MedicationDetailPage;
-
 

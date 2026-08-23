@@ -4,8 +4,10 @@ import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { auth } from "../firebase";
 import AccessibilityControls from "./AccessibilityControls";
+import useLanguage from "../hooks/useLanguage";
 
 function Header() {
+  const { isEnglish } = useLanguage();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ function Header() {
         gap="4"
       >
         <Heading size="lg" color="white">
-          MediBase
+          MediPervin
         </Heading>
 
         <Flex
@@ -47,27 +49,27 @@ function Header() {
           flexWrap="wrap"
         >
           <Link to="/">
-            Startseite
+            {isEnglish ? "Home" : "Startseite"}
           </Link>
 
           <Link to="/medikamente">
-            Medikamente
+            {isEnglish ? "Medications" : "Medikamente"}
           </Link>
 
           {user && (
             <Link to="/meine-medikamente">
-              Meine Medikamente
+              {isEnglish ? "My medications" : "Meine Medikamente"}
             </Link>
           )}
 
           {user && (
             <Link to="/neuer-eintrag">
-              Neuer Eintrag
+              {isEnglish ? "New entry" : "Neuer Eintrag"}
             </Link>
           )}
 
           <Link to="/ueber">
-            Über MediBase
+            {isEnglish ? "About MediPervin" : "Über MediPervin"}
           </Link>
 
           <Link
@@ -80,7 +82,7 @@ function Header() {
             fontWeight: "bold",
   }}
 >
-  Notfallhilfe
+  {isEnglish ? "Emergency help" : "Notfallhilfe"}
 </Link>
 
           {user ? (
@@ -91,16 +93,16 @@ function Header() {
               borderColor="white"
               onClick={handleLogout}
             >
-              Abmelden
+              {isEnglish ? "Sign out" : "Abmelden"}
             </Button>
           ) : (
             <Flex gap="4" align="center">
               <Link to="/login">
-                Anmelden
+                {isEnglish ? "Sign in" : "Anmelden"}
               </Link>
 
               <Link to="/registrieren">
-                Konto erstellen
+                {isEnglish ? "Create account" : "Konto erstellen"}
               </Link>
             </Flex>
           )}

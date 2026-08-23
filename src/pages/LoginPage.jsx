@@ -14,8 +14,10 @@ import {
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
+import useLanguage from "../hooks/useLanguage";
 
 function LoginPage() {
+  const { isEnglish } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -34,13 +36,13 @@ function LoginPage() {
 
       if (!userCredential.user.emailVerified) {
         await signOut(auth);
-        setMessage("Bitte bestätige zuerst deine E-Mail-Adresse.");
+        setMessage(isEnglish ? "Please verify your email address first." : "Bitte bestätige zuerst deine E-Mail-Adresse.");
         return;
       }
 
       navigate("/meine-medikamente");
     } catch {
-      setMessage("E-Mail-Adresse oder Passwort ist falsch.");
+      setMessage(isEnglish ? "The email address or password is incorrect." : "E-Mail-Adresse oder Passwort ist falsch.");
     }
   }
 
@@ -49,7 +51,7 @@ function LoginPage() {
 
     if (!email) {
       setMessage(
-        "Bitte trage zuerst deine E-Mail-Adresse ein."
+        isEnglish ? "Please enter your email address first." : "Bitte trage zuerst deine E-Mail-Adresse ein."
       );
       return;
     }
@@ -58,24 +60,24 @@ function LoginPage() {
       await sendPasswordResetEmail(auth, email);
 
       setMessage(
-        "Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet."
+        isEnglish ? "A password reset email has been sent." : "Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet."
       );
     } catch {
       setMessage(
-        "Die E-Mail zum Zurücksetzen konnte nicht gesendet werden."
+        isEnglish ? "The password reset email could not be sent." : "Die E-Mail zum Zurücksetzen konnte nicht gesendet werden."
       );
     }
   }
 
   return (
     <Box maxW="500px" mx="auto" p="6">
-      <Heading mb="6">Anmelden</Heading>
+      <Heading mb="6">{isEnglish ? "Sign in" : "Anmelden"}</Heading>
 
       <form onSubmit={handleSubmit}>
         <Stack gap="4">
           <Input
             type="email"
-            placeholder="E-Mail-Adresse"
+            placeholder={isEnglish ? "Email address" : "E-Mail-Adresse"}
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
@@ -83,14 +85,14 @@ function LoginPage() {
 
           <Input
             type="password"
-            placeholder="Passwort"
+            placeholder={isEnglish ? "Password" : "Passwort"}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
           />
 
           <Button type="submit" colorPalette="teal">
-            Anmelden
+            {isEnglish ? "Sign in" : "Anmelden"}
           </Button>
 
           <Button
@@ -98,13 +100,13 @@ function LoginPage() {
             variant="outline"
             onClick={handlePasswordReset}
           >
-            Passwort vergessen
+            {isEnglish ? "Forgot password" : "Passwort vergessen"}
           </Button>
 
           <Text>
-            Noch kein Konto?{" "}
+            {isEnglish ? "No account yet? " : "Noch kein Konto? "}
             <Link to="/registrieren">
-              Konto erstellen
+              {isEnglish ? "Create account" : "Konto erstellen"}
             </Link>
           </Text>
 

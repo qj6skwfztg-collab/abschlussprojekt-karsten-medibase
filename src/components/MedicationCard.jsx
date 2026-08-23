@@ -1,7 +1,9 @@
 import { Card, Heading, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import useLanguage from "../hooks/useLanguage";
 
 function MedicationCard({ medication }) {
+  const { isEnglish } = useLanguage();
   return (
     <Card.Root
       background="white"
@@ -15,16 +17,16 @@ function MedicationCard({ medication }) {
         </Heading>
 
         <Text marginTop="2" color="teal.700" fontWeight="bold">
-          {medication.category}
+          {isEnglish ? medication.categoryEn ?? medication.category : medication.category}
         </Text>
 
         <Text marginTop="4" color="gray.700">
-          {medication.description}
+          {isEnglish ? medication.descriptionEn ?? medication.description : medication.description}
         </Text>
 
         <Text marginTop="4" color="teal.700" fontWeight="bold">
           <Link to={`/medikamente/${medication.id}`}>
-            Mehr erfahren
+            {isEnglish ? "Learn more" : "Mehr erfahren"}
           </Link>
         </Text>
       </Card.Body>

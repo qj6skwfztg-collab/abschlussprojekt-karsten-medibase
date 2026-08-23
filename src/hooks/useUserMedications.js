@@ -6,6 +6,7 @@ import {
   doc,
   onSnapshot,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
@@ -89,6 +90,32 @@ function useUserMedications() {
     });
   }
 
+  async function updateUserMedication(
+    medicationId,
+    medication
+  ) {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser || !currentUser.emailVerified) {
+      throw new Error("Du bist nicht vollständig angemeldet.");
+    }
+
+    const medicationDocument = doc(
+      db,
+      "users",
+      currentUser.uid,
+      "medications",
+      medicationId
+    );
+
+    await updateDoc(medicationDocument, {
+      name: medication.name.trim(),
+      dosage: medication.dosage.trim(),
+      intakeTime: medication.intakeTime,
+      notes: medication.notes.trim(),
+    });
+  }
+
   async function deleteUserMedication(medicationId) {
     const currentUser = auth.currentUser;
 
@@ -112,6 +139,7 @@ function useUserMedications() {
     isLoading,
     error,
     addUserMedication,
+    updateUserMedication,
     deleteUserMedication,
   };
 }

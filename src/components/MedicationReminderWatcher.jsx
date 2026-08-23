@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import useLanguage from "../hooks/useLanguage";
 
 function MedicationReminderWatcher({ medications }) {
+  const { isEnglish } = useLanguage();
   useEffect(() => {
     async function checkMedicationTimes() {
       if (!("Notification" in window)) {
@@ -42,10 +44,10 @@ function MedicationReminderWatcher({ medications }) {
         }
 
         await registration.showNotification(
-          "MediBase Erinnerung",
+          isEnglish ? "MediPervin reminder" : "MediPervin Erinnerung",
           {
             body:
-              "Es ist Zeit für eine geplante Medikamenteneinnahme. Öffne MediBase für weitere Informationen.",
+              isEnglish ? "It is time for a scheduled medication. Open MediPervin for more information." : "Es ist Zeit für eine geplante Medikamenteneinnahme. Öffne MediPervin für weitere Informationen.",
             tag: reminderKey,
           }
         );
@@ -64,7 +66,7 @@ function MedicationReminderWatcher({ medications }) {
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [medications]);
+  }, [isEnglish, medications]);
 
   return null;
 }

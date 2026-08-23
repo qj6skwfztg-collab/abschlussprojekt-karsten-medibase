@@ -1,6 +1,8 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
+import useLanguage from "../hooks/useLanguage";
 
 function SafetyNotice() {
+  const { isEnglish } = useLanguage();
   return (
     <Box
       background="orange.50"
@@ -11,13 +13,13 @@ function SafetyNotice() {
       color="gray.900"
     >
       <Heading size="sm">
-        Wichtiger medizinischer Hinweis
+        {isEnglish ? "Important medical notice" : "Wichtiger medizinischer Hinweis"}
       </Heading>
 
       <Text marginTop="2">
-        Die Informationen in MediBase dienen nur der allgemeinen
-        Orientierung. Sie ersetzen weder die Packungsbeilage noch
-        die Beratung durch medizinisches Fachpersonal.
+        {isEnglish
+          ? "The information in MediPervin is for general guidance only. It does not replace the package leaflet or advice from a healthcare professional."
+          : "Die Informationen in MediPervin dienen nur der allgemeinen Orientierung. Sie ersetzen weder die Packungsbeilage noch die Beratung durch medizinisches Fachpersonal."}
       </Text>
     </Box>
   );

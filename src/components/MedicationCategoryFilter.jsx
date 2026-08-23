@@ -1,10 +1,12 @@
 import { Box, Text } from "@chakra-ui/react";
+import useLanguage from "../hooks/useLanguage";
 
 function MedicationCategoryFilter({
   categories,
   selectedCategory,
   onCategoryChange,
 }) {
+  const { isEnglish } = useLanguage();
   return (
     <Box marginTop="4" maxWidth="500px">
       <Text
@@ -12,7 +14,7 @@ function MedicationCategoryFilter({
         htmlFor="category-filter"
         fontWeight="bold"
       >
-        Nach Kategorie filtern
+        {isEnglish ? "Filter by category" : "Nach Kategorie filtern"}
       </Text>
 
       <select
@@ -22,7 +24,7 @@ function MedicationCategoryFilter({
           onCategoryChange(event.target.value)
         }
       >
-        <option value="Alle">Alle Kategorien</option>
+        <option value="Alle">{isEnglish ? "All categories" : "Alle Kategorien"}</option>
 
         {categories.map((category) => (
           <option key={category} value={category}>

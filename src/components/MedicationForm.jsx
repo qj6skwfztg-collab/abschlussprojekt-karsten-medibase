@@ -9,8 +9,10 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useMedications from "../hooks/useMedications";
+import useLanguage from "../hooks/useLanguage";
 
 function MedicationForm() {
+  const { isEnglish } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -51,7 +53,7 @@ function MedicationForm() {
       cleanedFormData.source.length < 5
     ) {
       setError(
-        "Bitte fülle alle Felder vollständig aus."
+        isEnglish ? "Please complete all fields." : "Bitte fülle alle Felder vollständig aus."
       );
       return;
     }
@@ -64,7 +66,7 @@ function MedicationForm() {
       navigate("/medikamente");
     } catch {
       setError(
-        "Das Medikament konnte nicht gespeichert werden."
+        isEnglish ? "The medication could not be saved." : "Das Medikament konnte nicht gespeichert werden."
       );
     } finally {
       setIsSaving(false);
@@ -79,7 +81,7 @@ function MedicationForm() {
       marginTop="6"
     >
       <Stack gap="4">
-        <label htmlFor="name">Name des Medikaments</label>
+        <label htmlFor="name">{isEnglish ? "Medication name" : "Name des Medikaments"}</label>
         <Input
           id="name"
           name="name"
@@ -88,7 +90,7 @@ function MedicationForm() {
           background="white"
         />
 
-        <label htmlFor="category">Kategorie</label>
+        <label htmlFor="category">{isEnglish ? "Category" : "Kategorie"}</label>
         <Input
           id="category"
           name="category"
@@ -97,7 +99,7 @@ function MedicationForm() {
           background="white"
         />
 
-        <label htmlFor="description">Beschreibung</label>
+        <label htmlFor="description">{isEnglish ? "Description" : "Beschreibung"}</label>
         <Textarea
           id="description"
           name="description"
@@ -106,7 +108,7 @@ function MedicationForm() {
           background="white"
         />
 
-        <label htmlFor="source">Informationsquelle</label>
+        <label htmlFor="source">{isEnglish ? "Information source" : "Informationsquelle"}</label>
         <Input
           id="source"
           name="source"
@@ -127,8 +129,8 @@ function MedicationForm() {
           disabled={isSaving}
         >
           {isSaving
-            ? "Wird gespeichert ..."
-            : "Medikament speichern"}
+            ? (isEnglish ? "Saving ..." : "Wird gespeichert ...")
+            : (isEnglish ? "Save medication" : "Medikament speichern")}
         </Button>
       </Stack>
     </Box>

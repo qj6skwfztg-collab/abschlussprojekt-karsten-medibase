@@ -9,8 +9,10 @@ import MedicationCard from "../components/MedicationCard";
 import MedicationSearch from "../components/MedicationSearch";
 import MedicationCategoryFilter from "../components/MedicationCategoryFilter";
 import useMedications from "../hooks/useMedications";
+import useLanguage from "../hooks/useLanguage";
 
 function MedicationsPage() {
+  const { isEnglish } = useLanguage();
   const { medications } = useMedications();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,7 +33,8 @@ function MedicationsPage() {
 
       const matchesSearch =
         medication.name.toLowerCase().includes(search) ||
-        medication.category.toLowerCase().includes(search);
+        medication.category.toLowerCase().includes(search) ||
+        (medication.categoryEn ?? "").toLowerCase().includes(search);
 
       const matchesCategory =
         selectedCategory === "Alle" ||
@@ -43,10 +46,10 @@ function MedicationsPage() {
 
   return (
     <Box padding="8">
-      <Heading>Medikamentenübersicht</Heading>
+      <Heading>{isEnglish ? "Medication overview" : "Medikamentenübersicht"}</Heading>
 
       <Text marginTop="4">
-        Wähle ein Medikament aus, um weitere Informationen zu sehen.
+        {isEnglish ? "Choose a medication to view more information." : "Wähle ein Medikament aus, um weitere Informationen zu sehen."}
       </Text>
 
       <MedicationSearch
@@ -62,7 +65,7 @@ function MedicationsPage() {
 
       {filteredMedications.length === 0 ? (
         <Text marginTop="6">
-          Kein passendes Medikament gefunden.
+          {isEnglish ? "No matching medication found." : "Kein passendes Medikament gefunden."}
         </Text>
       ) : (
         <SimpleGrid
@@ -83,4 +86,3 @@ function MedicationsPage() {
 }
 
 export default MedicationsPage;
-

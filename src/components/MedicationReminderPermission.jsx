@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Box, Button, Stack, Text } from "@chakra-ui/react";
+import useLanguage from "../hooks/useLanguage";
 
 function MedicationReminderPermission() {
+  const { isEnglish } = useLanguage();
   const [message, setMessage] = useState("");
 
   async function handlePermission() {
     if (!("Notification" in window)) {
       setMessage(
-        "Dieser Browser unterstützt keine Benachrichtigungen."
+        isEnglish ? "This browser does not support notifications." : "Dieser Browser unterstützt keine Benachrichtigungen."
       );
       return;
     }
@@ -17,13 +19,13 @@ function MedicationReminderPermission() {
 
     if (permission === "granted") {
       setMessage(
-        "Benachrichtigungen sind jetzt erlaubt."
+        isEnglish ? "Notifications are now allowed." : "Benachrichtigungen sind jetzt erlaubt."
       );
       return;
     }
 
     setMessage(
-      "Benachrichtigungen wurden nicht erlaubt."
+      isEnglish ? "Notifications were not allowed." : "Benachrichtigungen wurden nicht erlaubt."
     );
   }
 
@@ -32,21 +34,21 @@ function MedicationReminderPermission() {
 
     if (!("Notification" in window)) {
       setMessage(
-        "Dieser Browser unterstützt keine Benachrichtigungen."
+        isEnglish ? "This browser does not support notifications." : "Dieser Browser unterstützt keine Benachrichtigungen."
       );
       return;
     }
 
     if (!("serviceWorker" in navigator)) {
       setMessage(
-        "Dieser Browser unterstützt den Hintergrunddienst nicht."
+        isEnglish ? "This browser does not support the background service." : "Dieser Browser unterstützt den Hintergrunddienst nicht."
       );
       return;
     }
 
     if (Notification.permission !== "granted") {
       setMessage(
-        "Bitte erlaube zuerst die Benachrichtigungen."
+        isEnglish ? "Please allow notifications first." : "Bitte erlaube zuerst die Benachrichtigungen."
       );
       return;
     }
@@ -56,20 +58,20 @@ function MedicationReminderPermission() {
         await navigator.serviceWorker.ready;
 
       await registration.showNotification(
-        "MediBase Test",
+        "MediPervin Test",
         {
           body:
-            "Wenn du diese Nachricht siehst, funktionieren die Benachrichtigungen.",
+            isEnglish ? "If you can see this message, notifications are working." : "Wenn du diese Nachricht siehst, funktionieren die Benachrichtigungen.",
           tag: "medibase-test",
         }
       );
 
       setMessage(
-        "Die Testbenachrichtigung wurde ausgelöst."
+        isEnglish ? "The test notification was triggered." : "Die Testbenachrichtigung wurde ausgelöst."
       );
     } catch {
       setMessage(
-        "Die Testbenachrichtigung konnte nicht angezeigt werden."
+        isEnglish ? "The test notification could not be displayed." : "Die Testbenachrichtigung konnte nicht angezeigt werden."
       );
     }
   }
@@ -82,12 +84,11 @@ function MedicationReminderPermission() {
       background="white"
     >
       <Text fontWeight="bold">
-        Einnahmeerinnerungen
+        {isEnglish ? "Medication reminders" : "Einnahmeerinnerungen"}
       </Text>
 
       <Text marginTop="2">
-        Erlaube Benachrichtigungen, damit MediBase dich an
-        deine Einnahmezeiten erinnern kann.
+        {isEnglish ? "Allow notifications so MediPervin can remind you of your scheduled intake times." : "Erlaube Benachrichtigungen, damit MediPervin dich an deine Einnahmezeiten erinnern kann."}
       </Text>
 
       <Stack
@@ -99,7 +100,7 @@ function MedicationReminderPermission() {
           colorPalette="teal"
           onClick={handlePermission}
         >
-          Benachrichtigungen erlauben
+          {isEnglish ? "Allow notifications" : "Benachrichtigungen erlauben"}
         </Button>
 
         <Button
@@ -107,7 +108,7 @@ function MedicationReminderPermission() {
           colorPalette="teal"
           onClick={handleTestNotification}
         >
-          Testbenachrichtigung senden
+          {isEnglish ? "Send test notification" : "Testbenachrichtigung senden"}
         </Button>
       </Stack>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -9,9 +9,14 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import MedicationReminderPermission from "../components/MedicationReminderPermission";
-import MedicationReminderWatcher from "../components/MedicationReminderWatcher";
 import useUserMedications from "../hooks/useUserMedications";
+
+const emptyForm = {
+  name: "",
+  dosage: "",
+  intakeTime: "",
+  notes: "",
+};
 
 function MyMedicationsPage() {
   const {
@@ -19,65 +24,115 @@ function MyMedicationsPage() {
     isLoading,
     error,
     addUserMedication,
+    updateUserMedication,
     deleteUserMedication,
   } = useUserMedications();
 
-  const [name, setName] = useState("");
-  const [dosage, setDosage] = useState("");
-  const [intakeTime, setIntakeTime] = useState("");
-  const [notes, setNotes] = useState("");
-  const [formMessage, setFormMessage] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
+  const [formData, setFormData] = useState(emptyForm);
+  const [editingId, setEditingId] = useState(null);
+  const [message, setMessage] = useState("");
+  const [notificationPermission, setNotificationPermission] = useState(
+    typeof Notification !== "undefined"
+      ? Notification.permission
+      : "unsupported"
+  );
+
+  const sentReminders = useRef(new Set());
+
+  useEffect(() => {
+    if (
+      typeof Notification === "undefined" ||
+      Notification.permission !== "granted"
+    ) {
+      return;
+    }
+
+    function checkMedicationTimes() {
+      const now = new Date();
+
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const currentTime = `${hours}:${minutes}`;
+      const currentDay = now.toISOString().slice(0, 10);
+
+      userMedications.forEach((medication) => {
+        const reminderKey =
+          `${medication.id}-${currentDay}-${currentTime}`;
+
+        if (
+          medication.intakeTime === currentTime &&
+          !sentReminders.current.has(reminderKey)
+        ) {
+          new Notification("MediPervin – Medikamentenerinnerung", {
+            body: `${medication.name} – ${medication.dosage}`,
+          });
+
+          sentReminders.current.add(reminderKey);
+        }
+      });
+    }
+
+    checkMedicationTimes();
+
+    const intervalId = window.setInterval(
+      checkMedicationTimes,
+      30000
+    );
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [userMedications]);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    setFormData((previousData) => ({
+      ...previousData,
+      [name]: value,
+    }));
+  }
+
+  function resetForm() {
+    setFormData(emptyForm);
+    setEditingId(null);
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setFormMessage("");
-
-    if (!name.trim()) {
-      setFormMessage(
-        "Bitte gib den Namen des Medikaments ein."
-      );
-      return;
-    }
-
-    if (!dosage.trim()) {
-      setFormMessage("Bitte gib die Dosierung ein.");
-      return;
-    }
-
-
-    const validTime =
-      /^([01]\d|2[0-3]):[0-5]\d$/.test(intakeTime);
-
-    if (!validTime) {
-      setFormMessage(
-        "Bitte gib die Uhrzeit im Format HH:MM ein, zum Beispiel 13:30."
-      );
-      return;
-    }
+    setMessage("");
 
     try {
-      setIsSaving(true);
+      if (editingId) {
+        await updateUserMedication(editingId, formData);
+        setMessage("Die Änderungen wurden gespeichert.");
+      } else {
+        await addUserMedication(formData);
+        setMessage("Medikament wurde gespeichert.");
+      }
 
-      await addUserMedication({
-        name,
-        dosage,
-        intakeTime,
-        notes,
-      });
-
-      setName("");
-      setDosage("");
-      setIntakeTime("");
-      setNotes("");
-      setFormMessage("Medikament wurde gespeichert.");
+      resetForm();
     } catch {
-      setFormMessage(
-        "Das Medikament konnte nicht gespeichert werden."
-      );
-    } finally {
-      setIsSaving(false);
+      setMessage("Das Medikament konnte nicht gespeichert werden.");
     }
+  }
+
+  function handleEdit(medication) {
+    setEditingId(medication.id);
+
+    setFormData({
+      name: medication.name || "",
+      dosage: medication.dosage || "",
+      intakeTime: medication.intakeTime || "",
+      notes: medication.notes || "",
+    });
+
+    setMessage("Du bearbeitest jetzt dieses Medikament.");
+  }
+
+  function handleCancelEdit() {
+    resetForm();
+    setMessage("Bearbeitung wurde abgebrochen.");
   }
 
   async function handleDelete(medicationId) {
@@ -91,204 +146,251 @@ function MyMedicationsPage() {
 
     try {
       await deleteUserMedication(medicationId);
+
+      if (editingId === medicationId) {
+        resetForm();
+      }
+
+      setMessage("Medikament wurde gelöscht.");
     } catch {
-      setFormMessage(
-        "Das Medikament konnte nicht gelöscht werden."
-      );
+      setMessage("Das Medikament konnte nicht gelöscht werden.");
     }
   }
 
+  async function requestNotifications() {
+    if (typeof Notification === "undefined") {
+      setMessage(
+        "Dieser Browser unterstützt keine Benachrichtigungen."
+      );
+      return;
+    }
+
+    const permission = await Notification.requestPermission();
+    setNotificationPermission(permission);
+
+    if (permission === "granted") {
+      setMessage("Benachrichtigungen wurden erlaubt.");
+    } else {
+      setMessage("Benachrichtigungen wurden nicht erlaubt.");
+    }
+  }
+
+  function sendTestNotification() {
+    if (
+      typeof Notification === "undefined" ||
+      Notification.permission !== "granted"
+    ) {
+      setMessage("Erlaube zuerst die Benachrichtigungen.");
+      return;
+    }
+
+    new Notification("MediPervin – Test", {
+      body: "Die Medikamentenerinnerung funktioniert.",
+    });
+
+    setMessage("Testbenachrichtigung wurde ausgelöst.");
+  }
+
   return (
-    <Box
-      maxWidth="1100px"
-      margin="0 auto"
-      padding="6"
-    >
-        <MedicationReminderWatcher
-        medications={userMedications}
-        />
+    <Box maxW="1200px" mx="auto" p="6">
+      <Heading mb="4">Meine Medikamente</Heading>
 
-      <Heading marginBottom="2">
-        Meine Medikamente
-      </Heading>
-
-      <Text marginBottom="8">
+      <Text mb="8">
         Hier kannst du deine persönlichen Medikamente und
         Einnahmezeiten verwalten.
       </Text>
 
-      <Box marginBottom="8">
-        <MedicationReminderPermission />
+      <Box
+        borderWidth="1px"
+        borderRadius="lg"
+        background="white"
+        padding="6"
+        mb="8"
+      >
+        <Heading size="md" mb="4">
+          Erinnerungen
+        </Heading>
+
+        <Stack direction={{ base: "column", md: "row" }} gap="3">
+          <Button
+            colorPalette="teal"
+            onClick={requestNotifications}
+          >
+            Benachrichtigungen erlauben
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={sendTestNotification}
+            disabled={notificationPermission !== "granted"}
+          >
+            Testbenachrichtigung senden
+          </Button>
+        </Stack>
+
+        <Text mt="3" fontSize="sm">
+          Status: {notificationPermission}
+        </Text>
       </Box>
 
       <Box
-        as="form"
-        onSubmit={handleSubmit}
+        borderWidth="1px"
+        borderRadius="lg"
         background="white"
         padding="6"
-        borderRadius="lg"
-        boxShadow="md"
-        marginBottom="10"
+        mb="10"
       >
-        <Heading size="md" marginBottom="5">
-          Persönliches Medikament hinzufügen
+        <Heading size="md" mb="6">
+          {editingId
+            ? "Persönliches Medikament bearbeiten"
+            : "Persönliches Medikament hinzufügen"}
         </Heading>
 
-        <Stack gap="4">
-          <Box>
-            <Text marginBottom="2">
-              Name des Medikaments
-            </Text>
+        <form onSubmit={handleSubmit}>
+          <Stack gap="5">
+            <Box>
+              <Text as="label" htmlFor="name" display="block" mb="2">
+                Name des Medikaments
+              </Text>
 
-            <Input
-              value={name}
-              onChange={(event) =>
-                setName(event.target.value)
-              }
-              placeholder="Zum Beispiel Ibuprofen"
-            />
-          </Box>
+              <Input
+                id="name"
+                name="name"
+                placeholder="Zum Beispiel Ibuprofen"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </Box>
 
-          <Box>
-            <Text marginBottom="2">
-              Dosierung laut deinem Medikamentenplan
-            </Text>
+            <Box>
+              <Text as="label" htmlFor="dosage" display="block" mb="2">
+                Dosierung laut deinem Medikamentenplan
+              </Text>
 
-            <Input
-              value={dosage}
-              onChange={(event) =>
-                setDosage(event.target.value)
-              }
-              placeholder="Zum Beispiel 400 mg"
-            />
-          </Box>
+              <Input
+                id="dosage"
+                name="dosage"
+                placeholder="Zum Beispiel 400 mg"
+                value={formData.dosage}
+                onChange={handleChange}
+                required
+              />
+            </Box>
 
-          <Box>
-            <Text marginBottom="2">
-              Einnahmezeit
-            </Text>
+            <Box>
+              <Text
+                as="label"
+                htmlFor="intakeTime"
+                display="block"
+                mb="2"
+              >
+                Einnahmezeit
+              </Text>
 
-            <Input
-              type="text"
-              inputMode="numeric"
-              value={intakeTime}
-              onChange={(event) =>
-                setIntakeTime(event.target.value)
-              }
-              placeholder="Zum Beispiel 13:30"
-              maxLength={5}
-            />
+              <Input
+                id="intakeTime"
+                name="intakeTime"
+                type="time"
+                value={formData.intakeTime}
+                onChange={handleChange}
+                required
+              />
+            </Box>
 
-            <Text
-              marginTop="2"
-              fontSize="sm"
-              color="gray.600"
-            >
-              Bitte im 24-Stunden-Format eingeben, zum
-              Beispiel 08:00 oder 13:30.
-            </Text>
-          </Box>
+            <Box>
+              <Text as="label" htmlFor="notes" display="block" mb="2">
+                Persönliche Notiz
+              </Text>
 
-          <Box>
-            <Text marginBottom="2">
-              Persönliche Notiz
-            </Text>
+              <Textarea
+                id="notes"
+                name="notes"
+                placeholder="Zum Beispiel: nach dem Frühstück"
+                value={formData.notes}
+                onChange={handleChange}
+              />
+            </Box>
 
-            <Textarea
-              value={notes}
-              onChange={(event) =>
-                setNotes(event.target.value)
-              }
-              placeholder="Zum Beispiel: nach dem Frühstück"
-              maxLength={500}
-            />
-          </Box>
+            <Button type="submit" colorPalette="teal">
+              {editingId
+                ? "Änderungen speichern"
+                : "Persönliches Medikament speichern"}
+            </Button>
 
-          <Button
-            type="submit"
-            colorPalette="teal"
-            loading={isSaving}
-          >
-            Persönliches Medikament speichern
-          </Button>
+            {editingId && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCancelEdit}
+              >
+                Bearbeitung abbrechen
+              </Button>
+            )}
 
-          {formMessage && (
-            <Text>
-              {formMessage}
-            </Text>
-          )}
-        </Stack>
+            {message && <Text>{message}</Text>}
+          </Stack>
+        </form>
       </Box>
 
-      <Heading size="lg" marginBottom="5">
+      <Heading size="lg" mb="6">
         Meine gespeicherten Medikamente
       </Heading>
 
-      {isLoading && (
-        <Text>
-          Medikamente werden geladen …
-        </Text>
-      )}
+      {isLoading && <Text>Medikamente werden geladen …</Text>}
 
-      {error && (
-        <Text color="red.600">
-          {error}
-        </Text>
-      )}
+      {error && <Text color="red.600">{error}</Text>}
 
       {!isLoading &&
         !error &&
         userMedications.length === 0 && (
-          <Text>
-            Du hast noch keine persönlichen Medikamente
-            gespeichert.
-          </Text>
+          <Text>Du hast noch keine Medikamente gespeichert.</Text>
         )}
 
-      <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 3 }}
-        gap="5"
-      >
+      <SimpleGrid minChildWidth="280px" gap="6">
         {userMedications.map((medication) => (
           <Box
             key={medication.id}
-            background="white"
-            padding="5"
+            borderWidth="1px"
             borderRadius="lg"
-            boxShadow="md"
+            background="white"
+            padding="6"
           >
-            <Heading size="md" marginBottom="3">
+            <Heading size="md" mb="4">
               {medication.name}
             </Heading>
 
-            <Text>
-              <strong>Dosierung:</strong>{" "}
-              {medication.dosage}
+            <Text mb="2">
+              <strong>Dosierung:</strong> {medication.dosage}
             </Text>
 
-            <Text marginTop="2">
+            <Text mb="2">
               <strong>Einnahmezeit:</strong>{" "}
               {medication.intakeTime} Uhr
             </Text>
 
-            {medication.notes && (
-              <Text marginTop="2">
-                <strong>Notiz:</strong>{" "}
-                {medication.notes}
-              </Text>
-            )}
+            <Text mb="5">
+              <strong>Notiz:</strong>{" "}
+              {medication.notes || "Keine Notiz"}
+            </Text>
 
-            <Button
-              marginTop="5"
-              size="sm"
-              colorPalette="red"
-              variant="outline"
-              onClick={() =>
-                handleDelete(medication.id)
-              }
-            >
-              Löschen
-            </Button>
+            <Stack direction={{ base: "column", sm: "row" }} gap="3">
+              <Button
+                colorPalette="teal"
+                variant="outline"
+                onClick={() => handleEdit(medication)}
+              >
+                Bearbeiten
+              </Button>
+
+              <Button
+                colorPalette="red"
+                variant="outline"
+                onClick={() => handleDelete(medication.id)}
+              >
+                Löschen
+              </Button>
+            </Stack>
           </Box>
         ))}
       </SimpleGrid>
@@ -297,4 +399,3 @@ function MyMedicationsPage() {
 }
 
 export default MyMedicationsPage;
-

@@ -1,6 +1,8 @@
 import { Box, Text } from "@chakra-ui/react";
+import useLanguage from "../hooks/useLanguage";
 
 function Footer() {
+  const { isEnglish } = useLanguage();
   return (
     <Box
       as="footer"
@@ -11,16 +13,21 @@ function Footer() {
       textAlign="center"
     >
       <Text fontWeight="bold">
-        MediBase
+        MediPervin
+      </Text>
+
+      <Text marginTop="1" fontSize="sm" fontStyle="italic">
+        {isEnglish ? "named after Pervin Ketme" : "benannt nach Pervin Ketme"}
       </Text>
 
       <Text marginTop="2" fontSize="sm">
-        Arzneimittelinformationen zur allgemeinen Orientierung.
-        Keine medizinische Beratung.
+        {isEnglish
+          ? "Medication information for general guidance. No medical advice."
+          : "Arzneimittelinformationen zur allgemeinen Orientierung. Keine medizinische Beratung."}
       </Text>
 
       <Text marginTop="2" fontSize="sm">
-        © 2026 MediBase – entwickelt von Karsten Rabeneck-Ketme
+        © 2026 MediPervin – {isEnglish ? "developed by" : "entwickelt von"} Karsten Rabeneck-Ketme
       </Text>
     </Box>
   );

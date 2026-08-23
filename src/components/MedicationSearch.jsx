@@ -1,9 +1,11 @@
 import { Box, Input, Text } from "@chakra-ui/react";
+import useLanguage from "../hooks/useLanguage";
 
 function MedicationSearch({
   searchTerm,
   onSearchChange,
 }) {
+  const { isEnglish } = useLanguage();
   return (
     <Box marginTop="6" maxWidth="500px">
       <Text
@@ -11,7 +13,7 @@ function MedicationSearch({
         htmlFor="medication-search"
         fontWeight="bold"
       >
-        Medikament suchen
+        {isEnglish ? "Search medication" : "Medikament suchen"}
       </Text>
 
       <Input
@@ -21,7 +23,7 @@ function MedicationSearch({
         onChange={(event) =>
           onSearchChange(event.target.value)
         }
-        placeholder="Zum Beispiel Paracetamol"
+        placeholder={isEnglish ? "For example, paracetamol" : "Zum Beispiel Paracetamol"}
         marginTop="2"
         background="white"
       />

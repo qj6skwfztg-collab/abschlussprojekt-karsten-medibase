@@ -17,8 +17,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { auth, db } from "../firebase";
+import useLanguage from "../hooks/useLanguage";
 
 function EmergencyContacts() {
+  const { isEnglish } = useLanguage();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [contacts, setContacts] = useState([]);
@@ -55,17 +57,17 @@ function EmergencyContacts() {
     setMessage("");
 
     if (!user) {
-      setMessage("Bitte melde dich zuerst an.");
+      setMessage(isEnglish ? "Please sign in first." : "Bitte melde dich zuerst an.");
       return;
     }
 
     if (contacts.length >= 3) {
-      setMessage("Du kannst höchstens drei Notfallkontakte speichern.");
+      setMessage(isEnglish ? "You can save up to three emergency contacts." : "Du kannst höchstens drei Notfallkontakte speichern.");
       return;
     }
 
     if (name.trim().length < 2 || phone.trim().length < 5) {
-      setMessage("Bitte gib einen Namen und eine gültige Telefonnummer ein.");
+      setMessage(isEnglish ? "Please enter a name and a valid phone number." : "Bitte gib einen Namen und eine gültige Telefonnummer ein.");
       return;
     }
 
@@ -80,7 +82,7 @@ function EmergencyContacts() {
 
     setName("");
     setPhone("");
-    setMessage("Notfallkontakt wurde gespeichert.");
+    setMessage(isEnglish ? "Emergency contact saved." : "Notfallkontakt wurde gespeichert.");
   }
 
   async function handleDelete(contactId) {
@@ -95,7 +97,9 @@ function EmergencyContacts() {
 
   function openEmergencyMessage(contact) {
     const emergencyText =
-      "Ich habe versucht, den Notruf 112 zu kontaktieren. Bitte melde dich bei mir und prüfe, ob ich Hilfe benötige.";
+      isEnglish
+        ? "I have tried to call emergency services on 112. Please contact me and check whether I need help."
+        : "Ich habe versucht, den Notruf 112 zu kontaktieren. Bitte melde dich bei mir und prüfe, ob ich Hilfe benötige.";
 
     const smsLink =
       `sms:${contact.phone}?body=${encodeURIComponent(emergencyText)}`;
@@ -106,7 +110,7 @@ function EmergencyContacts() {
   if (!user) {
     return (
       <Text marginTop="6">
-        Melde dich an, um persönliche Notfallkontakte zu speichern.
+        {isEnglish ? "Sign in to save personal emergency contacts." : "Melde dich an, um persönliche Notfallkontakte zu speichern."}
       </Text>
     );
   }
@@ -114,20 +118,18 @@ function EmergencyContacts() {
   return (
     <Box marginTop="10">
       <Heading size="lg" marginBottom="4">
-        Meine Notfallkontakte
+        {isEnglish ? "My emergency contacts" : "Meine Notfallkontakte"}
       </Heading>
 
       <Text marginBottom="5">
-        Du kannst bis zu drei Personen speichern. Eine Nachricht wird nicht
-        automatisch versendet, sondern zuerst in deiner Nachrichten-App
-        geöffnet.
+        {isEnglish ? "You can save up to three people. A message is not sent automatically; it first opens in your messaging app." : "Du kannst bis zu drei Personen speichern. Eine Nachricht wird nicht automatisch versendet, sondern zuerst in deiner Nachrichten-App geöffnet."}
       </Text>
 
       <form onSubmit={handleSubmit}>
         <Stack gap="4">
           <Input
             type="text"
-            placeholder="Name des Notfallkontakts"
+            placeholder={isEnglish ? "Emergency contact name" : "Name des Notfallkontakts"}
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
@@ -135,7 +137,7 @@ function EmergencyContacts() {
 
           <Input
             type="tel"
-            placeholder="Telefonnummer, zum Beispiel +491701234567"
+            placeholder={isEnglish ? "Phone number, for example +491701234567" : "Telefonnummer, zum Beispiel +491701234567"}
             value={phone}
             onChange={(event) => setPhone(event.target.value)}
             required
@@ -146,7 +148,7 @@ function EmergencyContacts() {
             colorPalette="teal"
             disabled={contacts.length >= 3}
           >
-            Notfallkontakt speichern
+            {isEnglish ? "Save emergency contact" : "Notfallkontakt speichern"}
           </Button>
         </Stack>
       </form>
@@ -183,7 +185,7 @@ function EmergencyContacts() {
                 color="white"
                 onClick={() => openEmergencyMessage(contact)}
               >
-                Notfallnachricht vorbereiten
+                {isEnglish ? "Prepare emergency message" : "Notfallnachricht vorbereiten"}
               </Button>
 
               <Button
@@ -191,7 +193,7 @@ function EmergencyContacts() {
                 variant="outline"
                 onClick={() => handleDelete(contact.id)}
               >
-                Kontakt löschen
+                {isEnglish ? "Delete contact" : "Kontakt löschen"}
               </Button>
             </Stack>
           </Box>

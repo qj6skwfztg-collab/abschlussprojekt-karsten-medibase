@@ -6,6 +6,7 @@ import {
   defaultSystem,
 } from "@chakra-ui/react";
 import MedicationProvider from "./context/MedicationProvider";
+import LanguageProvider from "./context/LanguageProvider";
 import App from "./App.jsx";
 import "./index.css";
 
@@ -13,9 +14,11 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ChakraProvider value={defaultSystem}>
       <BrowserRouter>
-        <MedicationProvider>
-          <App />
-        </MedicationProvider>
+        <LanguageProvider>
+          <MedicationProvider>
+            <App />
+          </MedicationProvider>
+        </LanguageProvider>
       </BrowserRouter>
     </ChakraProvider>
   </StrictMode>
@@ -29,7 +32,7 @@ if ("serviceWorker" in navigator) {
       );
 
       console.log(
-        "MediBase Service Worker wurde registriert."
+        "MediPervin Service Worker wurde registriert."
       );
     } catch (error) {
       console.error(

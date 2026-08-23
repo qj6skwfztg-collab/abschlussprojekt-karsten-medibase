@@ -1,7 +1,9 @@
 import { Box, Button, Heading, Stack, Text } from "@chakra-ui/react";
 import EmergencyContacts from "../components/EmergencyContacts";
+import useLanguage from "../hooks/useLanguage";
 
 function EmergencyPage() {
+  const { isEnglish } = useLanguage();
   return (
     <Box maxWidth="700px" margin="0 auto" padding="6">
       <Box
@@ -13,11 +15,11 @@ function EmergencyPage() {
         textAlign="center"
       >
         <Heading color="red.700" marginBottom="4">
-          Notfallhilfe
+          {isEnglish ? "Emergency help" : "Notfallhilfe"}
         </Heading>
 
         <Text fontSize="lg" marginBottom="6">
-          Bei akuter Lebensgefahr rufe sofort den Rettungsdienst.
+          {isEnglish ? "If there is an immediate danger to life, call emergency services now." : "Bei akuter Lebensgefahr rufe sofort den Rettungsdienst."}
         </Text>
 
         <Stack gap="4">
@@ -31,7 +33,7 @@ function EmergencyPage() {
             fontSize="xl"
             _hover={{ background: "red.700" }}
           >
-            112 – Rettungsdienst anrufen
+            {isEnglish ? "112 – Call emergency services" : "112 – Rettungsdienst anrufen"}
           </Button>
 
           <Button
@@ -44,20 +46,17 @@ function EmergencyPage() {
             fontSize="lg"
             _hover={{ background: "blue.800" }}
           >
-            110 – Polizei anrufen
+            {isEnglish ? "110 – Call the police" : "110 – Polizei anrufen"}
           </Button>
         </Stack>
 
         <Text fontSize="sm" color="gray.700" marginTop="6">
-          Auf einem Smartphone öffnet sich die Telefonfunktion. Der Anruf muss
-          anschließend bestätigt werden.
+          {isEnglish ? "On a smartphone, the phone function opens. You must then confirm the call." : "Auf einem Smartphone öffnet sich die Telefonfunktion. Der Anruf muss anschließend bestätigt werden."}
         </Text>
       </Box>
 
       <Text marginTop="6" fontSize="sm" textAlign="center" color="gray.600">
-        MediBase ersetzt kein offizielles Notrufsystem. Die App kann nicht
-        feststellen, ob der Notruf angenommen oder ein Rettungswagen geschickt
-        wurde.
+        {isEnglish ? "MediPervin is not an official emergency system. The app cannot determine whether a call was answered or an ambulance was dispatched." : "MediPervin ersetzt kein offizielles Notrufsystem. Die App kann nicht feststellen, ob der Notruf angenommen oder ein Rettungswagen geschickt wurde."}
       </Text>
 
         <EmergencyContacts />

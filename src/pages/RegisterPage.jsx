@@ -14,8 +14,10 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { auth } from "../firebase";
+import useLanguage from "../hooks/useLanguage";
 
 function RegisterPage() {
+  const { isEnglish } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
@@ -29,17 +31,17 @@ function RegisterPage() {
     setError("");
 
     if (!email.trim()) {
-      setError("Bitte gib deine E-Mail-Adresse ein.");
+      setError(isEnglish ? "Please enter your email address." : "Bitte gib deine E-Mail-Adresse ein.");
       return;
     }
 
     if (password.length < 6) {
-      setError("Das Passwort muss mindestens 6 Zeichen lang sein.");
+      setError(isEnglish ? "The password must contain at least 6 characters." : "Das Passwort muss mindestens 6 Zeichen lang sein.");
       return;
     }
 
     if (password !== passwordRepeat) {
-      setError("Die beiden Passwörter stimmen nicht überein.");
+      setError(isEnglish ? "The two passwords do not match." : "Die beiden Passwörter stimmen nicht überein.");
       return;
     }
 
@@ -92,20 +94,19 @@ function RegisterPage() {
           borderRadius="lg"
         >
           <Heading size="lg" marginBottom="4">
-            E-Mail bestätigen
+            {isEnglish ? "Verify your email" : "E-Mail bestätigen"}
           </Heading>
 
           <Text marginBottom="4">
-            Wir haben dir eine Bestätigungs-E-Mail geschickt.
-            Öffne die E-Mail und klicke auf den enthaltenen Link.
+            {isEnglish ? "We sent you a verification email. Open it and select the link it contains." : "Wir haben dir eine Bestätigungs-E-Mail geschickt. Öffne die E-Mail und klicke auf den enthaltenen Link."}
           </Text>
 
           <Text marginBottom="4">
-            Danach kannst du dich bei MediBase anmelden.
+            {isEnglish ? "You can then sign in to MediPervin." : "Danach kannst du dich bei MediPervin anmelden."}
           </Text>
 
           <Link to="/login">
-            Zur Anmeldung
+            {isEnglish ? "Go to sign in" : "Zur Anmeldung"}
           </Link>
         </Box>
       </Box>
@@ -119,7 +120,7 @@ function RegisterPage() {
       padding="6"
     >
       <Heading marginBottom="6">
-        Konto erstellen
+        {isEnglish ? "Create account" : "Konto erstellen"}
       </Heading>
 
       <Box
@@ -133,7 +134,7 @@ function RegisterPage() {
         <Stack gap="4">
           <Box>
             <Text marginBottom="2">
-              E-Mail-Adresse
+              {isEnglish ? "Email address" : "E-Mail-Adresse"}
             </Text>
 
             <Input
@@ -148,7 +149,7 @@ function RegisterPage() {
 
           <Box>
             <Text marginBottom="2">
-              Passwort
+              {isEnglish ? "Password" : "Passwort"}
             </Text>
 
             <Input
@@ -157,13 +158,13 @@ function RegisterPage() {
               onChange={(event) =>
                 setPassword(event.target.value)
               }
-              placeholder="Mindestens 6 Zeichen"
+              placeholder={isEnglish ? "At least 6 characters" : "Mindestens 6 Zeichen"}
             />
           </Box>
 
           <Box>
             <Text marginBottom="2">
-              Passwort wiederholen
+              {isEnglish ? "Repeat password" : "Passwort wiederholen"}
             </Text>
 
             <Input
@@ -172,7 +173,7 @@ function RegisterPage() {
               onChange={(event) =>
                 setPasswordRepeat(event.target.value)
               }
-              placeholder="Passwort erneut eingeben"
+              placeholder={isEnglish ? "Enter password again" : "Passwort erneut eingeben"}
             />
           </Box>
 
@@ -187,13 +188,13 @@ function RegisterPage() {
             colorPalette="teal"
             loading={isLoading}
           >
-            Konto erstellen
+            {isEnglish ? "Create account" : "Konto erstellen"}
           </Button>
 
           <Text fontSize="sm">
-            Du hast bereits ein Konto?{" "}
+            {isEnglish ? "Already have an account? " : "Du hast bereits ein Konto? "}
             <Link to="/login">
-              Zur Anmeldung
+              {isEnglish ? "Go to sign in" : "Zur Anmeldung"}
             </Link>
           </Text>
         </Stack>

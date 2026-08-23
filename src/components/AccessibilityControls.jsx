@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
+import useLanguage from "../hooks/useLanguage";
 
 const MIN_FONT_SIZE = 90;
 const MAX_FONT_SIZE = 130;
 const FONT_SIZE_STEP = 10;
 
 function AccessibilityControls() {
+  const { isEnglish, toggleLanguage } = useLanguage();
   const [isReading, setIsReading] = useState(false);
 
   const [fontSize, setFontSize] = useState(() => {
@@ -60,7 +62,7 @@ function AccessibilityControls() {
 
   function toggleReadAloud() {
     if (!("speechSynthesis" in window)) {
-      window.alert("Die Vorlesefunktion wird von diesem Browser nicht unterstützt.");
+      window.alert(isEnglish ? "Read aloud is not supported by this browser." : "Die Vorlesefunktion wird von diesem Browser nicht unterstützt.");
       return;
     }
 
@@ -85,12 +87,12 @@ function AccessibilityControls() {
           .join(". ");
 
     if (!textToRead) {
-      window.alert("Auf dieser Seite wurde kein Text zum Vorlesen gefunden.");
+      window.alert(isEnglish ? "No text was found to read aloud on this page." : "Auf dieser Seite wurde kein Text zum Vorlesen gefunden.");
       return;
     }
 
     const speech = new SpeechSynthesisUtterance(textToRead);
-    speech.lang = "de-DE";
+    speech.lang = isEnglish ? "en-US" : "de-DE";
     speech.rate = 0.9;
     speech.onend = () => setIsReading(false);
     speech.onerror = () => setIsReading(false);
@@ -106,10 +108,10 @@ function AccessibilityControls() {
       justify="center"
       gap="2"
       flexWrap="wrap"
-      aria-label="Einstellungen für Barrierefreiheit"
+      aria-label={isEnglish ? "Accessibility settings" : "Einstellungen für Barrierefreiheit"}
     >
       <Text fontSize="sm" fontWeight="bold">
-        Barrierefreiheit:
+        {isEnglish ? "Accessibility:" : "Barrierefreiheit:"}
       </Text>
 
       <Button
@@ -119,7 +121,7 @@ function AccessibilityControls() {
         borderColor="white"
         onClick={decreaseFontSize}
         disabled={fontSize === MIN_FONT_SIZE}
-        aria-label="Schrift verkleinern"
+        aria-label={isEnglish ? "Decrease text size" : "Schrift verkleinern"}
       >
         A−
       </Button>
@@ -131,7 +133,7 @@ function AccessibilityControls() {
         borderColor="white"
         onClick={increaseFontSize}
         disabled={fontSize === MAX_FONT_SIZE}
-        aria-label="Schrift vergrößern"
+        aria-label={isEnglish ? "Increase text size" : "Schrift vergrößern"}
       >
         A+
       </Button>
@@ -145,7 +147,7 @@ function AccessibilityControls() {
         onClick={() => setHighContrast((currentValue) => !currentValue)}
         aria-pressed={highContrast}
       >
-        Hoher Kontrast
+        {isEnglish ? "High contrast" : "Hoher Kontrast"}
       </Button>
 
       <Button
@@ -156,7 +158,9 @@ function AccessibilityControls() {
         onClick={toggleReadAloud}
         aria-pressed={isReading}
       >
-        {isReading ? "Vorlesen stoppen" : "Seite vorlesen"}
+        {isReading
+          ? (isEnglish ? "Stop reading" : "Vorlesen stoppen")
+          : (isEnglish ? "Read page aloud" : "Seite vorlesen")}
       </Button>
 
       <Button
@@ -165,7 +169,17 @@ function AccessibilityControls() {
         color="white"
         onClick={resetAccessibility}
       >
-        Standard
+        {isEnglish ? "Reset" : "Standard"}
+      </Button>
+
+      <Button
+        size="sm"
+        background="white"
+        color="teal.800"
+        onClick={toggleLanguage}
+        aria-label={isEnglish ? "Switch to German" : "Auf Englisch umstellen"}
+      >
+        {isEnglish ? "Deutsch" : "English"}
       </Button>
     </Flex>
   );

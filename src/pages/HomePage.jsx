@@ -11,8 +11,10 @@ import { Link } from "react-router-dom";
 import heroImage from "../assets/medibase-neu.png";
 import vitruvianImage from "../assets/medibase-vitruvian.png";
 import SafetyNotice from "../components/SafetyNotice";
+import useLanguage from "../hooks/useLanguage";
 
 function HomePage() {
+  const { isEnglish } = useLanguage();
   return (
     <Box
       padding={{ base: "6", md: "10" }}
@@ -38,20 +40,16 @@ function HomePage() {
       <Box position="relative" zIndex="1">
         <Box textAlign="center">
           <Heading size="2xl">
-            Medikamente verständlich nachschlagen
+            {isEnglish ? "Understand your medications" : "Medikamente verständlich nachschlagen"}
           </Heading>
 
           <Text
             marginTop="4"
             fontSize={{ base: "md", md: "lg" }}
           >
-            Verwalte deine persönlichen Medikamente, behalte
-            Einnahmezeiten im Blick und hinterlege wichtige
-            Notfallkontakte – sicher getrennt in deinem Benutzerkonto.
-            In einer Notfallsituation kannst du direkt die Telefonfunktion
-            für den Rettungsdienst unter 112 oder die Polizei unter 110
-            öffnen und deine Notfallkontakte über eine vorbereitete
-            Nachricht informieren.
+            {isEnglish
+              ? "Manage your personal medications, keep track of intake times and save important emergency contacts securely in your user account. In an emergency, you can open the phone function for emergency services on 112 or the police on 110 and inform your emergency contacts with a prepared message."
+              : "Verwalte deine persönlichen Medikamente, behalte Einnahmezeiten im Blick und hinterlege wichtige Notfallkontakte – sicher getrennt in deinem Benutzerkonto. In einer Notfallsituation kannst du direkt die Telefonfunktion für den Rettungsdienst unter 112 oder die Polizei unter 110 öffnen und deine Notfallkontakte über eine vorbereitete Nachricht informieren."}
           </Text>
 
           <Flex
@@ -66,13 +64,13 @@ function HomePage() {
               color="white"
             >
               <Link to="/medikamente">
-                Medikamente ansehen
+                {isEnglish ? "View medications" : "Medikamente ansehen"}
               </Link>
             </Button>
 
             <Button asChild variant="outline">
               <Link to="/neuer-eintrag">
-                Eigenen Eintrag erstellen
+                {isEnglish ? "Create an entry" : "Eigenen Eintrag erstellen"}
               </Link>
             </Button>
           </Flex>
@@ -80,7 +78,7 @@ function HomePage() {
 
         <Image
           src={heroImage}
-          alt="Illustration zur Suche nach Medikamenteninformationen"
+          alt={isEnglish ? "Illustration about finding medication information" : "Illustration zur Suche nach Medikamenteninformationen"}
           width="100%"
           maxHeight="500px"
           objectFit="cover"
@@ -109,12 +107,11 @@ function HomePage() {
           >
             <Link to="/medikamente">
               <Heading size="md">
-                Schnell suchen
+                {isEnglish ? "Quick search" : "Schnell suchen"}
               </Heading>
 
               <Text marginTop="3">
-                Finde Medikamente nach ihrem Namen oder ihrer
-                Kategorie.
+                {isEnglish ? "Find medications by name or category." : "Finde Medikamente nach ihrem Namen oder ihrer Kategorie."}
               </Text>
             </Link>
           </Box>
@@ -134,12 +131,11 @@ function HomePage() {
           >
             <Link to="/medikamente">
               <Heading size="md">
-                Details & Quellen
+                {isEnglish ? "Details & sources" : "Details & Quellen"}
               </Heading>
 
               <Text marginTop="3">
-                Rufe die hinterlegten Informationsquellen direkt
-                über die Detailseiten auf.
+                {isEnglish ? "Open the referenced information sources directly from the detail pages." : "Rufe die hinterlegten Informationsquellen direkt über die Detailseiten auf."}
               </Text>
             </Link>
           </Box>
@@ -159,12 +155,11 @@ function HomePage() {
           >
             <Link to="/neuer-eintrag">
               <Heading size="md">
-                Eigene Einträge
+                {isEnglish ? "Personal entries" : "Eigene Einträge"}
               </Heading>
 
               <Text marginTop="3">
-                Ergänze eigene Einträge und speichere sie dauerhaft
-                in deinem Browser.
+                {isEnglish ? "Add personal entries and save them securely in your account." : "Ergänze eigene Einträge und speichere sie sicher in deinem Benutzerkonto."}
               </Text>
             </Link>
           </Box>

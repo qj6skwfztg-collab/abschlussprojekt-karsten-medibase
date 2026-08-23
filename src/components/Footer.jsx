@@ -1,4 +1,5 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import useLanguage from "../hooks/useLanguage";
 
 function Footer() {
@@ -29,6 +30,15 @@ function Footer() {
       <Text marginTop="2" fontSize="sm">
         © 2026 MediPervin – {isEnglish ? "developed by" : "entwickelt von"} Karsten Rabeneck-Ketme
       </Text>
+
+      <Flex justify="center" gap="4" marginTop="4" fontSize="sm">
+        <Link to="/impressum">
+          {isEnglish ? "Legal notice" : "Impressum"}
+        </Link>
+        <Link to="/datenschutz">
+          {isEnglish ? "Privacy policy" : "Datenschutz"}
+        </Link>
+      </Flex>
     </Box>
   );
 }

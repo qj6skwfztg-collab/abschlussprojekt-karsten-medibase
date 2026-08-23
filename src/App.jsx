@@ -12,13 +12,16 @@ import MyMedicationsPage from "./pages/MyMedicationsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import RegisterPage from "./pages/RegisterPage";
 import EmergencyPage from "./pages/EmergencyPage";
+import ImprintPage from "./pages/ImprintPage";
+import PrivacyPage from "./pages/PrivacyPage";
 
 function App() {
   return (
     <>
       <Header />
 
-      <Routes>
+      <main id="main-content">
+        <Routes>
         <Route
           path="/"
           element={<HomePage />}
@@ -72,11 +75,22 @@ function App() {
           element={<AboutPage />}
         />
 
-        <Route
-          path="*"
-          element={<NotFoundPage />}
-        />
-      </Routes>
+          <Route
+            path="/impressum"
+            element={<ImprintPage />}
+          />
+
+          <Route
+            path="/datenschutz"
+            element={<PrivacyPage />}
+          />
+
+          <Route
+            path="*"
+            element={<NotFoundPage />}
+          />
+        </Routes>
+      </main>
 
       <Footer />
     </>

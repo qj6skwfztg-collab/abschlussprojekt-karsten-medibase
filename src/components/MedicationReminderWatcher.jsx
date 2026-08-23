@@ -1,6 +1,40 @@
 import { useEffect } from "react";
 import useLanguage from "../hooks/useLanguage";
 
+function normalizeTime(value) {
+  const time = String(value ?? "").trim();
+
+  if (/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(time)) {
+    return time;
+  }
+
+  const twelveHourMatch = time.match(
+    /^(\d{1,2}):([0-5]\d)\s*(AM|PM)$/i
+  );
+
+  if (!twelveHourMatch) {
+    return "";
+  }
+
+  let hour = Number(twelveHourMatch[1]);
+  const minutes = twelveHourMatch[2];
+  const period = twelveHourMatch[3].toUpperCase();
+
+  if (hour < 1 || hour > 12) {
+    return "";
+  }
+
+  if (period === "PM" && hour !== 12) {
+    hour += 12;
+  }
+
+  if (period === "AM" && hour === 12) {
+    hour = 0;
+  }
+
+  return `${String(hour).padStart(2, "0")}:${minutes}`;
+}
+
 function MedicationReminderWatcher({ medications }) {
   const { isEnglish } = useLanguage();
   useEffect(() => {
@@ -23,13 +57,17 @@ function MedicationReminderWatcher({ medications }) {
       const minutes = String(now.getMinutes()).padStart(2, "0");
 
       const currentTime = `${hours}:${minutes}`;
-      const currentDate = now.toISOString().split("T")[0];
+      const currentDate = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0"),
+      ].join("-");
 
       const registration =
         await navigator.serviceWorker.ready;
 
       for (const medication of medications) {
-        if (medication.intakeTime !== currentTime) {
+        if (normalizeTime(medication.intakeTime) !== currentTime) {
           continue;
         }
 

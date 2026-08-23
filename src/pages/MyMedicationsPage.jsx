@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 import useUserMedications from "../hooks/useUserMedications";
 import useLanguage from "../hooks/useLanguage";
+import MedicationReminderPermission from "../components/MedicationReminderPermission";
+import MedicationReminderWatcher from "../components/MedicationReminderWatcher";
 
 const emptyForm = {
   name: "",
@@ -70,9 +72,6 @@ function MyMedicationsPage() {
         description:
           "Here you can manage your personal medications and intake times.",
         reminders: "Reminders",
-        allowNotifications: "Allow notifications",
-        testNotification: "Send test notification",
-        status: "Status",
         editTitle: "Edit personal medication",
         addTitle: "Add personal medication",
         name: "Medication name",
@@ -103,23 +102,12 @@ function MyMedicationsPage() {
         deleteConfirm: "Do you really want to delete this medication?",
         deleted: "Medication was deleted.",
         deleteError: "The medication could not be deleted.",
-        unsupported: "This browser does not support notifications.",
-        allowed: "Notifications were allowed.",
-        notAllowed: "Notifications were not allowed.",
-        allowFirst: "Allow notifications first.",
-        testBody: "The medication reminder is working.",
-        testTriggered: "Test notification was triggered.",
-        reminderTitle: "MediPervin – Medication reminder",
-        testTitle: "MediPervin – Test",
       }
     : {
         title: "Meine Medikamente",
         description:
           "Hier kannst du deine persönlichen Medikamente und Einnahmezeiten verwalten.",
         reminders: "Erinnerungen",
-        allowNotifications: "Benachrichtigungen erlauben",
-        testNotification: "Testbenachrichtigung senden",
-        status: "Status",
         editTitle: "Persönliches Medikament bearbeiten",
         addTitle: "Persönliches Medikament hinzufügen",
         name: "Name des Medikaments",
@@ -150,73 +138,11 @@ function MyMedicationsPage() {
         deleteConfirm: "Möchtest du dieses Medikament wirklich löschen?",
         deleted: "Medikament wurde gelöscht.",
         deleteError: "Das Medikament konnte nicht gelöscht werden.",
-        unsupported: "Dieser Browser unterstützt keine Benachrichtigungen.",
-        allowed: "Benachrichtigungen wurden erlaubt.",
-        notAllowed: "Benachrichtigungen wurden nicht erlaubt.",
-        allowFirst: "Erlaube zuerst die Benachrichtigungen.",
-        testBody: "Die Medikamentenerinnerung funktioniert.",
-        testTriggered: "Testbenachrichtigung wurde ausgelöst.",
-        reminderTitle: "MediPervin – Medikamentenerinnerung",
-        testTitle: "MediPervin – Test",
       };
 
   const [formData, setFormData] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
-  const [notificationPermission, setNotificationPermission] = useState(
-    typeof Notification !== "undefined"
-      ? Notification.permission
-      : "unsupported"
-  );
-
-  const sentReminders = useRef(new Set());
-
-  useEffect(() => {
-    if (
-      typeof Notification === "undefined" ||
-      Notification.permission !== "granted"
-    ) {
-      return;
-    }
-
-    function checkMedicationTimes() {
-      const now = new Date();
-
-      const hours = String(now.getHours()).padStart(2, "0");
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      const currentTime = `${hours}:${minutes}`;
-      const currentDay = now.toISOString().slice(0, 10);
-
-      userMedications.forEach((medication) => {
-        const reminderKey =
-          `${medication.id}-${currentDay}-${currentTime}`;
-        const medicationTime = normalizeTime(medication.intakeTime);
-
-        if (
-          medicationTime === currentTime &&
-          !sentReminders.current.has(reminderKey)
-        ) {
-          new Notification(text.reminderTitle, {
-            body: `${medication.name} – ${medication.dosage}`,
-          });
-
-          sentReminders.current.add(reminderKey);
-        }
-      });
-    }
-
-    checkMedicationTimes();
-
-    const intervalId = window.setInterval(
-      checkMedicationTimes,
-      30000
-    );
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, [isEnglish, text.reminderTitle, userMedications]);
-
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -302,77 +228,16 @@ function MyMedicationsPage() {
     }
   }
 
-  async function requestNotifications() {
-    if (typeof Notification === "undefined") {
-      setMessage(
-        text.unsupported
-      );
-      return;
-    }
-
-    const permission = await Notification.requestPermission();
-    setNotificationPermission(permission);
-
-    if (permission === "granted") {
-      setMessage(text.allowed);
-    } else {
-      setMessage(text.notAllowed);
-    }
-  }
-
-  function sendTestNotification() {
-    if (
-      typeof Notification === "undefined" ||
-      Notification.permission !== "granted"
-    ) {
-      setMessage(text.allowFirst);
-      return;
-    }
-
-    new Notification(text.testTitle, {
-      body: text.testBody,
-    });
-
-    setMessage(text.testTriggered);
-  }
-
   return (
     <Box maxW="1200px" mx="auto" p="6">
+      <MedicationReminderWatcher medications={userMedications} />
+
       <Heading mb="4">{text.title}</Heading>
 
       <Text mb="8">{text.description}</Text>
 
-      <Box
-        borderWidth="1px"
-        borderRadius="lg"
-        background="white"
-        padding="6"
-        mb="8"
-      >
-        <Heading size="md" mb="4">
-          {text.reminders}
-        </Heading>
-
-        <Stack direction={{ base: "column", md: "row" }} gap="3">
-          <Button
-            colorPalette="teal"
-            onClick={requestNotifications}
-          >
-            {text.allowNotifications}
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={sendTestNotification}
-            disabled={notificationPermission !== "granted"}
-          >
-            {text.testNotification}
-          </Button>
-        </Stack>
-
-        <Text mt="3" fontSize="sm">
-          {text.status}: {notificationPermission}
-        </Text>
+      <Box mb="8">
+        <MedicationReminderPermission />
       </Box>
 
       <Box

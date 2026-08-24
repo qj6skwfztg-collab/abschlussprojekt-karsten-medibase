@@ -236,8 +236,8 @@ function Header() {
           aria-label={isEnglish ? "Mobile swipe navigation tip" : "Hinweis zur Navigation auf dem Handy"}
         >
           {isEnglish
-            ? "Tip: On many smartphones, swipe from the edge to go back or forward."
-            : "Tipp: Auf vielen Smartphones kannst du vom Bildschirmrand wischen, um zurück oder vorwärts zu gehen."}
+            ? "‹  Tip: On many smartphones, swipe from the edge to go back or forward.  ›"
+            : "‹  Tipp: Auf vielen Smartphones kannst du vom Bildschirmrand wischen, um zurück oder vorwärts zu gehen.  ›"}
         </Text>
       </Box>
     </Box>

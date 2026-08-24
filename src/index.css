@@ -50,6 +50,20 @@ a {
   text-decoration: none;
 }
 
+@media (max-width: 767px) {
+  header #main-navigation .header-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  header #main-navigation .header-auth-links {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
 #root {
   width: 100%;
   min-height: 100vh;

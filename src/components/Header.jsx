@@ -46,6 +46,7 @@ function Header() {
           : "transparent",
         textDecoration: isActive ? "underline" : "none",
         textUnderlineOffset: "4px",
+        textAlign: "center",
       },
     };
   }
@@ -58,12 +59,13 @@ function Header() {
       padding={{ base: "4", md: "5" }}
     >
       <Flex
-        direction="row"
+        direction={{ base: "column", md: "row" }}
         align="center"
         justify="space-between"
         gap="4"
+        width="100%"
       >
-        <Flex align="center" gap="3" flexShrink="0">
+        <Flex align="center" justify="center" gap="3" flexShrink="0" width={{ base: "100%", md: "auto" }}>
           <Image
             src="/curaelis-icon.svg"
             alt=""
@@ -86,6 +88,8 @@ function Header() {
           aria-controls="main-navigation"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((currentValue) => !currentValue)}
+          width={{ base: "100%", md: "auto" }}
+          maxWidth={{ base: "320px", md: "none" }}
         >
           {menuOpen
             ? (isEnglish ? "Close menu" : "Menü schließen")
@@ -103,19 +107,21 @@ function Header() {
           align={{ base: "stretch", md: "center" }}
           justify="center"
           flexWrap="wrap"
+          maxWidth={{ base: "420px", md: "none" }}
+          marginX="auto"
         >
           {!isHomePage && (
             <>
-              <Link to="/" onClick={closeMenu} {...getNavigationLinkProps("/")}>
+              <Link className="header-link" to="/" onClick={closeMenu} {...getNavigationLinkProps("/")}>
                 {isEnglish ? "Home" : "Startseite"}
               </Link>
 
-              <Link to="/medikamente" onClick={closeMenu} {...getNavigationLinkProps("/medikamente")}>
+              <Link className="header-link" to="/medikamente" onClick={closeMenu} {...getNavigationLinkProps("/medikamente")}>
                 {isEnglish ? "Search medications" : "Medikamente suchen"}
               </Link>
 
               {user && (
-                <Link to="/meine-medikamente" onClick={closeMenu} {...getNavigationLinkProps("/meine-medikamente")}>
+                <Link className="header-link" to="/meine-medikamente" onClick={closeMenu} {...getNavigationLinkProps("/meine-medikamente")}>
                   {isEnglish ? "My medications" : "Meine Medikamente"}
                 </Link>
               )}
@@ -123,22 +129,22 @@ function Header() {
           )}
 
           {user && (
-            <Link to="/konto" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
+            <Link className="header-link" to="/konto" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
               {isEnglish ? "My account" : "Mein Konto"}
             </Link>
           )}
 
           {user?.uid === ADMIN_UID && user.emailVerified && (
-            <Link to="/neuer-eintrag" onClick={closeMenu} {...getNavigationLinkProps("/neuer-eintrag")}>
+            <Link className="header-link" to="/neuer-eintrag" onClick={closeMenu} {...getNavigationLinkProps("/neuer-eintrag")}>
               {isEnglish ? "New entry" : "Neuer Eintrag"}
             </Link>
           )}
 
-          <Link to="/installieren" onClick={closeMenu} {...getNavigationLinkProps("/installieren")}>
+          <Link className="header-link" to="/installieren" onClick={closeMenu} {...getNavigationLinkProps("/installieren")}>
             {isEnglish ? "Install Curaelis" : "Curaelis installieren"}
           </Link>
 
-          <Link to="/ueber" onClick={closeMenu} {...getNavigationLinkProps("/ueber")}>
+          <Link className="header-link" to="/ueber" onClick={closeMenu} {...getNavigationLinkProps("/ueber")}>
             {isEnglish ? "About Curaelis" : "Über Curaelis"}
           </Link>
 
@@ -173,12 +179,12 @@ function Header() {
               {isEnglish ? "Sign out" : "Abmelden"}
             </Button>
           ) : (
-            <Flex gap="4" align="center">
-              <Link to="/login" onClick={closeMenu} {...getNavigationLinkProps("/login")}>
+            <Flex className="header-auth-links" gap="4" align="center">
+              <Link className="header-link" to="/login" onClick={closeMenu} {...getNavigationLinkProps("/login")}>
                 {isEnglish ? "Sign in" : "Anmelden"}
               </Link>
 
-              <Link to="/registrieren" onClick={closeMenu} {...getNavigationLinkProps("/registrieren")}>
+              <Link className="header-link" to="/registrieren" onClick={closeMenu} {...getNavigationLinkProps("/registrieren")}>
                 {isEnglish ? "Create account" : "Konto erstellen"}
               </Link>
             </Flex>

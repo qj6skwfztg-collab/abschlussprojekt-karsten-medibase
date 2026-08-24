@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
-import { Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 import { ADMIN_UID, auth } from "../firebase";
 import AccessibilityControls from "./AccessibilityControls";
@@ -223,6 +223,22 @@ function Header() {
         marginX="auto"
       >
         <AccessibilityControls />
+      </Box>
+
+      <Box
+        display={{ base: "block", md: "none" }}
+        textAlign="center"
+        marginTop="2"
+      >
+        <Text
+          fontSize="xs"
+          color="whiteAlpha.800"
+          aria-label={isEnglish ? "Mobile swipe navigation tip" : "Hinweis zur Navigation auf dem Handy"}
+        >
+          {isEnglish
+            ? "Tip: On many smartphones, swipe from the edge to go back or forward."
+            : "Tipp: Auf vielen Smartphones kannst du vom Bildschirmrand wischen, um zurück oder vorwärts zu gehen."}
+        </Text>
       </Box>
     </Box>
   );

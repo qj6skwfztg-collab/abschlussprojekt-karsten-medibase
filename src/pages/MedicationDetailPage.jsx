@@ -35,7 +35,7 @@ function MedicationDetailPage() {
     <Box padding="8">
       <Heading>{medication.name}</Heading>
 
-      <Text marginTop="4" fontWeight="bold" color="teal.700">
+      <Text marginTop="4" fontWeight="800" color="teal.900">
         {isEnglish ? medication.categoryEn ?? medication.category : medication.category}
       </Text>
 
@@ -46,11 +46,17 @@ function MedicationDetailPage() {
       <SafetyNotice />
 
       {medication.sourceUrl ? (
-        <Text marginTop="6" color="teal.700">
+        <Text
+          marginTop="6"
+          color="teal.900"
+          fontSize="lg"
+          fontWeight="700"
+        >
           <a
             href={medication.sourceUrl}
             target="_blank"
             rel="noreferrer"
+            style={{ textDecoration: "underline" }}
           >
             {isEnglish ? "Information source" : "Informationsquelle"}: {medication.source}
           </a>
@@ -61,7 +67,13 @@ function MedicationDetailPage() {
         </Text>
       )}
 
-      <Text marginTop="6" color="teal.700">
+      <Text
+        marginTop="6"
+        color="teal.900"
+        fontSize="lg"
+        fontWeight="700"
+        textDecoration="underline"
+      >
         <Link to="/medikamente">
           {isEnglish ? "Back to overview" : "Zurück zur Übersicht"}
         </Link>
@@ -71,4 +83,3 @@ function MedicationDetailPage() {
 }
 
 export default MedicationDetailPage;
-

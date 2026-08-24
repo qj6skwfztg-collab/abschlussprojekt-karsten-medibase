@@ -53,7 +53,7 @@ function Header() {
           </Link>
 
           <Link to="/medikamente">
-            {isEnglish ? "Medications" : "Medikamente"}
+            {isEnglish ? "Search medications" : "Medikamente suchen"}
           </Link>
 
           {user && (

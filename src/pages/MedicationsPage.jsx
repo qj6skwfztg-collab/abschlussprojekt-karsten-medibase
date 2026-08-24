@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Heading,
   SimpleGrid,
   Text,
@@ -44,6 +45,9 @@ function MedicationsPage() {
     }
   );
 
+  const officialMedicationSearchUrl =
+    "https://www.bfarm.de/DE/Arzneimittel/Arzneimittelinformationen/Arzneimittel-recherchieren/AMIce/_node.html";
+
   return (
     <Box padding="8">
       <Heading>{isEnglish ? "Medication overview" : "Medikamentenübersicht"}</Heading>
@@ -64,9 +68,42 @@ function MedicationsPage() {
       />
 
       {filteredMedications.length === 0 ? (
-        <Text marginTop="6">
-          {isEnglish ? "No matching medication found." : "Kein passendes Medikament gefunden."}
-        </Text>
+        <Box marginTop="6" padding="5" borderWidth="1px" borderRadius="lg">
+          <Text>
+            {isEnglish
+              ? "No matching Curaelis entry was found."
+              : "Es wurde kein passender Curaelis-Eintrag gefunden."}
+          </Text>
+
+          {searchTerm.trim() && (
+            <>
+              <Text marginTop="2">
+                {isEnglish
+                  ? "You can search for this medication in the official German medicines database."
+                  : "Du kannst dieses Medikament in der offiziellen deutschen Arzneimitteldatenbank suchen."}
+              </Text>
+
+              <Button
+                as="a"
+                href={officialMedicationSearchUrl}
+                target="_blank"
+                rel="noreferrer"
+                marginTop="4"
+                colorPalette="teal"
+              >
+                {isEnglish
+                  ? "Open official medicines search"
+                  : "Offizielle Arzneimittelsuche öffnen"}
+              </Button>
+
+              <Text marginTop="2" fontSize="sm" color="gray.600">
+                {isEnglish
+                  ? "The search term must be entered again on the official website."
+                  : "Der Suchbegriff muss auf der offiziellen Seite erneut eingegeben werden."}
+              </Text>
+            </>
+          )}
+        </Box>
       ) : (
         <SimpleGrid
           columns={{ base: 1, md: 2 }}

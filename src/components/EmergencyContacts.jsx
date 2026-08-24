@@ -19,7 +19,7 @@ import {
 import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 
-function EmergencyContacts() {
+function EmergencyContacts({ emergencyNumber }) {
   const { isEnglish } = useLanguage();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -98,8 +98,8 @@ function EmergencyContacts() {
   function openEmergencyMessage(contact) {
     const emergencyText =
       isEnglish
-        ? "I have tried to call emergency services on 112. Please contact me and check whether I need help."
-        : "Ich habe versucht, den Notruf 112 zu kontaktieren. Bitte melde dich bei mir und prüfe, ob ich Hilfe benötige.";
+        ? `I have tried to call emergency services on ${emergencyNumber}. Please contact me and check whether I need help.`
+        : `Ich habe versucht, den Notruf ${emergencyNumber} zu kontaktieren. Bitte melde dich bei mir und prüfe, ob ich Hilfe benötige.`;
 
     const smsLink =
       `sms:${contact.phone}?body=${encodeURIComponent(emergencyText)}`;

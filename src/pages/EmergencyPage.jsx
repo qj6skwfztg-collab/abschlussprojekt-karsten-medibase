@@ -1,11 +1,89 @@
+import { useState } from "react";
 import { Box, Button, Heading, Stack, Text } from "@chakra-ui/react";
 import EmergencyContacts from "../components/EmergencyContacts";
 import useLanguage from "../hooks/useLanguage";
+import emergencyCountries from "../data/emergencyCountries";
+
+const COUNTRY_STORAGE_KEY = "curaelis-emergency-country";
 
 function EmergencyPage() {
   const { isEnglish } = useLanguage();
+  const [selectedCountryCode, setSelectedCountryCode] = useState(() => {
+    const savedCountryCode = localStorage.getItem(COUNTRY_STORAGE_KEY);
+
+    return emergencyCountries.some(
+      (country) => country.code === savedCountryCode
+    )
+      ? savedCountryCode
+      : "DE";
+  });
+
+  const selectedCountry = emergencyCountries.find(
+    (country) => country.code === selectedCountryCode
+  ) || emergencyCountries[0];
+
+  function handleCountryChange(event) {
+    const countryCode = event.target.value;
+
+    setSelectedCountryCode(countryCode);
+    localStorage.setItem(COUNTRY_STORAGE_KEY, countryCode);
+  }
+
   return (
     <Box maxWidth="700px" margin="0 auto" padding="6">
+      <Box
+        background="white"
+        borderWidth="1px"
+        borderColor="teal.100"
+        borderRadius="xl"
+        padding="5"
+        marginBottom="6"
+        boxShadow="sm"
+      >
+        <Heading size="md" color="teal.900" marginBottom="3">
+          {isEnglish ? "Your country" : "Dein Land"}
+        </Heading>
+
+        <Text marginBottom="3">
+          {isEnglish
+            ? "Select your country so the correct emergency numbers are shown."
+            : "Wähle dein Land aus, damit die passenden Notrufnummern angezeigt werden."}
+        </Text>
+
+        <Text as="label" htmlFor="emergency-country" fontWeight="700">
+          {isEnglish ? "Country" : "Land"}
+        </Text>
+
+        <select
+          id="emergency-country"
+          value={selectedCountryCode}
+          onChange={handleCountryChange}
+          style={{
+            display: "block",
+            width: "100%",
+            marginTop: "8px",
+            padding: "10px 12px",
+            border: "2px solid #285e61",
+            borderRadius: "8px",
+            background: "white",
+            color: "#1a202c",
+            fontSize: "1rem",
+          }}
+        >
+          {emergencyCountries.map((country) => (
+            <option key={country.code} value={country.code}>
+              {country.flag} {isEnglish ? country.nameEnglish : country.name}
+            </option>
+          ))}
+        </select>
+
+        <Text marginTop="3" fontSize="sm" color="gray.600">
+          {isEnglish
+            ? `Ambulance/emergency services: ${selectedCountry.ambulanceNumber} · Police: ${selectedCountry.policeNumber}`
+            : `Rettungsdienst: ${selectedCountry.ambulanceNumber} · Polizei: ${selectedCountry.policeNumber}`}
+        </Text>
+      </Box>
+
       <Box
         background="red.50"
         border="2px solid"
@@ -25,7 +103,7 @@ function EmergencyPage() {
         <Stack gap="4">
           <Button
             as="a"
-            href="tel:112"
+            href={`tel:${selectedCountry.ambulanceNumber}`}
             background="red.600"
             color="white"
             size="lg"
@@ -33,12 +111,14 @@ function EmergencyPage() {
             fontSize="xl"
             _hover={{ background: "red.700" }}
           >
-            {isEnglish ? "112 – Call emergency services" : "112 – Rettungsdienst anrufen"}
+            {isEnglish
+              ? `${selectedCountry.ambulanceNumber} – Call emergency services`
+              : `${selectedCountry.ambulanceNumber} – Rettungsdienst anrufen`}
           </Button>
 
           <Button
             as="a"
-            href="tel:110"
+            href={`tel:${selectedCountry.policeNumber}`}
             background="blue.700"
             color="white"
             size="lg"
@@ -46,7 +126,9 @@ function EmergencyPage() {
             fontSize="lg"
             _hover={{ background: "blue.800" }}
           >
-            {isEnglish ? "110 – Call the police" : "110 – Polizei anrufen"}
+            {isEnglish
+              ? `${selectedCountry.policeNumber} – Call the police`
+              : `${selectedCountry.policeNumber} – Polizei anrufen`}
           </Button>
         </Stack>
 
@@ -59,7 +141,9 @@ function EmergencyPage() {
         {isEnglish ? "Curaelis is not an official emergency system. The app cannot determine whether a call was answered or an ambulance was dispatched." : "Curaelis ersetzt kein offizielles Notrufsystem. Die App kann nicht feststellen, ob der Notruf angenommen oder ein Rettungswagen geschickt wurde."}
       </Text>
 
-        <EmergencyContacts />
+        <EmergencyContacts
+          emergencyNumber={selectedCountry.ambulanceNumber}
+        />
     </Box>
   );
 }

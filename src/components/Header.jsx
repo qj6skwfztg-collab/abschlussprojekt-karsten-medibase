@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
 import { Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
-import { auth } from "../firebase";
+import { ADMIN_UID, auth } from "../firebase";
 import AccessibilityControls from "./AccessibilityControls";
 import useLanguage from "../hooks/useLanguage";
 
@@ -128,7 +128,7 @@ function Header() {
             </Link>
           )}
 
-          {user && (
+          {user?.uid === ADMIN_UID && user.emailVerified && (
             <Link to="/neuer-eintrag" onClick={closeMenu} {...getNavigationLinkProps("/neuer-eintrag")}>
               {isEnglish ? "New entry" : "Neuer Eintrag"}
             </Link>

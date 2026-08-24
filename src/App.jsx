@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import AboutPage from "./pages/AboutPage";
 import AddMedicationPage from "./pages/AddMedicationPage";
 import HomePage from "./pages/HomePage";
@@ -72,9 +73,9 @@ function App() {
         <Route
           path="/neuer-eintrag"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <AddMedicationPage />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         />
 

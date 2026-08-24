@@ -17,6 +17,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+export const ADMIN_UID = "IjelVzBlIIgkJWgLiDdHrhLtwDf1";
+
 if (
   import.meta.env.PROD &&
   import.meta.env.VITE_RECAPTCHA_ENTERPRISE_SITE_KEY

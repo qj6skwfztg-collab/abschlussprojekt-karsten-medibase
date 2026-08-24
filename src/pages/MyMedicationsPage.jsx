@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   Box,
   Button,
+  Flex,
   Heading,
   Input,
   SimpleGrid,
@@ -90,6 +91,7 @@ function MyMedicationsPage() {
         timeShort: "Intake time:",
         noteShort: "Note:",
         noNote: "No note",
+        reminderSet: "Reminder time saved",
         edit: "Edit",
         delete: "Delete",
         invalidTime: "Please enter the intake time in the format 13:00.",
@@ -126,6 +128,7 @@ function MyMedicationsPage() {
         timeShort: "Einnahmezeit:",
         noteShort: "Notiz:",
         noNote: "Keine Notiz",
+        reminderSet: "Erinnerungszeit gespeichert",
         edit: "Bearbeiten",
         delete: "Löschen",
         invalidTime: "Bitte gib die Einnahmezeit im Format 13:00 ein.",
@@ -228,12 +231,21 @@ function MyMedicationsPage() {
   }
 
   return (
-    <Box maxW="1200px" mx="auto" p="6">
-      <Heading mb="4">{text.title}</Heading>
+    <Box maxW="1200px" mx="auto" p={{ base: "5", md: "8" }}>
+      <Box
+        borderBottomWidth="1px"
+        borderColor="teal.100"
+        paddingBottom="5"
+        marginBottom="8"
+      >
+        <Heading color="teal.900">{text.title}</Heading>
 
-      <Text mb="8">{text.description}</Text>
+        <Text marginTop="3" maxW="700px" fontSize={{ base: "md", md: "lg" }}>
+          {text.description}
+        </Text>
+      </Box>
 
-      <Box mb="8">
+      <Box mb="8" boxShadow="sm">
         <MedicationReminderPermission />
       </Box>
 
@@ -242,9 +254,10 @@ function MyMedicationsPage() {
         borderRadius="lg"
         background="white"
         padding="6"
+        boxShadow="sm"
         mb="10"
       >
-        <Heading size="md" mb="6">
+        <Heading size="md" color="teal.900" mb="6">
           {editingId
             ? text.editTitle
             : text.addTitle}
@@ -341,14 +354,28 @@ function MyMedicationsPage() {
               </Button>
             )}
 
-            {message && <Text>{message}</Text>}
+            {message && (
+              <Box
+                role="status"
+                aria-live="polite"
+                background="teal.50"
+                borderLeftWidth="4px"
+                borderColor="teal.500"
+                padding="3"
+                borderRadius="md"
+              >
+                <Text fontWeight="600">{message}</Text>
+              </Box>
+            )}
           </Stack>
         </form>
       </Box>
 
-      <Heading size="lg" mb="6">
-        {text.savedHeading}
-      </Heading>
+      <Box marginBottom="6">
+        <Heading size="lg" color="teal.900">
+          {text.savedHeading}
+        </Heading>
+      </Box>
 
       {isLoading && <Text>{text.loading}</Text>}
 
@@ -366,31 +393,81 @@ function MyMedicationsPage() {
             key={medication.id}
             borderWidth="1px"
             borderRadius="lg"
+            borderColor="gray.200"
             background="white"
-            padding="6"
+            padding={{ base: "5", md: "6" }}
+            boxShadow="sm"
           >
-            <Heading size="md" mb="4">
-              {medication.name}
-            </Heading>
+            <Flex
+              direction={{ base: "column", sm: "row" }}
+              align={{ base: "flex-start", sm: "center" }}
+              justify="space-between"
+              gap="3"
+              mb="5"
+            >
+              <Heading size="md" color="teal.900">
+                {medication.name}
+              </Heading>
 
-            <Text mb="2">
+              <Box
+                as="span"
+                flexShrink="0"
+                background="teal.50"
+                color="teal.900"
+                borderRadius="full"
+                paddingX="3"
+                paddingY="1"
+                fontSize="sm"
+                fontWeight="700"
+              >
+                ✓ {text.reminderSet}
+              </Box>
+            </Flex>
+
+            <Box
+              background="teal.50"
+              borderLeftWidth="4px"
+              borderColor="teal.500"
+              borderRadius="md"
+              padding="4"
+              mb="4"
+            >
+              <Text fontSize="sm" fontWeight="700" color="teal.800">
+                {text.timeShort}
+              </Text>
+
+              <Text
+                marginTop="1"
+                fontSize={{ base: "2xl", md: "3xl" }}
+                fontWeight="800"
+                color="teal.900"
+              >
+                {normalizeTime(medication.intakeTime) || medication.intakeTime} Uhr
+              </Text>
+            </Box>
+
+            <Text mb="3">
               <strong>{text.dosageShort}</strong> {medication.dosage}
             </Text>
 
-            <Text mb="2">
-              <strong>{text.timeShort}</strong>{" "}
-              {normalizeTime(medication.intakeTime) || medication.intakeTime} Uhr
-            </Text>
-
-            <Text mb="5">
-              <strong>{text.noteShort}</strong>{" "}
-              {medication.notes || text.noNote}
-            </Text>
+            <Box
+              background="gray.50"
+              borderRadius="md"
+              padding="3"
+              mb="5"
+            >
+              <Text>
+                <strong>{text.noteShort}</strong>{" "}
+                {medication.notes || text.noNote}
+              </Text>
+            </Box>
 
             <Stack direction={{ base: "column", sm: "row" }} gap="3">
               <Button
                 colorPalette="teal"
                 variant="outline"
+                size="lg"
+                flex="1"
                 onClick={() => handleEdit(medication)}
               >
                 {text.edit}
@@ -399,6 +476,8 @@ function MyMedicationsPage() {
               <Button
                 colorPalette="red"
                 variant="outline"
+                size="lg"
+                flex="1"
                 onClick={() => handleDelete(medication.id)}
               >
                 {text.delete}

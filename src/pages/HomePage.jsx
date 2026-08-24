@@ -71,8 +71,8 @@ function HomePage() {
             fontSize={{ base: "md", md: "lg" }}
           >
             {isEnglish
-              ? "Find medication information, manage your personal medications and reach emergency help quickly."
-              : "Finde verständliche Informationen zu Medikamenten, verwalte deine persönlichen Medikamente und erreiche im Notfall schnell Hilfe."}
+              ? "Find medication information, manage your personal medications, set intake reminders and reach emergency help quickly."
+              : "Finde verständliche Informationen zu Medikamenten, verwalte deine persönlichen Medikamente, richte Einnahmeerinnerungen ein und erreiche im Notfall schnell Hilfe."}
           </Text>
 
           <Box

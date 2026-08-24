@@ -15,6 +15,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { auth } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
+import PasswordField from "../components/PasswordField";
 
 function RegisterPage() {
   const { isEnglish } = useLanguage();
@@ -102,7 +103,7 @@ function RegisterPage() {
           </Text>
 
           <Text marginBottom="4">
-            {isEnglish ? "You can then sign in to MediPervin." : "Danach kannst du dich bei MediPervin anmelden."}
+            {isEnglish ? "You can then sign in to Curaelis." : "Danach kannst du dich bei Curaelis anmelden."}
           </Text>
 
           <Link to="/login">
@@ -147,35 +148,29 @@ function RegisterPage() {
             />
           </Box>
 
-          <Box>
-            <Text marginBottom="2">
-              {isEnglish ? "Password" : "Passwort"}
-            </Text>
+          <PasswordField
+            id="register-password"
+            label={isEnglish ? "Password" : "Passwort"}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder={isEnglish ? "At least 6 characters" : "Mindestens 6 Zeichen"}
+            showText={isEnglish ? "Show" : "Anzeigen"}
+            hideText={isEnglish ? "Hide" : "Verbergen"}
+            autoComplete="new-password"
+            required
+          />
 
-            <Input
-              type="password"
-              value={password}
-              onChange={(event) =>
-                setPassword(event.target.value)
-              }
-              placeholder={isEnglish ? "At least 6 characters" : "Mindestens 6 Zeichen"}
-            />
-          </Box>
-
-          <Box>
-            <Text marginBottom="2">
-              {isEnglish ? "Repeat password" : "Passwort wiederholen"}
-            </Text>
-
-            <Input
-              type="password"
-              value={passwordRepeat}
-              onChange={(event) =>
-                setPasswordRepeat(event.target.value)
-              }
-              placeholder={isEnglish ? "Enter password again" : "Passwort erneut eingeben"}
-            />
-          </Box>
+          <PasswordField
+            id="register-password-repeat"
+            label={isEnglish ? "Repeat password" : "Passwort wiederholen"}
+            value={passwordRepeat}
+            onChange={(event) => setPasswordRepeat(event.target.value)}
+            placeholder={isEnglish ? "Enter password again" : "Passwort erneut eingeben"}
+            showText={isEnglish ? "Show" : "Anzeigen"}
+            hideText={isEnglish ? "Hide" : "Verbergen"}
+            autoComplete="new-password"
+            required
+          />
 
           {error && (
             <Text color="red.600">

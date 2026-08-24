@@ -32,7 +32,7 @@ if ("serviceWorker" in navigator) {
       );
 
       console.log(
-        "MediPervin Service Worker wurde registriert."
+        "Curaelis Service Worker wurde registriert."
       );
     } catch (error) {
       console.error(

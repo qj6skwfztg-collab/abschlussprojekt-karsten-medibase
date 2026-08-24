@@ -18,8 +18,8 @@ function SafetyNotice() {
 
       <Text marginTop="2">
         {isEnglish
-          ? "The information in MediPervin is for general guidance only. It does not replace the package leaflet or advice from a healthcare professional."
-          : "Die Informationen in MediPervin dienen nur der allgemeinen Orientierung. Sie ersetzen weder die Packungsbeilage noch die Beratung durch medizinisches Fachpersonal."}
+          ? "The information in Curaelis is for general guidance only. It does not replace the package leaflet or advice from a healthcare professional."
+          : "Die Informationen in Curaelis dienen nur der allgemeinen Orientierung. Sie ersetzen weder die Packungsbeilage noch die Beratung durch medizinisches Fachpersonal."}
       </Text>
     </Box>
   );

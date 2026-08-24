@@ -15,6 +15,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
+import PasswordField from "../components/PasswordField";
 
 function LoginPage() {
   const { isEnglish } = useLanguage();
@@ -83,11 +84,15 @@ function LoginPage() {
             required
           />
 
-          <Input
-            type="password"
-            placeholder={isEnglish ? "Password" : "Passwort"}
+          <PasswordField
+            id="login-password"
+            label={isEnglish ? "Password" : "Passwort"}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            placeholder={isEnglish ? "Password" : "Passwort"}
+            showText={isEnglish ? "Show" : "Anzeigen"}
+            hideText={isEnglish ? "Hide" : "Verbergen"}
+            autoComplete="current-password"
             required
           />
 

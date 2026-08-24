@@ -1,6 +1,6 @@
-# MediPervin
+# Curaelis
 
-MediPervin ist eine React-Webanwendung zur übersichtlichen Darstellung allgemeiner Informationen über Medikamente.
+Curaelis ist eine React-Webanwendung zur übersichtlichen Darstellung allgemeiner Informationen über Medikamente.
 
 Die Anwendung dient ausschließlich der allgemeinen Orientierung. Sie ersetzt weder die Packungsbeilage noch eine medizinische Beratung.
 

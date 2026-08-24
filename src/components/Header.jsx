@@ -38,7 +38,7 @@ function Header() {
         gap="4"
       >
         <Heading size="lg" color="white">
-          MediPervin
+          Curaelis
         </Heading>
 
         <Flex
@@ -63,13 +63,19 @@ function Header() {
           )}
 
           {user && (
+            <Link to="/konto">
+              {isEnglish ? "My account" : "Mein Konto"}
+            </Link>
+          )}
+
+          {user && (
             <Link to="/neuer-eintrag">
               {isEnglish ? "New entry" : "Neuer Eintrag"}
             </Link>
           )}
 
           <Link to="/ueber">
-            {isEnglish ? "About MediPervin" : "Über MediPervin"}
+            {isEnglish ? "About Curaelis" : "Über Curaelis"}
           </Link>
 
           <Link

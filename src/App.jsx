@@ -14,6 +14,7 @@ import RegisterPage from "./pages/RegisterPage";
 import EmergencyPage from "./pages/EmergencyPage";
 import ImprintPage from "./pages/ImprintPage";
 import PrivacyPage from "./pages/PrivacyPage";
+import AccountPage from "./pages/AccountPage";
 
 function App() {
   return (
@@ -52,6 +53,15 @@ function App() {
           element={
             <ProtectedRoute>
               <MyMedicationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/konto"
+          element={
+            <ProtectedRoute>
+              <AccountPage />
             </ProtectedRoute>
           }
         />

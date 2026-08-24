@@ -58,7 +58,7 @@ function MedicationReminderPermission() {
         await navigator.serviceWorker.ready;
 
       await registration.showNotification(
-        "MediPervin Test",
+        "Curaelis Test",
         {
           body:
             isEnglish ? "If you can see this message, notifications are working." : "Wenn du diese Nachricht siehst, funktionieren die Benachrichtigungen.",
@@ -88,7 +88,7 @@ function MedicationReminderPermission() {
       </Text>
 
       <Text marginTop="2">
-        {isEnglish ? "Allow notifications so MediPervin can remind you of your scheduled intake times." : "Erlaube Benachrichtigungen, damit MediPervin dich an deine Einnahmezeiten erinnern kann."}
+        {isEnglish ? "Allow notifications so Curaelis can remind you of your scheduled intake times." : "Erlaube Benachrichtigungen, damit Curaelis dich an deine Einnahmezeiten erinnern kann."}
       </Text>
 
       <Stack

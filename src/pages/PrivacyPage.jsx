@@ -75,7 +75,7 @@ function PrivacyPage() {
       </Heading>
 
       <Text>
-        Für Authentifizierung und Speicherung verwendet MediPervin Firebase
+        Für Authentifizierung und Speicherung verwendet Curaelis Firebase
         Authentication und Cloud Firestore. Für den Schutz der Anwendung wird
         außerdem Firebase App Check mit reCAPTCHA Enterprise eingesetzt. Die
         Anwendung wird über Vercel bereitgestellt. Dabei können technische
@@ -109,9 +109,11 @@ function PrivacyPage() {
 
       <Text>
         Persönliche Daten werden grundsätzlich so lange gespeichert, wie dein
-        Benutzerkonto und die jeweiligen Funktionen genutzt werden. Eine
-        Löschung oder Auskunft kann über die oben genannte Kontaktadresse
-        angefragt werden.
+        Benutzerkonto und die jeweiligen Funktionen genutzt werden. Du kannst
+        dein Benutzerkonto sowie deine persönlichen Medikamente und
+        Notfallkontakte jederzeit über den Bereich „Mein Konto“ dauerhaft
+        löschen. Eine Löschung oder Auskunft kann zusätzlich über die oben
+        genannte Kontaktadresse angefragt werden.
       </Text>
 
       <Heading size="md" mt="8" mb="3">
@@ -130,7 +132,7 @@ function PrivacyPage() {
       </Heading>
 
       <Text>
-        MediPervin verarbeitet persönliche Angaben zur Nutzung der Anwendung,
+        Curaelis verarbeitet persönliche Angaben zur Nutzung der Anwendung,
         bietet aber keine medizinische Beratung. Medikamenteninformationen sind
         nur allgemeine Orientierung und ersetzen keine Packungsbeilage oder
         Beratung durch medizinisches Fachpersonal.

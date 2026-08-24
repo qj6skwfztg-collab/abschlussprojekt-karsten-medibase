@@ -37,7 +37,7 @@ function ImprintPage() {
       </Heading>
 
       <Text>
-        MediPervin ist ein privates beziehungsweise schulisches
+        Curaelis ist ein privates beziehungsweise schulisches
         Abschlussprojekt. Die Anwendung stellt allgemeine Informationen zu
         Medikamenten bereit und ersetzt keine medizinische Beratung.
       </Text>

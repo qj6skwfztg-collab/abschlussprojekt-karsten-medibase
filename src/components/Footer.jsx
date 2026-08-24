@@ -14,11 +14,7 @@ function Footer() {
       textAlign="center"
     >
       <Text fontWeight="bold">
-        MediPervin
-      </Text>
-
-      <Text marginTop="1" fontSize="sm" fontStyle="italic">
-        {isEnglish ? "named after Pervin Ketme" : "benannt nach Pervin Ketme"}
+        Curaelis
       </Text>
 
       <Text marginTop="2" fontSize="sm">
@@ -28,7 +24,7 @@ function Footer() {
       </Text>
 
       <Text marginTop="2" fontSize="sm">
-        © 2026 MediPervin – {isEnglish ? "developed by" : "entwickelt von"} Karsten Rabeneck-Ketme
+        © 2026 Curaelis – {isEnglish ? "developed by" : "entwickelt von"} Karsten Rabeneck-Ketme
       </Text>
 
       <Flex justify="center" gap="4" marginTop="4" fontSize="sm">

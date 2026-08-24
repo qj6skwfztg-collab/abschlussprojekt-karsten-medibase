@@ -10,18 +10,18 @@ function AboutPage() {
       maxWidth="900px"
       margin="0 auto"
     >
-      <Heading>{isEnglish ? "About MediPervin" : "Über MediPervin"}</Heading>
+      <Heading>{isEnglish ? "About Curaelis" : "Über Curaelis"}</Heading>
 
       <Text marginTop="4">
         {isEnglish
-          ? "MediPervin is a React web application that clearly presents general information about commonly used medications."
-          : "MediPervin ist eine React-Webanwendung, die allgemeine Informationen über häufig verwendete Medikamente übersichtlich darstellt."}
+          ? "Curaelis is a React web application that clearly presents general information about commonly used medications."
+          : "Curaelis ist eine React-Webanwendung, die allgemeine Informationen über häufig verwendete Medikamente übersichtlich darstellt."}
       </Text>
 
       <Text marginTop="4" fontStyle="italic">
         {isEnglish
-          ? "The name MediPervin is dedicated to my beloved wife, Pervin Ketme. The application was developed by Karsten Rabeneck-Ketme."
-          : "Der Name MediPervin ist meiner lieben Ehefrau Pervin Ketme gewidmet. Entwickelt wurde die Anwendung von Karsten Rabeneck-Ketme."}
+          ? "This app is dedicated to my beloved wife, Pervin Ketme. The application was developed by Karsten Rabeneck-Ketme."
+          : "Diese App ist meiner lieben Ehefrau Pervin Ketme gewidmet. Entwickelt wurde die Anwendung von Karsten Rabeneck-Ketme."}
       </Text>
 
       <Heading size="md" marginTop="8">

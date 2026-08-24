@@ -82,10 +82,10 @@ function MedicationReminderWatcher({ medications }) {
         }
 
         await registration.showNotification(
-          isEnglish ? "MediPervin reminder" : "MediPervin Erinnerung",
+          isEnglish ? "Curaelis reminder" : "Curaelis Erinnerung",
           {
             body:
-              isEnglish ? "It is time for a scheduled medication. Open MediPervin for more information." : "Es ist Zeit für eine geplante Medikamenteneinnahme. Öffne MediPervin für weitere Informationen.",
+              isEnglish ? "It is time for a scheduled medication. Open Curaelis for more information." : "Es ist Zeit für eine geplante Medikamenteneinnahme. Öffne Curaelis für weitere Informationen.",
             tag: reminderKey,
           }
         );

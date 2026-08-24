@@ -56,7 +56,7 @@ function EmergencyPage() {
       </Box>
 
       <Text marginTop="6" fontSize="sm" textAlign="center" color="gray.600">
-        {isEnglish ? "MediPervin is not an official emergency system. The app cannot determine whether a call was answered or an ambulance was dispatched." : "MediPervin ersetzt kein offizielles Notrufsystem. Die App kann nicht feststellen, ob der Notruf angenommen oder ein Rettungswagen geschickt wurde."}
+        {isEnglish ? "Curaelis is not an official emergency system. The app cannot determine whether a call was answered or an ambulance was dispatched." : "Curaelis ersetzt kein offizielles Notrufsystem. Die App kann nicht feststellen, ob der Notruf angenommen oder ein Rettungswagen geschickt wurde."}
       </Text>
 
         <EmergencyContacts />

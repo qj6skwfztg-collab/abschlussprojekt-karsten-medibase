@@ -55,6 +55,18 @@ function normalizeTime(value) {
   return `${String(hour).padStart(2, "0")}:${minutes}`;
 }
 
+function formatTimeInput(value) {
+  const digits = String(value ?? "")
+    .replace(/\D/g, "")
+    .slice(0, 4);
+
+  if (digits.length <= 2) {
+    return digits;
+  }
+
+  return `${digits.slice(0, 2)}:${digits.slice(2)}`;
+}
+
 function MyMedicationsPage() {
   const { isEnglish } = useLanguage();
   const {
@@ -79,6 +91,7 @@ function MyMedicationsPage() {
         dosage: "Dosage according to your medication plan",
         dosagePlaceholder: "For example, 400 mg",
         intakeTime: "Intake time",
+        timeHint: "You can enter 13:30 or simply 1330.",
         notes: "Personal note",
         notesPlaceholder: "For example: after breakfast",
         saveChanges: "Save changes",
@@ -117,6 +130,7 @@ function MyMedicationsPage() {
         dosage: "Dosierung laut deinem Medikamentenplan",
         dosagePlaceholder: "Zum Beispiel 400 mg",
         intakeTime: "Einnahmezeit",
+        timeHint: "Du kannst 13:30 oder einfach 1330 eingeben.",
         notes: "Persönliche Notiz",
         notesPlaceholder: "Zum Beispiel: nach dem Frühstück",
         saveChanges: "Änderungen speichern",
@@ -160,6 +174,13 @@ function MyMedicationsPage() {
     setFormData((previousData) => ({
       ...previousData,
       [name]: value,
+    }));
+  }
+
+  function handleIntakeTimeChange(event) {
+    setFormData((previousData) => ({
+      ...previousData,
+      intakeTime: formatTimeInput(event.target.value),
     }));
   }
 
@@ -323,15 +344,20 @@ function MyMedicationsPage() {
                 placeholder="13:00"
                 maxLength={8}
                 value={formData.intakeTime}
-                onChange={handleChange}
+                onChange={handleIntakeTimeChange}
                 onBlur={() =>
                   setFormData((previousData) => ({
                     ...previousData,
-                    intakeTime: normalizeTime(previousData.intakeTime),
+                    intakeTime:
+                      normalizeTime(previousData.intakeTime) ||
+                      previousData.intakeTime,
                   }))
                 }
-                required
               />
+
+              <Text marginTop="2" fontSize="sm" color="gray.600">
+                {text.timeHint}
+              </Text>
             </Box>
 
             <Box>

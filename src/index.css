@@ -70,6 +70,20 @@ a {
     align-items: center;
     gap: 8px;
   }
+
+  header .accessibility-controls {
+    gap: 12px;
+  }
+
+  header .accessibility-label {
+    width: 100%;
+    text-align: center;
+  }
+
+  header .accessibility-buttons {
+    width: 100%;
+    max-width: 420px;
+  }
 }
 
 @media (min-width: 768px) {

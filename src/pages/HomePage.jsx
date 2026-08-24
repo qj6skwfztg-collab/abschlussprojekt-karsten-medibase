@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Flex,
   Heading,
   Image,
   SimpleGrid,
@@ -52,28 +51,50 @@ function HomePage() {
               : "Verwalte deine persönlichen Medikamente, behalte Einnahmezeiten im Blick und hinterlege wichtige Notfallkontakte – sicher getrennt in deinem Benutzerkonto. In einer Notfallsituation kannst du direkt die Telefonfunktion für den Rettungsdienst unter 112 oder die Polizei unter 110 öffnen und deine Notfallkontakte über eine vorbereitete Nachricht informieren."}
           </Text>
 
-          <Flex
-            marginTop="6"
+          <SimpleGrid
+            columns={{ base: 1, md: 3 }}
             gap="4"
-            justify="center"
-            flexWrap="wrap"
+            marginTop="6"
+            maxWidth="900px"
+            marginX="auto"
           >
             <Button
               asChild
               background="teal.700"
               color="white"
+              minHeight="76px"
+              fontSize="lg"
             >
               <Link to="/medikamente">
-                {isEnglish ? "View medications" : "Medikamente ansehen"}
+                {isEnglish ? "Search medications" : "Medikamente suchen"}
               </Link>
             </Button>
 
-            <Button asChild variant="outline">
-              <Link to="/neuer-eintrag">
-                {isEnglish ? "Create an entry" : "Eigenen Eintrag erstellen"}
+            <Button
+              asChild
+              variant="outline"
+              borderWidth="2px"
+              minHeight="76px"
+              fontSize="lg"
+            >
+              <Link to="/meine-medikamente">
+                {isEnglish ? "My medications" : "Meine Medikamente"}
               </Link>
             </Button>
-          </Flex>
+
+            <Button
+              asChild
+              background="red.600"
+              color="white"
+              minHeight="76px"
+              fontSize="lg"
+              _hover={{ background: "red.700" }}
+            >
+              <Link to="/notfall">
+                {isEnglish ? "Emergency help" : "Notfallhilfe"}
+              </Link>
+            </Button>
+          </SimpleGrid>
         </Box>
 
         <Image

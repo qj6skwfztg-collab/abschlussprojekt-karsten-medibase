@@ -5,6 +5,9 @@ import useLanguage from "../hooks/useLanguage";
 function MedicationReminderPermission() {
   const { isEnglish } = useLanguage();
   const [message, setMessage] = useState("");
+  const [permission, setPermission] = useState(() =>
+    "Notification" in window ? Notification.permission : "unsupported"
+  );
 
   async function handlePermission() {
     if (!("Notification" in window)) {
@@ -18,14 +21,22 @@ function MedicationReminderPermission() {
       await Notification.requestPermission();
 
     if (permission === "granted") {
+      setPermission(permission);
       setMessage(
         isEnglish ? "Notifications are now allowed." : "Benachrichtigungen sind jetzt erlaubt."
       );
       return;
     }
 
+    setPermission(permission);
     setMessage(
-      isEnglish ? "Notifications were not allowed." : "Benachrichtigungen wurden nicht erlaubt."
+      permission === "denied"
+        ? (isEnglish
+            ? "Notifications are blocked. Please allow them in your browser settings."
+            : "Benachrichtigungen sind blockiert. Erlaube sie bitte in den Browsereinstellungen.")
+        : (isEnglish
+            ? "Notifications were not allowed."
+            : "Benachrichtigungen wurden nicht erlaubt.")
     );
   }
 
@@ -89,6 +100,22 @@ function MedicationReminderPermission() {
 
       <Text marginTop="2">
         {isEnglish ? "Allow notifications so Curaelis can remind you of your scheduled intake times." : "Erlaube Benachrichtigungen, damit Curaelis dich an deine Einnahmezeiten erinnern kann."}
+      </Text>
+
+      <Text marginTop="2" fontSize="sm" fontWeight="600">
+        {permission === "granted"
+          ? (isEnglish ? "Status: notifications allowed." : "Status: Benachrichtigungen erlaubt.")
+          : permission === "denied"
+            ? (isEnglish ? "Status: notifications blocked." : "Status: Benachrichtigungen blockiert.")
+            : permission === "unsupported"
+              ? (isEnglish ? "This browser does not support notifications." : "Dieser Browser unterstützt keine Benachrichtigungen.")
+              : (isEnglish ? "Status: permission not decided yet." : "Status: Berechtigung noch nicht festgelegt.")}
+      </Text>
+
+      <Text marginTop="2" fontSize="sm" color="gray.600">
+        {isEnglish
+          ? "For now, reminders require Curaelis to be open or active as a web app."
+          : "Aktuell muss Curaelis für Erinnerungen geöffnet oder als Web-App aktiv sein."}
       </Text>
 
       <Stack

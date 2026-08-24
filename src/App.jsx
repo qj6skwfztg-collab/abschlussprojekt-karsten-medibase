@@ -15,11 +15,14 @@ import EmergencyPage from "./pages/EmergencyPage";
 import ImprintPage from "./pages/ImprintPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import AccountPage from "./pages/AccountPage";
+import InstallPage from "./pages/InstallPage";
+import PersonalMedicationReminder from "./components/PersonalMedicationReminder";
 
 function App() {
   return (
     <>
       <Header />
+      <PersonalMedicationReminder />
 
       <main id="main-content">
         <Routes>
@@ -80,10 +83,15 @@ function App() {
           element={<EmergencyPage />}
         />
 
-        <Route
-          path="/ueber"
-          element={<AboutPage />}
-        />
+          <Route
+            path="/ueber"
+            element={<AboutPage />}
+          />
+
+          <Route
+            path="/installieren"
+            element={<InstallPage />}
+          />
 
           <Route
             path="/impressum"

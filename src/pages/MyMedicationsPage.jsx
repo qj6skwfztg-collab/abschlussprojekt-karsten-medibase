@@ -12,7 +12,6 @@ import {
 import useUserMedications from "../hooks/useUserMedications";
 import useLanguage from "../hooks/useLanguage";
 import MedicationReminderPermission from "../components/MedicationReminderPermission";
-import MedicationReminderWatcher from "../components/MedicationReminderWatcher";
 
 const emptyForm = {
   name: "",
@@ -230,8 +229,6 @@ function MyMedicationsPage() {
 
   return (
     <Box maxW="1200px" mx="auto" p="6">
-      <MedicationReminderWatcher medications={userMedications} />
-
       <Heading mb="4">{text.title}</Heading>
 
       <Text mb="8">{text.description}</Text>

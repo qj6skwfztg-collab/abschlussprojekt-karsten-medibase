@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useLanguage from "../hooks/useLanguage";
 
 function normalizeTime(value) {
@@ -37,8 +37,17 @@ function normalizeTime(value) {
 
 function MedicationReminderWatcher({ medications }) {
   const { isEnglish } = useLanguage();
+  const isChecking = useRef(false);
+
   useEffect(() => {
     async function checkMedicationTimes() {
+      if (isChecking.current) {
+        return;
+      }
+
+      isChecking.current = true;
+
+      try {
       if (!("Notification" in window)) {
         return;
       }
@@ -85,24 +94,37 @@ function MedicationReminderWatcher({ medications }) {
           isEnglish ? "Curaelis reminder" : "Curaelis Erinnerung",
           {
             body:
-              isEnglish ? "It is time for a scheduled medication. Open Curaelis for more information." : "Es ist Zeit für eine geplante Medikamenteneinnahme. Öffne Curaelis für weitere Informationen.",
+              isEnglish
+                ? `It is time to take ${medication.name}${medication.dosage ? ` (${medication.dosage})` : ""}. Open Curaelis for more information.`
+                : `Es ist Zeit für ${medication.name}${medication.dosage ? ` (${medication.dosage})` : ""}. Öffne Curaelis für weitere Informationen.`,
             tag: reminderKey,
+            data: { url: "/meine-medikamente" },
           }
         );
 
         localStorage.setItem(reminderKey, "shown");
       }
+      } finally {
+        isChecking.current = false;
+      }
     }
 
-    checkMedicationTimes();
+    const checkNow = () => {
+      void checkMedicationTimes();
+    };
+
+    checkNow();
 
     const intervalId = window.setInterval(
-      checkMedicationTimes,
+      checkNow,
       15000
     );
 
+    document.addEventListener("visibilitychange", checkNow);
+
     return () => {
       window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", checkNow);
     };
   }, [isEnglish, medications]);
 

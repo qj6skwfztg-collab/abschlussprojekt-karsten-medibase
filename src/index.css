@@ -57,6 +57,12 @@ html.high-contrast #root {
   color: #fff !important;
 }
 
+html.high-contrast * {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
 html.high-contrast header,
 html.high-contrast footer,
 html.high-contrast main,
@@ -87,6 +93,8 @@ html.high-contrast textarea {
 }
 
 html.high-contrast button {
+  background: #000 !important;
+  color: #fff !important;
   border-color: #fff !important;
 }
 

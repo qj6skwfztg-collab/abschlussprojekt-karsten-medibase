@@ -151,7 +151,9 @@ function AccessibilityControls() {
           onClick={() => setHighContrast((currentValue) => !currentValue)}
           aria-pressed={highContrast}
         >
-          {isEnglish ? "High contrast" : "Hoher Kontrast"}
+          {highContrast
+            ? (isEnglish ? "Standard contrast" : "Normaler Kontrast")
+            : (isEnglish ? "High contrast" : "Hoher Kontrast")}
         </Button>
 
         <Button

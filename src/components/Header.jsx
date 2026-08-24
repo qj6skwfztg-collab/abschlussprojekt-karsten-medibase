@@ -56,16 +56,26 @@ function Header() {
       as="header"
       background="teal.700"
       color="white"
-      padding={{ base: "4", md: "5" }}
+      padding={{ base: "3", md: "5" }}
     >
       <Flex
+        className="header-main"
         direction={{ base: "column", md: "row" }}
         align="center"
         justify="space-between"
         gap="4"
         width="100%"
+        maxWidth="1400px"
+        marginX="auto"
       >
-        <Flex align="center" justify="center" gap="3" flexShrink="0" width={{ base: "100%", md: "auto" }}>
+        <Flex
+          className="header-brand"
+          align="center"
+          justify="center"
+          gap="3"
+          flexShrink="0"
+          width={{ base: "100%", md: "auto" }}
+        >
           <Image
             src="/curaelis-icon.svg"
             alt=""
@@ -81,10 +91,20 @@ function Header() {
         </Flex>
 
         <Button
+          className="header-menu-toggle"
           display={{ base: "inline-flex", md: "none" }}
           variant="outline"
           color="white"
           borderColor="white"
+          background="transparent"
+          _hover={{ background: "whiteAlpha.200", color: "white" }}
+          _active={{ background: "whiteAlpha.300", color: "white" }}
+          _focusVisible={{
+            background: "transparent",
+            color: "white",
+            outline: "3px solid white",
+            outlineOffset: "3px",
+          }}
           aria-controls="main-navigation"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((currentValue) => !currentValue)}
@@ -98,6 +118,7 @@ function Header() {
 
         <Flex
           as="nav"
+          className="header-navigation"
           id="main-navigation"
           aria-label={isEnglish ? "Main navigation" : "Hauptnavigation"}
           display={{ base: menuOpen ? "flex" : "none", md: "flex" }}
@@ -107,6 +128,7 @@ function Header() {
           align={{ base: "stretch", md: "center" }}
           justify="center"
           flexWrap="wrap"
+          flex={{ base: "none", md: "1" }}
           maxWidth={{ base: "420px", md: "none" }}
           marginX="auto"
         >
@@ -192,7 +214,14 @@ function Header() {
         </Flex>
       </Flex>
 
-      <Box marginTop="4" paddingTop="4" borderTop="1px solid" borderColor="whiteAlpha.400">
+      <Box
+        marginTop={{ base: "3", md: "4" }}
+        paddingTop={{ base: "3", md: "4" }}
+        borderTop="1px solid"
+        borderColor="whiteAlpha.400"
+        maxWidth="1400px"
+        marginX="auto"
+      >
         <AccessibilityControls />
       </Box>
     </Box>

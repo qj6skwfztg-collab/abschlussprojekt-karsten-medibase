@@ -51,6 +51,14 @@ a {
 }
 
 @media (max-width: 767px) {
+  header .header-main {
+    gap: 12px;
+  }
+
+  header .header-menu-toggle {
+    max-width: 300px;
+  }
+
   header #main-navigation .header-link {
     width: 100%;
     text-align: center;
@@ -61,6 +69,13 @@ a {
     flex-direction: column;
     align-items: center;
     gap: 8px;
+  }
+}
+
+@media (min-width: 768px) {
+  header #main-navigation {
+    justify-content: flex-end;
+    margin-left: 32px;
   }
 }
 

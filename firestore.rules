@@ -23,6 +23,7 @@ service cloud.firestore {
           'name',
           'dosage',
           'intakeTime',
+          'intakeTimes',
           'notes',
           'createdAt'
         ])
@@ -30,6 +31,7 @@ service cloud.firestore {
           'name',
           'dosage',
           'intakeTime',
+          'intakeTimes',
           'notes',
           'createdAt'
         ])
@@ -42,6 +44,12 @@ service cloud.firestore {
         && request.resource.data.intakeTime is string
         && request.resource.data.intakeTime.size() >= 4
         && request.resource.data.intakeTime.size() <= 20
+        && request.resource.data.intakeTimes is list
+        && request.resource.data.intakeTimes.size() >= 1
+        && request.resource.data.intakeTimes.size() <= 8
+        && request.resource.data.intakeTimes[0] is string
+        && request.resource.data.intakeTimes.toSet().size()
+          == request.resource.data.intakeTimes.size()
         && request.resource.data.notes is string
         && request.resource.data.notes.size() <= 500
         && request.resource.data.createdAt is timestamp;

@@ -81,10 +81,15 @@ function useUserMedications() {
       "medications"
     );
 
+    const intakeTimes = Array.isArray(medication.intakeTimes)
+      ? medication.intakeTimes
+      : [medication.intakeTime];
+
     await addDoc(medicationCollection, {
       name: medication.name.trim(),
       dosage: medication.dosage.trim(),
-      intakeTime: medication.intakeTime,
+      intakeTime: intakeTimes[0],
+      intakeTimes,
       notes: medication.notes.trim(),
       createdAt: serverTimestamp(),
     });
@@ -108,10 +113,15 @@ function useUserMedications() {
       medicationId
     );
 
+    const intakeTimes = Array.isArray(medication.intakeTimes)
+      ? medication.intakeTimes
+      : [medication.intakeTime];
+
     await updateDoc(medicationDocument, {
       name: medication.name.trim(),
       dosage: medication.dosage.trim(),
-      intakeTime: medication.intakeTime,
+      intakeTime: intakeTimes[0],
+      intakeTimes,
       notes: medication.notes.trim(),
     });
   }

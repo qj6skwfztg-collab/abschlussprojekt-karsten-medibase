@@ -35,6 +35,20 @@ function normalizeTime(value) {
   return `${String(hour).padStart(2, "0")}:${minutes}`;
 }
 
+function getMedicationTimes(medication) {
+  const savedTimes = Array.isArray(medication.intakeTimes)
+    ? medication.intakeTimes
+    : [medication.intakeTime];
+
+  return [
+    ...new Set(
+      savedTimes
+        .map((time) => normalizeTime(time))
+        .filter(Boolean)
+    ),
+  ];
+}
+
 function MedicationReminderWatcher({ medications }) {
   const { isEnglish } = useLanguage();
   const isChecking = useRef(false);
@@ -76,33 +90,35 @@ function MedicationReminderWatcher({ medications }) {
         await navigator.serviceWorker.ready;
 
       for (const medication of medications) {
-        if (normalizeTime(medication.intakeTime) !== currentTime) {
-          continue;
-        }
-
-        const reminderKey =
-          `reminder-${medication.id}-${currentDate}-${currentTime}`;
-
-        const reminderWasShown =
-          localStorage.getItem(reminderKey);
-
-        if (reminderWasShown) {
-          continue;
-        }
-
-        await registration.showNotification(
-          isEnglish ? "Curaelis reminder" : "Curaelis Erinnerung",
-          {
-            body:
-              isEnglish
-                ? `It is time to take ${medication.name}${medication.dosage ? ` (${medication.dosage})` : ""}. Open Curaelis for more information.`
-                : `Es ist Zeit für ${medication.name}${medication.dosage ? ` (${medication.dosage})` : ""}. Öffne Curaelis für weitere Informationen.`,
-            tag: reminderKey,
-            data: { url: "/meine-medikamente" },
+        for (const intakeTime of getMedicationTimes(medication)) {
+          if (intakeTime !== currentTime) {
+            continue;
           }
-        );
 
-        localStorage.setItem(reminderKey, "shown");
+          const reminderKey =
+            `reminder-${medication.id}-${currentDate}-${currentTime}`;
+
+          const reminderWasShown =
+            localStorage.getItem(reminderKey);
+
+          if (reminderWasShown) {
+            continue;
+          }
+
+          await registration.showNotification(
+            isEnglish ? "Curaelis reminder" : "Curaelis Erinnerung",
+            {
+              body:
+                isEnglish
+                  ? `It is time to take ${medication.name}${medication.dosage ? ` (${medication.dosage})` : ""}. Open Curaelis for more information.`
+                  : `Es ist Zeit für ${medication.name}${medication.dosage ? ` (${medication.dosage})` : ""}. Öffne Curaelis für weitere Informationen.`,
+              tag: reminderKey,
+              data: { url: "/meine-medikamente" },
+            }
+          );
+
+          localStorage.setItem(reminderKey, "shown");
+        }
       }
       } finally {
         isChecking.current = false;

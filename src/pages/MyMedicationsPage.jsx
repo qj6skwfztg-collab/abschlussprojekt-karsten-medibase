@@ -17,7 +17,7 @@ import MedicationReminderPermission from "../components/MedicationReminderPermis
 const emptyForm = {
   name: "",
   dosage: "",
-  intakeTime: "",
+  intakeTimes: [""],
   notes: "",
 };
 
@@ -67,6 +67,18 @@ function formatTimeInput(value) {
   return `${digits.slice(0, 2)}:${digits.slice(2)}`;
 }
 
+function getMedicationTimes(medication) {
+  const savedTimes = Array.isArray(medication.intakeTimes)
+    ? medication.intakeTimes
+    : [medication.intakeTime];
+
+  const normalizedTimes = savedTimes
+    .map((time) => normalizeTime(time))
+    .filter(Boolean);
+
+  return normalizedTimes.length > 0 ? normalizedTimes : [""];
+}
+
 function MyMedicationsPage() {
   const { isEnglish } = useLanguage();
   const {
@@ -90,8 +102,10 @@ function MyMedicationsPage() {
         namePlaceholder: "For example, ibuprofen",
         dosage: "Dosage according to your medication plan",
         dosagePlaceholder: "For example, 400 mg",
-        intakeTime: "Intake time",
+        intakeTime: "Intake times",
         timeHint: "You can enter 13:30 or simply 1330.",
+        addTime: "Add another intake time",
+        removeTime: "Remove",
         notes: "Personal note",
         notesPlaceholder: "For example: after breakfast",
         saveChanges: "Save changes",
@@ -104,11 +118,12 @@ function MyMedicationsPage() {
         timeShort: "Intake time:",
         noteShort: "Note:",
         noNote: "No note",
-        reminderSet: "Reminder time saved",
+        reminderSet: "Reminder times saved",
         emptyHint: "Use the form above to save your first personal medication.",
         edit: "Edit",
         delete: "Delete",
-        invalidTime: "Please enter the intake time in the format 13:00.",
+        invalidTime: "Please enter every intake time in the format 13:00.",
+        duplicateTime: "Please enter each intake time only once.",
         savedChanges: "The changes were saved.",
         saved: "Medication was saved.",
         saveError: "The medication could not be saved.",
@@ -129,8 +144,10 @@ function MyMedicationsPage() {
         namePlaceholder: "Zum Beispiel Ibuprofen",
         dosage: "Dosierung laut deinem Medikamentenplan",
         dosagePlaceholder: "Zum Beispiel 400 mg",
-        intakeTime: "Einnahmezeit",
+        intakeTime: "Einnahmezeiten",
         timeHint: "Du kannst 13:30 oder einfach 1330 eingeben.",
+        addTime: "Weitere Einnahmezeit hinzufügen",
+        removeTime: "Entfernen",
         notes: "Persönliche Notiz",
         notesPlaceholder: "Zum Beispiel: nach dem Frühstück",
         saveChanges: "Änderungen speichern",
@@ -143,11 +160,12 @@ function MyMedicationsPage() {
         timeShort: "Einnahmezeit:",
         noteShort: "Notiz:",
         noNote: "Keine Notiz",
-        reminderSet: "Erinnerungszeit gespeichert",
+        reminderSet: "Erinnerungszeiten gespeichert",
         emptyHint: "Nutze das Formular oben, um dein erstes persönliches Medikament zu speichern.",
         edit: "Bearbeiten",
         delete: "Löschen",
-        invalidTime: "Bitte gib die Einnahmezeit im Format 13:00 ein.",
+        invalidTime: "Bitte gib jede Einnahmezeit im Format 13:00 ein.",
+        duplicateTime: "Bitte gib jede Einnahmezeit nur einmal ein.",
         savedChanges: "Die Änderungen wurden gespeichert.",
         saved: "Medikament wurde gespeichert.",
         saveError: "Das Medikament konnte nicht gespeichert werden.",
@@ -177,10 +195,28 @@ function MyMedicationsPage() {
     }));
   }
 
-  function handleIntakeTimeChange(event) {
+  function handleIntakeTimeChange(index, event) {
     setFormData((previousData) => ({
       ...previousData,
-      intakeTime: formatTimeInput(event.target.value),
+      intakeTimes: previousData.intakeTimes.map((time, timeIndex) =>
+        timeIndex === index ? formatTimeInput(event.target.value) : time
+      ),
+    }));
+  }
+
+  function addIntakeTime() {
+    setFormData((previousData) => ({
+      ...previousData,
+      intakeTimes: [...previousData.intakeTimes, ""],
+    }));
+  }
+
+  function removeIntakeTime(index) {
+    setFormData((previousData) => ({
+      ...previousData,
+      intakeTimes: previousData.intakeTimes.filter(
+        (_, timeIndex) => timeIndex !== index
+      ),
     }));
   }
 
@@ -194,16 +230,24 @@ function MyMedicationsPage() {
     setMessage("");
     setMessageType("");
 
-    const normalizedTime = normalizeTime(formData.intakeTime);
+    const normalizedTimes = formData.intakeTimes.map((time) =>
+      normalizeTime(time)
+    );
 
-    if (!normalizedTime) {
+    if (normalizedTimes.length === 0 || normalizedTimes.some((time) => !time)) {
       showMessage(text.invalidTime, "error");
+      return;
+    }
+
+    if (new Set(normalizedTimes).size !== normalizedTimes.length) {
+      showMessage(text.duplicateTime, "error");
       return;
     }
 
     const medicationData = {
       ...formData,
-      intakeTime: normalizedTime,
+      intakeTime: normalizedTimes[0],
+      intakeTimes: normalizedTimes,
     };
 
     try {
@@ -227,7 +271,7 @@ function MyMedicationsPage() {
     setFormData({
       name: medication.name || "",
       dosage: medication.dosage || "",
-      intakeTime: normalizeTime(medication.intakeTime),
+      intakeTimes: getMedicationTimes(medication),
       notes: medication.notes || "",
     });
 
@@ -327,33 +371,83 @@ function MyMedicationsPage() {
             </Box>
 
             <Box>
-              <Text
-                as="label"
-                htmlFor="intakeTime"
-                display="block"
-                mb="2"
-              >
+              <Text display="block" mb="2" fontWeight="600">
                 {text.intakeTime}
               </Text>
 
-              <Input
-                id="intakeTime"
-                name="intakeTime"
-                type="text"
-                inputMode="numeric"
-                placeholder="13:00"
-                maxLength={8}
-                value={formData.intakeTime}
-                onChange={handleIntakeTimeChange}
-                onBlur={() =>
-                  setFormData((previousData) => ({
-                    ...previousData,
-                    intakeTime:
-                      normalizeTime(previousData.intakeTime) ||
-                      previousData.intakeTime,
-                  }))
-                }
-              />
+              <Stack gap="3">
+                {formData.intakeTimes.map((time, index) => {
+                  const inputId = `intakeTime-${index}`;
+
+                  return (
+                    <Flex
+                      key={inputId}
+                      direction={{ base: "column", sm: "row" }}
+                      align={{ base: "stretch", sm: "flex-end" }}
+                      gap="3"
+                    >
+                      <Box flex="1" width="100%">
+                        {formData.intakeTimes.length > 1 && (
+                          <Text
+                            as="label"
+                            htmlFor={inputId}
+                            display="block"
+                            mb="2"
+                            fontSize="sm"
+                            fontWeight="600"
+                          >
+                            {text.intakeTime} {index + 1}
+                          </Text>
+                        )}
+
+                        <Input
+                          id={inputId}
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="13:00"
+                          maxLength={8}
+                          value={time}
+                          onChange={(event) =>
+                            handleIntakeTimeChange(index, event)
+                          }
+                          onBlur={() =>
+                            setFormData((previousData) => ({
+                              ...previousData,
+                              intakeTimes: previousData.intakeTimes.map(
+                                (currentTime, timeIndex) =>
+                                  timeIndex === index
+                                    ? normalizeTime(currentTime) || currentTime
+                                    : currentTime
+                              ),
+                            }))
+                          }
+                        />
+                      </Box>
+
+                      {formData.intakeTimes.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          colorPalette="red"
+                          onClick={() => removeIntakeTime(index)}
+                        >
+                          {text.removeTime}
+                        </Button>
+                      )}
+                    </Flex>
+                  );
+                })}
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  colorPalette="teal"
+                  onClick={addIntakeTime}
+                  disabled={formData.intakeTimes.length >= 8}
+                >
+                  + {text.addTime}
+                </Button>
+              </Stack>
 
               <Text marginTop="2" fontSize="sm" color="gray.600">
                 {text.timeHint}
@@ -443,103 +537,131 @@ function MyMedicationsPage() {
 
       <SimpleGrid minChildWidth="280px" gap="6">
         {userMedications.map((medication) => (
-          <Box
+          <MedicationCard
             key={medication.id}
-            borderWidth="1px"
-            borderRadius="lg"
-            borderColor="gray.200"
+            medication={medication}
+            text={text}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        ))}
+      </SimpleGrid>
+    </Box>
+  );
+}
+
+function MedicationCard({ medication, text, onEdit, onDelete }) {
+  const medicationTimes = getMedicationTimes(medication);
+
+  return (
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      borderColor="gray.200"
+      background="white"
+      padding={{ base: "5", md: "6" }}
+      boxShadow="sm"
+    >
+    <Flex
+      direction={{ base: "column", sm: "row" }}
+      align={{ base: "flex-start", sm: "center" }}
+      justify="space-between"
+      gap="3"
+      mb="5"
+    >
+      <Heading size="md" color="teal.900">
+        {medication.name}
+      </Heading>
+
+      <Box
+        as="span"
+        flexShrink="0"
+        background="teal.50"
+        color="teal.900"
+        borderRadius="full"
+        paddingX="3"
+        paddingY="1"
+        fontSize="sm"
+        fontWeight="700"
+      >
+        ✓ {text.reminderSet}
+      </Box>
+    </Flex>
+
+    <Box
+      background="teal.50"
+      borderLeftWidth="4px"
+      borderColor="teal.500"
+      borderRadius="md"
+      padding="4"
+      mb="4"
+    >
+      <Text fontSize="sm" fontWeight="700" color="teal.800">
+        {text.timeShort}
+      </Text>
+
+      <SimpleGrid
+        columns={{ base: 1, sm: 2 }}
+        gap="2"
+        marginTop="2"
+      >
+        {medicationTimes.map((time, index) => (
+          <Box
+            key={`${medication.id}-${time}-${index}`}
             background="white"
-            padding={{ base: "5", md: "6" }}
-            boxShadow="sm"
+            borderRadius="md"
+            paddingX="3"
+            paddingY="2"
           >
-            <Flex
-              direction={{ base: "column", sm: "row" }}
-              align={{ base: "flex-start", sm: "center" }}
-              justify="space-between"
-              gap="3"
-              mb="5"
+            <Text
+              fontSize={{ base: "2xl", md: "3xl" }}
+              fontWeight="800"
+              color="teal.900"
             >
-              <Heading size="md" color="teal.900">
-                {medication.name}
-              </Heading>
-
-              <Box
-                as="span"
-                flexShrink="0"
-                background="teal.50"
-                color="teal.900"
-                borderRadius="full"
-                paddingX="3"
-                paddingY="1"
-                fontSize="sm"
-                fontWeight="700"
-              >
-                ✓ {text.reminderSet}
-              </Box>
-            </Flex>
-
-            <Box
-              background="teal.50"
-              borderLeftWidth="4px"
-              borderColor="teal.500"
-              borderRadius="md"
-              padding="4"
-              mb="4"
-            >
-              <Text fontSize="sm" fontWeight="700" color="teal.800">
-                {text.timeShort}
-              </Text>
-
-              <Text
-                marginTop="1"
-                fontSize={{ base: "2xl", md: "3xl" }}
-                fontWeight="800"
-                color="teal.900"
-              >
-                {normalizeTime(medication.intakeTime) || medication.intakeTime} Uhr
-              </Text>
-            </Box>
-
-            <Text mb="3">
-              <strong>{text.dosageShort}</strong> {medication.dosage}
+              {time} Uhr
             </Text>
-
-            <Box
-              background="gray.50"
-              borderRadius="md"
-              padding="3"
-              mb="5"
-            >
-              <Text>
-                <strong>{text.noteShort}</strong>{" "}
-                {medication.notes || text.noNote}
-              </Text>
-            </Box>
-
-            <Stack direction={{ base: "column", sm: "row" }} gap="3">
-              <Button
-                colorPalette="teal"
-                variant="outline"
-                size="lg"
-                flex="1"
-                onClick={() => handleEdit(medication)}
-              >
-                {text.edit}
-              </Button>
-
-              <Button
-                colorPalette="red"
-                variant="outline"
-                size="lg"
-                flex="1"
-                onClick={() => handleDelete(medication.id)}
-              >
-                {text.delete}
-              </Button>
-            </Stack>
           </Box>
         ))}
       </SimpleGrid>
+    </Box>
+
+    <Text mb="3">
+      <strong>{text.dosageShort}</strong> {medication.dosage}
+    </Text>
+
+    <Box
+      background="gray.50"
+      borderRadius="md"
+      padding="3"
+      mb="5"
+    >
+      <Text>
+        <strong>{text.noteShort}</strong>{" "}
+        {medication.notes || text.noNote}
+      </Text>
+    </Box>
+
+    <Stack direction={{ base: "column", sm: "row" }} gap="3">
+      <Button
+        colorPalette="teal"
+        variant="outline"
+        size="lg"
+        flex="1"
+        onClick={() => onEdit(medication)}
+      >
+        {text.edit}
+      </Button>
+
+      <Button
+        colorPalette="red"
+        variant="outline"
+        size="lg"
+        flex="1"
+        onClick={() => onDelete(medication.id)}
+      >
+        {text.delete}
+      </Button>
+    </Stack>
     </Box>
   );
 }

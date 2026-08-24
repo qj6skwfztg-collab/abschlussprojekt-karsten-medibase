@@ -24,7 +24,13 @@ function MedicationCard({ medication }) {
           {isEnglish ? medication.descriptionEn ?? medication.description : medication.description}
         </Text>
 
-        <Text marginTop="4" color="teal.700" fontWeight="800">
+        <Text
+          marginTop="4"
+          color="teal.700"
+          fontWeight="900"
+          fontSize="lg"
+          textDecoration="underline"
+        >
           <Link to={`/medikamente/${medication.id}`}>
             {isEnglish ? "Learn more" : "Mehr erfahren"}
           </Link>

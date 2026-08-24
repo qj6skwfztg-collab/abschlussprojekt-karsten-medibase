@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
-import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 import { auth } from "../firebase";
 import AccessibilityControls from "./AccessibilityControls";
@@ -45,9 +45,20 @@ function Header() {
         justify="space-between"
         gap="4"
       >
-        <Heading size="lg" color="white">
-          Curaelis
-        </Heading>
+        <Flex align="center" gap="3" flexShrink="0">
+          <Image
+            src="/curaelis-icon.svg"
+            alt=""
+            aria-hidden="true"
+            width={{ base: "9", md: "10" }}
+            height={{ base: "9", md: "10" }}
+            borderRadius="lg"
+          />
+
+          <Heading size="lg" color="white">
+            Curaelis
+          </Heading>
+        </Flex>
 
         <Button
           display={{ base: "inline-flex", md: "none" }}

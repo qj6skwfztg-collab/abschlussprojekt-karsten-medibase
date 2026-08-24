@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Heading,
   Image,
   SimpleGrid,
@@ -11,6 +12,27 @@ import heroImage from "../assets/medibase-neu.png";
 import vitruvianImage from "../assets/medibase-vitruvian.png";
 import SafetyNotice from "../components/SafetyNotice";
 import useLanguage from "../hooks/useLanguage";
+
+function ActionIcon({ symbol }) {
+  return (
+    <Box
+      as="span"
+      aria-hidden="true"
+      display="inline-flex"
+      alignItems="center"
+      justifyContent="center"
+      width="10"
+      height="10"
+      marginRight="3"
+      borderRadius="full"
+      background="whiteAlpha.300"
+      fontSize="xl"
+      lineHeight="1"
+    >
+      {symbol}
+    </Box>
+  );
+}
 
 function HomePage() {
   const { isEnglish } = useLanguage();
@@ -44,57 +66,87 @@ function HomePage() {
 
           <Text
             marginTop="4"
+            maxWidth="760px"
+            marginX="auto"
             fontSize={{ base: "md", md: "lg" }}
           >
             {isEnglish
-              ? "Manage your personal medications, keep track of intake times and save important emergency contacts securely in your user account. In an emergency, you can open the phone function for emergency services on 112 or the police on 110 and inform your emergency contacts with a prepared message."
-              : "Verwalte deine persönlichen Medikamente, behalte Einnahmezeiten im Blick und hinterlege wichtige Notfallkontakte – sicher getrennt in deinem Benutzerkonto. In einer Notfallsituation kannst du direkt die Telefonfunktion für den Rettungsdienst unter 112 oder die Polizei unter 110 öffnen und deine Notfallkontakte über eine vorbereitete Nachricht informieren."}
+              ? "Find medication information, manage your personal medications and reach emergency help quickly."
+              : "Finde verständliche Informationen zu Medikamenten, verwalte deine persönlichen Medikamente und erreiche im Notfall schnell Hilfe."}
           </Text>
 
-          <SimpleGrid
-            columns={{ base: 1, md: 3 }}
-            gap="4"
-            marginTop="6"
-            maxWidth="900px"
-            marginX="auto"
+          <Box
+            marginTop="7"
+            padding={{ base: "4", md: "6" }}
+            background="white"
+            borderWidth="1px"
+            borderColor="teal.100"
+            borderRadius="2xl"
+            boxShadow="sm"
           >
-            <Button
-              asChild
-              background="teal.700"
-              color="white"
-              minHeight="76px"
-              fontSize="lg"
-            >
-              <Link to="/medikamente">
-                {isEnglish ? "Search medications" : "Medikamente suchen"}
-              </Link>
-            </Button>
+            <Heading size="md" color="teal.900">
+              {isEnglish ? "What would you like to do?" : "Was möchtest du tun?"}
+            </Heading>
 
-            <Button
-              asChild
-              variant="outline"
-              borderWidth="2px"
-              minHeight="76px"
-              fontSize="lg"
+            <SimpleGrid
+              columns={{ base: 1, md: 3 }}
+              gap="4"
+              marginTop="4"
+              maxWidth="900px"
+              marginX="auto"
             >
-              <Link to="/meine-medikamente">
-                {isEnglish ? "My medications" : "Meine Medikamente"}
-              </Link>
-            </Button>
+              <Button
+                asChild
+                background="teal.700"
+                color="white"
+                minHeight="76px"
+                fontSize="lg"
+                width="100%"
+              >
+                <Link to="/medikamente">
+                  <Flex as="span" align="center" justify="center">
+                    <ActionIcon symbol="🔎" />
+                    {isEnglish ? "Search medications" : "Medikamente suchen"}
+                  </Flex>
+                </Link>
+              </Button>
 
-            <Button
-              asChild
-              background="red.600"
-              color="white"
-              minHeight="76px"
-              fontSize="lg"
-              _hover={{ background: "red.700" }}
-            >
-              <Link to="/notfall">
-                {isEnglish ? "Emergency help" : "Notfallhilfe"}
-              </Link>
-            </Button>
-          </SimpleGrid>
+              <Button
+                asChild
+                variant="outline"
+                borderWidth="2px"
+                minHeight="76px"
+                fontSize="lg"
+                color="teal.900"
+                borderColor="teal.700"
+                width="100%"
+              >
+                <Link to="/meine-medikamente">
+                  <Flex as="span" align="center" justify="center">
+                    <ActionIcon symbol="💊" />
+                    {isEnglish ? "My medications" : "Meine Medikamente"}
+                  </Flex>
+                </Link>
+              </Button>
+
+              <Button
+                asChild
+                background="red.600"
+                color="white"
+                minHeight="76px"
+                fontSize="lg"
+                width="100%"
+                _hover={{ background: "red.700" }}
+              >
+                <Link to="/notfall">
+                  <Flex as="span" align="center" justify="center">
+                    <ActionIcon symbol="⚠️" />
+                    {isEnglish ? "Emergency help" : "Notfallhilfe"}
+                  </Flex>
+                </Link>
+              </Button>
+            </SimpleGrid>
+          </Box>
         </Box>
 
         <Image
@@ -118,12 +170,20 @@ function HomePage() {
             background="white"
             padding="6"
             borderRadius="xl"
+            borderWidth="1px"
+            borderColor="gray.200"
+            minHeight="170px"
             boxShadow="sm"
             cursor="pointer"
             transition="0.2s"
             _hover={{
               transform: "translateY(-4px)",
               boxShadow: "md",
+            }}
+            _focusVisible={{
+              outline: "3px solid",
+              outlineColor: "teal.500",
+              outlineOffset: "3px",
             }}
           >
             <Link to="/medikamente">
@@ -142,12 +202,20 @@ function HomePage() {
             background="white"
             padding="6"
             borderRadius="xl"
+            borderWidth="1px"
+            borderColor="gray.200"
+            minHeight="170px"
             boxShadow="sm"
             cursor="pointer"
             transition="0.2s"
             _hover={{
               transform: "translateY(-4px)",
               boxShadow: "md",
+            }}
+            _focusVisible={{
+              outline: "3px solid",
+              outlineColor: "teal.500",
+              outlineOffset: "3px",
             }}
           >
             <Link to="/medikamente">
@@ -166,12 +234,20 @@ function HomePage() {
             background="white"
             padding="6"
             borderRadius="xl"
+            borderWidth="1px"
+            borderColor="gray.200"
+            minHeight="170px"
             boxShadow="sm"
             cursor="pointer"
             transition="0.2s"
             _hover={{
               transform: "translateY(-4px)",
               boxShadow: "md",
+            }}
+            _focusVisible={{
+              outline: "3px solid",
+              outlineColor: "teal.500",
+              outlineOffset: "3px",
             }}
           >
             <Link to="/neuer-eintrag">

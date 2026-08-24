@@ -28,6 +28,18 @@ textarea {
   font: inherit;
 }
 
+button,
+input,
+select,
+textarea {
+  min-height: 44px;
+}
+
+*:focus-visible {
+  outline: 3px solid #319795;
+  outline-offset: 3px;
+}
+
 img {
   display: block;
   max-width: 100%;

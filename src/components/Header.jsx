@@ -32,6 +32,24 @@ function Header() {
     setMenuOpen(false);
   }
 
+  function getNavigationLinkProps(path) {
+    const isActive = location.pathname === path;
+
+    return {
+      "aria-current": isActive ? "page" : undefined,
+      style: {
+        padding: "10px 12px",
+        borderRadius: "8px",
+        fontWeight: isActive ? "700" : "500",
+        backgroundColor: isActive
+          ? "rgba(255, 255, 255, 0.2)"
+          : "transparent",
+        textDecoration: isActive ? "underline" : "none",
+        textUnderlineOffset: "4px",
+      },
+    };
+  }
+
   return (
     <Box
       as="header"
@@ -88,16 +106,16 @@ function Header() {
         >
           {!isHomePage && (
             <>
-              <Link to="/" onClick={closeMenu} style={{ padding: "8px" }}>
+              <Link to="/" onClick={closeMenu} {...getNavigationLinkProps("/")}>
                 {isEnglish ? "Home" : "Startseite"}
               </Link>
 
-              <Link to="/medikamente" onClick={closeMenu} style={{ padding: "8px" }}>
+              <Link to="/medikamente" onClick={closeMenu} {...getNavigationLinkProps("/medikamente")}>
                 {isEnglish ? "Search medications" : "Medikamente suchen"}
               </Link>
 
               {user && (
-                <Link to="/meine-medikamente" onClick={closeMenu} style={{ padding: "8px" }}>
+                <Link to="/meine-medikamente" onClick={closeMenu} {...getNavigationLinkProps("/meine-medikamente")}>
                   {isEnglish ? "My medications" : "Meine Medikamente"}
                 </Link>
               )}
@@ -105,22 +123,22 @@ function Header() {
           )}
 
           {user && (
-            <Link to="/konto" onClick={closeMenu} style={{ padding: "8px" }}>
+            <Link to="/konto" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
               {isEnglish ? "My account" : "Mein Konto"}
             </Link>
           )}
 
           {user && (
-            <Link to="/neuer-eintrag" onClick={closeMenu} style={{ padding: "8px" }}>
+            <Link to="/neuer-eintrag" onClick={closeMenu} {...getNavigationLinkProps("/neuer-eintrag")}>
               {isEnglish ? "New entry" : "Neuer Eintrag"}
             </Link>
           )}
 
-          <Link to="/installieren" onClick={closeMenu} style={{ padding: "8px" }}>
+          <Link to="/installieren" onClick={closeMenu} {...getNavigationLinkProps("/installieren")}>
             {isEnglish ? "Install Curaelis" : "Curaelis installieren"}
           </Link>
 
-          <Link to="/ueber" onClick={closeMenu} style={{ padding: "8px" }}>
+          <Link to="/ueber" onClick={closeMenu} {...getNavigationLinkProps("/ueber")}>
             {isEnglish ? "About Curaelis" : "Über Curaelis"}
           </Link>
 
@@ -134,6 +152,10 @@ function Header() {
                 padding: "10px 16px",
                 borderRadius: "8px",
                 fontWeight: "bold",
+                boxShadow:
+                  location.pathname === "/notfall"
+                    ? "0 0 0 3px rgba(255, 255, 255, 0.8)"
+                    : "none",
               }}
             >
               {isEnglish ? "Emergency help" : "Notfallhilfe"}
@@ -152,11 +174,11 @@ function Header() {
             </Button>
           ) : (
             <Flex gap="4" align="center">
-              <Link to="/login" onClick={closeMenu} style={{ padding: "8px" }}>
+              <Link to="/login" onClick={closeMenu} {...getNavigationLinkProps("/login")}>
                 {isEnglish ? "Sign in" : "Anmelden"}
               </Link>
 
-              <Link to="/registrieren" onClick={closeMenu} style={{ padding: "8px" }}>
+              <Link to="/registrieren" onClick={closeMenu} {...getNavigationLinkProps("/registrieren")}>
                 {isEnglish ? "Create account" : "Konto erstellen"}
               </Link>
             </Flex>

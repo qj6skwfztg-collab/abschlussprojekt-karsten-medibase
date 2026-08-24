@@ -34,6 +34,27 @@ function ActionIcon({ symbol }) {
   );
 }
 
+function FeatureIcon({ symbol, background }) {
+  return (
+    <Box
+      as="span"
+      aria-hidden="true"
+      display="inline-flex"
+      alignItems="center"
+      justifyContent="center"
+      width="14"
+      height="14"
+      marginBottom="4"
+      borderRadius="full"
+      background={background}
+      fontSize="2xl"
+      lineHeight="1"
+    >
+      {symbol}
+    </Box>
+  );
+}
+
 function HomePage() {
   const { isEnglish } = useLanguage();
   return (
@@ -168,11 +189,11 @@ function HomePage() {
           <Box
             asChild
             background="white"
-            padding="6"
+            padding={{ base: "5", md: "6" }}
             borderRadius="xl"
             borderWidth="1px"
             borderColor="gray.200"
-            minHeight="170px"
+            minHeight={{ base: "150px", md: "170px" }}
             boxShadow="sm"
             cursor="pointer"
             transition="0.2s"
@@ -187,6 +208,8 @@ function HomePage() {
             }}
           >
             <Link to="/medikamente">
+              <FeatureIcon symbol="🔎" background="teal.100" />
+
               <Heading size="md">
                 {isEnglish ? "Quick search" : "Schnell suchen"}
               </Heading>
@@ -200,11 +223,11 @@ function HomePage() {
           <Box
             asChild
             background="white"
-            padding="6"
+            padding={{ base: "5", md: "6" }}
             borderRadius="xl"
             borderWidth="1px"
             borderColor="gray.200"
-            minHeight="170px"
+            minHeight={{ base: "150px", md: "170px" }}
             boxShadow="sm"
             cursor="pointer"
             transition="0.2s"
@@ -219,6 +242,8 @@ function HomePage() {
             }}
           >
             <Link to="/medikamente">
+              <FeatureIcon symbol="📖" background="orange.100" />
+
               <Heading size="md">
                 {isEnglish ? "Details & sources" : "Details & Quellen"}
               </Heading>
@@ -232,11 +257,11 @@ function HomePage() {
           <Box
             asChild
             background="white"
-            padding="6"
+            padding={{ base: "5", md: "6" }}
             borderRadius="xl"
             borderWidth="1px"
             borderColor="gray.200"
-            minHeight="170px"
+            minHeight={{ base: "150px", md: "170px" }}
             boxShadow="sm"
             cursor="pointer"
             transition="0.2s"
@@ -251,6 +276,8 @@ function HomePage() {
             }}
           >
             <Link to="/neuer-eintrag">
+              <FeatureIcon symbol="📝" background="blue.100" />
+
               <Heading size="md">
                 {isEnglish ? "Personal entries" : "Eigene Einträge"}
               </Heading>

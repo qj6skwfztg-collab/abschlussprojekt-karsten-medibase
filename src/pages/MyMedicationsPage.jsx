@@ -92,6 +92,7 @@ function MyMedicationsPage() {
         noteShort: "Note:",
         noNote: "No note",
         reminderSet: "Reminder time saved",
+        emptyHint: "Use the form above to save your first personal medication.",
         edit: "Edit",
         delete: "Delete",
         invalidTime: "Please enter the intake time in the format 13:00.",
@@ -129,6 +130,7 @@ function MyMedicationsPage() {
         noteShort: "Notiz:",
         noNote: "Keine Notiz",
         reminderSet: "Erinnerungszeit gespeichert",
+        emptyHint: "Nutze das Formular oben, um dein erstes persönliches Medikament zu speichern.",
         edit: "Bearbeiten",
         delete: "Löschen",
         invalidTime: "Bitte gib die Einnahmezeit im Format 13:00 ein.",
@@ -145,6 +147,13 @@ function MyMedicationsPage() {
   const [formData, setFormData] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+
+  function showMessage(value, type) {
+    setMessage(value);
+    setMessageType(type);
+  }
+
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -162,11 +171,12 @@ function MyMedicationsPage() {
   async function handleSubmit(event) {
     event.preventDefault();
     setMessage("");
+    setMessageType("");
 
     const normalizedTime = normalizeTime(formData.intakeTime);
 
     if (!normalizedTime) {
-      setMessage(text.invalidTime);
+      showMessage(text.invalidTime, "error");
       return;
     }
 
@@ -178,15 +188,15 @@ function MyMedicationsPage() {
     try {
       if (editingId) {
         await updateUserMedication(editingId, medicationData);
-        setMessage(text.savedChanges);
+        showMessage(text.savedChanges, "success");
       } else {
         await addUserMedication(medicationData);
-        setMessage(text.saved);
+        showMessage(text.saved, "success");
       }
 
       resetForm();
     } catch {
-      setMessage(text.saveError);
+      showMessage(text.saveError, "error");
     }
   }
 
@@ -200,12 +210,12 @@ function MyMedicationsPage() {
       notes: medication.notes || "",
     });
 
-    setMessage(text.editing);
+    showMessage(text.editing, "info");
   }
 
   function handleCancelEdit() {
     resetForm();
-    setMessage(text.cancelled);
+    showMessage(text.cancelled, "info");
   }
 
   async function handleDelete(medicationId) {
@@ -224,9 +234,9 @@ function MyMedicationsPage() {
         resetForm();
       }
 
-      setMessage(text.deleted);
+      showMessage(text.deleted, "success");
     } catch {
-      setMessage(text.deleteError);
+      showMessage(text.deleteError, "error");
     }
   }
 
@@ -356,15 +366,20 @@ function MyMedicationsPage() {
 
             {message && (
               <Box
-                role="status"
+                role={messageType === "error" ? "alert" : "status"}
                 aria-live="polite"
-                background="teal.50"
+                background={messageType === "error" ? "red.50" : "teal.50"}
                 borderLeftWidth="4px"
-                borderColor="teal.500"
+                borderColor={messageType === "error" ? "red.500" : "teal.500"}
                 padding="3"
                 borderRadius="md"
               >
-                <Text fontWeight="600">{message}</Text>
+                <Text
+                  fontWeight="600"
+                  color={messageType === "error" ? "red.800" : "teal.900"}
+                >
+                  {message}
+                </Text>
               </Box>
             )}
           </Stack>
@@ -384,7 +399,20 @@ function MyMedicationsPage() {
       {!isLoading &&
         !error &&
         userMedications.length === 0 && (
-          <Text>{text.empty}</Text>
+          <Box
+            role="status"
+            background="teal.50"
+            borderLeftWidth="4px"
+            borderColor="teal.500"
+            padding="4"
+            borderRadius="md"
+            marginBottom="6"
+          >
+            <Text fontWeight="700" color="teal.900">
+              {text.empty}
+            </Text>
+            <Text marginTop="2">{text.emptyHint}</Text>
+          </Box>
         )}
 
       <SimpleGrid minChildWidth="280px" gap="6">

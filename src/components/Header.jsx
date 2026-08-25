@@ -7,7 +7,7 @@ import AccessibilityControls from "./AccessibilityControls";
 import MobileBottomNavigation from "./MobileBottomNavigation";
 import useLanguage from "../hooks/useLanguage";
 
-function Header() {
+function Header({ onMenuStateChange }) {
   const { isEnglish } = useLanguage();
   const location = useLocation();
   const [user, setUser] = useState(null);
@@ -23,6 +23,10 @@ function Header() {
 
     return stopListening;
   }, []);
+
+  useEffect(() => {
+    onMenuStateChange?.(menuOpen);
+  }, [menuOpen, onMenuStateChange]);
 
   async function handleLogout() {
     await signOut(auth);
@@ -213,27 +217,35 @@ function Header() {
             </Flex>
           </Box>
 
-          {user ? (
-            <Button
-              size="sm"
-              variant="outline"
-              color="white"
-              borderColor="white"
-              onClick={handleLogout}
-            >
-              {isEnglish ? "Sign out" : "Abmelden"}
-            </Button>
-          ) : (
-            <Flex className="header-auth-links" gap="4" align="center">
-              <Link className="header-link" to="/login" onClick={closeMenu} {...getNavigationLinkProps("/login")}>
-                {isEnglish ? "Sign in" : "Anmelden"}
-              </Link>
+          <Box className="nav-group nav-group-account">
+            <Text className="nav-group-label">
+              {isEnglish ? "Account" : "Konto"}
+            </Text>
+            <Flex className="nav-group-links" gap="2" align="center" flexWrap="wrap">
+              {user ? (
+                <Button
+                  className="header-link"
+                  size="sm"
+                  variant="outline"
+                  color="white"
+                  borderColor="white"
+                  onClick={handleLogout}
+                >
+                  {isEnglish ? "Sign out" : "Abmelden"}
+                </Button>
+              ) : (
+                <>
+                  <Link className="header-link" to="/login" onClick={closeMenu} {...getNavigationLinkProps("/login")}>
+                    {isEnglish ? "Sign in" : "Anmelden"}
+                  </Link>
 
-              <Link className="header-link" to="/registrieren" onClick={closeMenu} {...getNavigationLinkProps("/registrieren")}>
-                {isEnglish ? "Create account" : "Konto erstellen"}
-              </Link>
+                  <Link className="header-link" to="/registrieren" onClick={closeMenu} {...getNavigationLinkProps("/registrieren")}>
+                    {isEnglish ? "Create account" : "Konto erstellen"}
+                  </Link>
+                </>
+              )}
             </Flex>
-          )}
+          </Box>
         </Flex>
       </Flex>
 

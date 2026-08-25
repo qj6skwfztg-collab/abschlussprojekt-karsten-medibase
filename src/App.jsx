@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -21,13 +22,15 @@ import InstallPage from "./pages/InstallPage";
 import PersonalMedicationReminder from "./components/PersonalMedicationReminder";
 
 function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <>
-      <Header />
+      <Header onMenuStateChange={setMenuOpen} />
       <PersonalMedicationReminder />
 
       <main id="main-content">
-        <BackButton />
+        {!menuOpen && <BackButton />}
 
         <Routes>
         <Route

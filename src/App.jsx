@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import BackButton from "./components/BackButton";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import AboutPage from "./pages/AboutPage";
@@ -26,6 +27,8 @@ function App() {
       <PersonalMedicationReminder />
 
       <main id="main-content">
+        <BackButton />
+
         <Routes>
         <Route
           path="/"

@@ -4,6 +4,7 @@ import { Box, Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 import { ADMIN_UID, auth } from "../firebase";
 import AccessibilityControls from "./AccessibilityControls";
+import MobileBottomNavigation from "./MobileBottomNavigation";
 import useLanguage from "../hooks/useLanguage";
 
 function Header() {
@@ -52,12 +53,13 @@ function Header() {
   }
 
   return (
-    <Box
-      as="header"
-      background="teal.700"
-      color="white"
-      padding={{ base: "3", md: "5" }}
-    >
+    <>
+      <Box
+        as="header"
+        background="teal.700"
+        color="white"
+        padding={{ base: "3", md: "5" }}
+      >
       <Flex
         className="header-main"
         direction={{ base: "column", md: "row" }}
@@ -133,62 +135,83 @@ function Header() {
           marginX="auto"
         >
           {!isHomePage && (
-            <>
-              <Link className="header-link" to="/" onClick={closeMenu} {...getNavigationLinkProps("/")}>
-                {isEnglish ? "Home" : "Startseite"}
-              </Link>
+            <Link className="header-link" to="/" onClick={closeMenu} {...getNavigationLinkProps("/")}>
+              {isEnglish ? "Home" : "Startseite"}
+            </Link>
+          )}
 
-              <Link className="header-link" to="/medikamente" onClick={closeMenu} {...getNavigationLinkProps("/medikamente")}>
-                {isEnglish ? "Search medications" : "Medikamente suchen"}
-              </Link>
-
-              {user && (
-                <Link className="header-link" to="/meine-medikamente" onClick={closeMenu} {...getNavigationLinkProps("/meine-medikamente")}>
-                  {isEnglish ? "My medications" : "Meine Medikamente"}
+          {!isHomePage && (
+            <Box className="nav-group">
+              <Text className="nav-group-label">
+                {isEnglish ? "Medications" : "Medikamente"}
+              </Text>
+              <Flex className="nav-group-links" gap="2" align="center" flexWrap="wrap">
+                <Link className="header-link" to="/medikamente" onClick={closeMenu} {...getNavigationLinkProps("/medikamente")}>
+                  {isEnglish ? "Search medications" : "Medikamente suchen"}
                 </Link>
-              )}
-            </>
+
+                {user && (
+                  <Link className="header-link" to="/meine-medikamente" onClick={closeMenu} {...getNavigationLinkProps("/meine-medikamente")}>
+                    {isEnglish ? "My medications" : "Meine Medikamente"}
+                  </Link>
+                )}
+
+                {user?.uid === ADMIN_UID && user.emailVerified && (
+                  <Link className="header-link" to="/neuer-eintrag" onClick={closeMenu} {...getNavigationLinkProps("/neuer-eintrag")}>
+                    {isEnglish ? "New entry" : "Neuer Eintrag"}
+                  </Link>
+                )}
+              </Flex>
+            </Box>
           )}
 
           {user && (
-            <Link className="header-link" to="/konto" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
-              {isEnglish ? "My account" : "Mein Konto"}
-            </Link>
+            <Box className="nav-group">
+              <Text className="nav-group-label">
+                {isEnglish ? "Personal data" : "Meine persönlichen Daten"}
+              </Text>
+              <Flex className="nav-group-links" gap="2" align="center">
+                <Link className="header-link" to="/konto" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
+                  {isEnglish ? "My account" : "Mein Konto"}
+                </Link>
+              </Flex>
+            </Box>
           )}
 
-          {user?.uid === ADMIN_UID && user.emailVerified && (
-            <Link className="header-link" to="/neuer-eintrag" onClick={closeMenu} {...getNavigationLinkProps("/neuer-eintrag")}>
-              {isEnglish ? "New entry" : "Neuer Eintrag"}
-            </Link>
-          )}
+          <Box className="nav-group">
+            <Text className="nav-group-label">
+              {isEnglish ? "Help and information" : "Hilfe und Informationen"}
+            </Text>
+            <Flex className="nav-group-links" gap="2" align="center" flexWrap="wrap">
+              <Link className="header-link" to="/installieren" onClick={closeMenu} {...getNavigationLinkProps("/installieren")}>
+                {isEnglish ? "Install Curaelis" : "Curaelis installieren"}
+              </Link>
 
-          <Link className="header-link" to="/installieren" onClick={closeMenu} {...getNavigationLinkProps("/installieren")}>
-            {isEnglish ? "Install Curaelis" : "Curaelis installieren"}
-          </Link>
+              <Link className="header-link" to="/ueber" onClick={closeMenu} {...getNavigationLinkProps("/ueber")}>
+                {isEnglish ? "About Curaelis" : "Über Curaelis"}
+              </Link>
 
-          <Link className="header-link" to="/ueber" onClick={closeMenu} {...getNavigationLinkProps("/ueber")}>
-            {isEnglish ? "About Curaelis" : "Über Curaelis"}
-          </Link>
-
-          {!isHomePage && (
-            <Link
-              to="/notfall"
-              onClick={closeMenu}
-              style={{
-                backgroundColor: "#c53030",
-                color: "white",
-                padding: "10px 16px",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                boxShadow:
-                  location.pathname === "/notfall"
-                    ? "0 0 0 3px rgba(255, 255, 255, 0.8)"
-                    : "none",
-              }}
-            >
-              {isEnglish ? "Emergency help" : "Notfallhilfe"}
-            </Link>
-          )}
+              {!isHomePage && (
+                <Link
+                  to="/notfall"
+                  onClick={closeMenu}
+                  style={{
+                    backgroundColor: "#c53030",
+                    color: "white",
+                    padding: "10px 16px",
+                    borderRadius: "8px",
+                    fontWeight: "bold",
+                    boxShadow:
+                      location.pathname === "/notfall"
+                        ? "0 0 0 3px rgba(255, 255, 255, 0.8)"
+                        : "none",
+                  }}
+                >
+                  {isEnglish ? "Emergency help" : "Notfallhilfe"}
+                </Link>
+              )}
+            </Flex>
+          </Box>
 
           {user ? (
             <Button
@@ -240,7 +263,10 @@ function Header() {
             : "‹  Tipp: Auf vielen Smartphones kannst du vom Bildschirmrand wischen, um zurück oder vorwärts zu gehen.  ›"}
         </Text>
       </Box>
-    </Box>
+      </Box>
+
+      <MobileBottomNavigation onNavigate={closeMenu} />
+    </>
   );
 }
 

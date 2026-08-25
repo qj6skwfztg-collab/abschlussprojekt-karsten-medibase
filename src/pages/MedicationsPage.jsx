@@ -46,7 +46,7 @@ function MedicationsPage() {
   );
 
   const officialMedicationSearchUrl =
-    "https://www.bfarm.de/DE/Arzneimittel/Arzneimittelinformationen/Arzneimittel-recherchieren/AMIce/_node.html";
+    "https://www.bfarm.de/SiteGlobals/Forms/Suche/Expertensuche_Formular.html";
 
   return (
     <Box padding="8">
@@ -79,27 +79,27 @@ function MedicationsPage() {
             <>
               <Text marginTop="2">
                 {isEnglish
-                  ? "You can search for this medication in the official German medicines database."
-                  : "Du kannst dieses Medikament in der offiziellen deutschen Arzneimitteldatenbank suchen."}
+                  ? "You can continue searching for this medication in the official BfArM search."
+                  : "Du kannst dieses Medikament in der offiziellen BfArM-Suche weiter suchen."}
               </Text>
 
               <Button
                 as="a"
-                href={officialMedicationSearchUrl}
+                href={`${officialMedicationSearchUrl}?query=${encodeURIComponent(searchTerm.trim())}`}
                 target="_blank"
                 rel="noreferrer"
                 marginTop="4"
                 colorPalette="teal"
               >
                 {isEnglish
-                  ? "Open official medicines search"
-                  : "Offizielle Arzneimittelsuche öffnen"}
+                  ? "Open official BfArM search"
+                  : "Offizielle BfArM-Suche öffnen"}
               </Button>
 
               <Text marginTop="2" fontSize="sm" color="gray.600">
                 {isEnglish
-                  ? "The search term must be entered again on the official website."
-                  : "Der Suchbegriff muss auf der offiziellen Seite erneut eingegeben werden."}
+                  ? `The search opens with “${searchTerm.trim()}” already entered.`
+                  : `Die Suche wird bereits mit „${searchTerm.trim()}“ geöffnet.`}
               </Text>
             </>
           )}

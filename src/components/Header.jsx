@@ -248,22 +248,7 @@ function Header() {
         <AccessibilityControls />
       </Box>
 
-      <Box
-        display={{ base: "block", md: "none" }}
-        textAlign="center"
-        marginTop="2"
-      >
-        <Text
-          fontSize="xs"
-          color="whiteAlpha.800"
-          aria-label={isEnglish ? "Mobile swipe navigation tip" : "Hinweis zur Navigation auf dem Handy"}
-        >
-          {isEnglish
-            ? "‹  Tip: On many smartphones, swipe from the edge to go back or forward.  ›"
-            : "‹  Tipp: Auf vielen Smartphones kannst du vom Bildschirmrand wischen, um zurück oder vorwärts zu gehen.  ›"}
-        </Text>
-      </Box>
-      </Box>
+    </Box>
 
       <MobileBottomNavigation onNavigate={closeMenu} />
     </>

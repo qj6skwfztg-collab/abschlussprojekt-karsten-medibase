@@ -7,6 +7,7 @@ import {
   onSnapshot,
   serverTimestamp,
 } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   Box,
   Button,
@@ -19,14 +20,26 @@ import {
 import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 
-function EmergencyContacts({ emergencyNumber }) {
+function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
   const { isEnglish } = useLanguage();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [contacts, setContacts] = useState([]);
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+  const [user, setUser] = useState(null);
 
-  const user = auth.currentUser;
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+
+        if (!currentUser) {
+          setContacts([]);
+        }
+      }),
+    []
+  );
 
   useEffect(() => {
     if (!user) {
@@ -40,21 +53,33 @@ function EmergencyContacts({ emergencyNumber }) {
       "emergencyContacts"
     );
 
-    const stopListening = onSnapshot(contactsReference, (snapshot) => {
-      const loadedContacts = snapshot.docs.map((contactDocument) => ({
-        id: contactDocument.id,
-        ...contactDocument.data(),
-      }));
+    const stopListening = onSnapshot(
+      contactsReference,
+      (snapshot) => {
+        const loadedContacts = snapshot.docs.map((contactDocument) => ({
+          id: contactDocument.id,
+          ...contactDocument.data(),
+        }));
 
-      setContacts(loadedContacts);
-    });
+        setContacts(loadedContacts);
+      },
+      () => {
+        setMessage(
+          isEnglish
+            ? "The emergency contacts could not be loaded."
+            : "Die Notfallkontakte konnten nicht geladen werden."
+        );
+        setMessageType("error");
+      }
+    );
 
     return stopListening;
-  }, [user]);
+  }, [isEnglish, user]);
 
   async function handleSubmit(event) {
     event.preventDefault();
     setMessage("");
+    setMessageType("");
 
     if (!user) {
       setMessage(isEnglish ? "Please sign in first." : "Bitte melde dich zuerst an.");
@@ -71,18 +96,32 @@ function EmergencyContacts({ emergencyNumber }) {
       return;
     }
 
-    await addDoc(
-      collection(db, "users", user.uid, "emergencyContacts"),
-      {
-        name: name.trim(),
-        phone: phone.trim(),
-        createdAt: serverTimestamp(),
-      }
-    );
+    try {
+      await addDoc(
+        collection(db, "users", user.uid, "emergencyContacts"),
+        {
+          name: name.trim(),
+          phone: phone.trim(),
+          createdAt: serverTimestamp(),
+        }
+      );
 
-    setName("");
-    setPhone("");
-    setMessage(isEnglish ? "Emergency contact saved." : "Notfallkontakt wurde gespeichert.");
+      setName("");
+      setPhone("");
+      setMessage(
+        isEnglish
+          ? "Emergency contact saved."
+          : "Notfallkontakt wurde gespeichert."
+      );
+      setMessageType("success");
+    } catch {
+      setMessage(
+        isEnglish
+          ? "The emergency contact could not be saved."
+          : "Der Notfallkontakt konnte nicht gespeichert werden."
+      );
+      setMessageType("error");
+    }
   }
 
   async function handleDelete(contactId) {
@@ -90,12 +129,35 @@ function EmergencyContacts({ emergencyNumber }) {
       return;
     }
 
-    await deleteDoc(
-      doc(db, "users", user.uid, "emergencyContacts", contactId)
-    );
+    try {
+      await deleteDoc(
+        doc(db, "users", user.uid, "emergencyContacts", contactId)
+      );
+      setMessage(
+        isEnglish ? "Emergency contact deleted." : "Notfallkontakt wurde gelöscht."
+      );
+      setMessageType("success");
+    } catch {
+      setMessage(
+        isEnglish
+          ? "The emergency contact could not be deleted."
+          : "Der Notfallkontakt konnte nicht gelöscht werden."
+      );
+      setMessageType("error");
+    }
   }
 
   function openEmergencyMessage(contact) {
+    if (!emergencyCallStarted) {
+      setMessage(
+        isEnglish
+          ? "Start the emergency call first."
+          : "Starte zuerst den Notruf."
+      );
+      setMessageType("error");
+      return;
+    }
+
     const emergencyText =
       isEnglish
         ? `I have tried to call emergency services on ${emergencyNumber}. Please contact me and check whether I need help.`
@@ -154,7 +216,13 @@ function EmergencyContacts({ emergencyNumber }) {
       </form>
 
       {message && (
-        <Text marginTop="4">
+        <Text
+          marginTop="4"
+          color={messageType === "error" ? "red.700" : "teal.700"}
+          fontWeight="600"
+          role={messageType === "error" ? "alert" : "status"}
+          aria-live="polite"
+        >
           {message}
         </Text>
       )}
@@ -180,13 +248,23 @@ function EmergencyContacts({ emergencyNumber }) {
             </Text>
 
             <Stack gap="3" marginTop="4">
-              <Button
-                background="orange.500"
-                color="white"
-                onClick={() => openEmergencyMessage(contact)}
-              >
-                {isEnglish ? "Prepare emergency message" : "Notfallnachricht vorbereiten"}
-              </Button>
+              {emergencyCallStarted ? (
+                <Button
+                  background="orange.500"
+                  color="white"
+                  onClick={() => openEmergencyMessage(contact)}
+                >
+                  {isEnglish
+                    ? "Prepare emergency message"
+                    : "Notfallnachricht vorbereiten"}
+                </Button>
+              ) : (
+                <Text fontSize="sm" color="gray.600">
+                  {isEnglish
+                    ? "After starting the emergency call, you can prepare a message here."
+                    : "Nach dem Start des Notrufs kannst du hier eine Nachricht vorbereiten."}
+                </Text>
+              )}
 
               <Button
                 colorPalette="red"

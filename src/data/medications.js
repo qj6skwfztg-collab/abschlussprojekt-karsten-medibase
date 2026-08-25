@@ -47,9 +47,8 @@ const medications = [
       "Loratadin ist ein langwirkendes Antihistaminikum zur symptomatischen Behandlung von allergischem Schnupfen und chronischer Nesselsucht.",
     descriptionEn:
       "Loratadine is a long-acting antihistamine used for the symptomatic treatment of allergic rhinitis and chronic hives.",
-    source: "BfArM",
-    sourceUrl:
-      "https://jahresbericht.bfarm.de/SiteGlobals/Forms/Suche/Expertensuche_Formular.html",
+    source: "gesund.bund.de",
+    sourceUrl: "https://gesund.bund.de/heuschnupfen",
   },
 
     {
@@ -61,9 +60,8 @@ const medications = [
       "Pantoprazol vermindert die Bildung von Magensäure und wird bei Erwachsenen unter anderem zur kurzzeitigen Behandlung von Refluxbeschwerden wie Sodbrennen eingesetzt.",
     descriptionEn:
       "Pantoprazole reduces stomach acid production and is used in adults for the short-term treatment of reflux symptoms such as heartburn.",
-    source: "EMA",
-    sourceUrl:
-      "https://www.ema.europa.eu/en/medicines/human/EPAR/pantozol-control",
+    source: "gesund.bund.de",
+    sourceUrl: "https://gesund.bund.de/glossar/pantoprazol",
   },
   {
     id: "dimenhydrinat",

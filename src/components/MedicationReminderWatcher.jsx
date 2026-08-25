@@ -49,6 +49,17 @@ function getMedicationTimes(medication) {
   ];
 }
 
+function isDueWithinReminderWindow(intakeTime, now) {
+  const [hour, minute] = intakeTime.split(":").map(Number);
+  const scheduledTime = new Date(now);
+
+  scheduledTime.setHours(hour, minute, 0, 0);
+
+  const elapsedMilliseconds = now.getTime() - scheduledTime.getTime();
+
+  return elapsedMilliseconds >= 0 && elapsedMilliseconds <= 15 * 60 * 1000;
+}
+
 function MedicationReminderWatcher({ medications }) {
   const { isEnglish } = useLanguage();
   const isChecking = useRef(false);
@@ -76,10 +87,6 @@ function MedicationReminderWatcher({ medications }) {
 
       const now = new Date();
 
-      const hours = String(now.getHours()).padStart(2, "0");
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-
-      const currentTime = `${hours}:${minutes}`;
       const currentDate = [
         now.getFullYear(),
         String(now.getMonth() + 1).padStart(2, "0"),
@@ -91,12 +98,12 @@ function MedicationReminderWatcher({ medications }) {
 
       for (const medication of medications) {
         for (const intakeTime of getMedicationTimes(medication)) {
-          if (intakeTime !== currentTime) {
+          if (!isDueWithinReminderWindow(intakeTime, now)) {
             continue;
           }
 
           const reminderKey =
-            `reminder-${medication.id}-${currentDate}-${currentTime}`;
+            `reminder-${medication.id}-${currentDate}-${intakeTime}`;
 
           const reminderWasShown =
             localStorage.getItem(reminderKey);

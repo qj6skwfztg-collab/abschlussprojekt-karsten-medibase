@@ -18,6 +18,34 @@ service cloud.firestore {
         && request.auth.uid == 'IjelVzBlIIgkJWgLiDdHrhLtwDf1';
     }
 
+    function validTime(value) {
+      return value is string
+        && value.matches('^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$');
+    }
+
+    function validIntakeTimes() {
+      return request.resource.data.intakeTimes is list
+        && request.resource.data.intakeTimes.size() >= 1
+        && request.resource.data.intakeTimes.size() <= 8
+        && validTime(request.resource.data.intakeTimes[0])
+        && (request.resource.data.intakeTimes.size() < 2
+          || validTime(request.resource.data.intakeTimes[1]))
+        && (request.resource.data.intakeTimes.size() < 3
+          || validTime(request.resource.data.intakeTimes[2]))
+        && (request.resource.data.intakeTimes.size() < 4
+          || validTime(request.resource.data.intakeTimes[3]))
+        && (request.resource.data.intakeTimes.size() < 5
+          || validTime(request.resource.data.intakeTimes[4]))
+        && (request.resource.data.intakeTimes.size() < 6
+          || validTime(request.resource.data.intakeTimes[5]))
+        && (request.resource.data.intakeTimes.size() < 7
+          || validTime(request.resource.data.intakeTimes[6]))
+        && (request.resource.data.intakeTimes.size() < 8
+          || validTime(request.resource.data.intakeTimes[7]))
+        && request.resource.data.intakeTimes.toSet().size()
+          == request.resource.data.intakeTimes.size();
+    }
+
     function validPersonalMedication() {
       return request.resource.data.keys().hasAll([
           'name',
@@ -41,15 +69,8 @@ service cloud.firestore {
         && request.resource.data.dosage is string
         && request.resource.data.dosage.size() >= 1
         && request.resource.data.dosage.size() <= 100
-        && request.resource.data.intakeTime is string
-        && request.resource.data.intakeTime.size() >= 4
-        && request.resource.data.intakeTime.size() <= 20
-        && request.resource.data.intakeTimes is list
-        && request.resource.data.intakeTimes.size() >= 1
-        && request.resource.data.intakeTimes.size() <= 8
-        && request.resource.data.intakeTimes[0] is string
-        && request.resource.data.intakeTimes.toSet().size()
-          == request.resource.data.intakeTimes.size()
+        && validTime(request.resource.data.intakeTime)
+        && validIntakeTimes()
         && request.resource.data.notes is string
         && request.resource.data.notes.size() <= 500
         && request.resource.data.createdAt is timestamp;

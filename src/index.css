@@ -225,6 +225,11 @@ a {
     justify-content: flex-end;
     margin-left: 32px;
   }
+
+  header #main-navigation .nav-group-account .nav-group-label,
+  header #main-navigation .nav-group-help .nav-group-label {
+    display: none;
+  }
 }
 
 #root {

@@ -275,15 +275,15 @@ function HomePage() {
               outlineOffset: "3px",
             }}
           >
-            <Link to="/neuer-eintrag">
-              <FeatureIcon symbol="📝" background="blue.100" />
+            <Link to="/meine-medikamente">
+              <FeatureIcon symbol="💊" background="blue.100" />
 
               <Heading size="md">
-                {isEnglish ? "Personal entries" : "Eigene Einträge"}
+                {isEnglish ? "My medications" : "Meine Medikamente"}
               </Heading>
 
               <Text marginTop="3">
-                {isEnglish ? "Add personal entries and save them securely in your account." : "Ergänze eigene Einträge und speichere sie sicher in deinem Benutzerkonto."}
+                {isEnglish ? "Manage your personal medications and reminders securely in your account." : "Verwalte deine persönlichen Medikamente und Erinnerungen sicher in deinem Benutzerkonto."}
               </Text>
             </Link>
           </Box>

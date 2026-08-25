@@ -8,6 +8,7 @@ const COUNTRY_STORAGE_KEY = "curaelis-emergency-country";
 
 function EmergencyPage() {
   const { isEnglish } = useLanguage();
+  const [emergencyCallStarted, setEmergencyCallStarted] = useState(false);
   const [selectedCountryCode, setSelectedCountryCode] = useState(() => {
     const savedCountryCode = localStorage.getItem(COUNTRY_STORAGE_KEY);
 
@@ -26,6 +27,7 @@ function EmergencyPage() {
     const countryCode = event.target.value;
 
     setSelectedCountryCode(countryCode);
+    setEmergencyCallStarted(false);
     localStorage.setItem(COUNTRY_STORAGE_KEY, countryCode);
   }
 
@@ -104,6 +106,7 @@ function EmergencyPage() {
           <Button
             as="a"
             href={`tel:${selectedCountry.ambulanceNumber}`}
+            onClick={() => setEmergencyCallStarted(true)}
             background="red.600"
             color="white"
             size="lg"
@@ -143,6 +146,7 @@ function EmergencyPage() {
 
         <EmergencyContacts
           emergencyNumber={selectedCountry.ambulanceNumber}
+          emergencyCallStarted={emergencyCallStarted}
         />
     </Box>
   );

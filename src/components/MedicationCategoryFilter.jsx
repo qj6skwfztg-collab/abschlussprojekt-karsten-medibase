@@ -27,8 +27,8 @@ function MedicationCategoryFilter({
         <option value="Alle">{isEnglish ? "All categories" : "Alle Kategorien"}</option>
 
         {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
+          <option key={category.value} value={category.value}>
+            {category.label}
           </option>
         ))}
       </select>

@@ -182,7 +182,7 @@ function Header({ onMenuStateChange }) {
             </Box>
           )}
 
-          <Box className="nav-group">
+          <Box className="nav-group nav-group-help">
             <Text className="nav-group-label">
               {isEnglish ? "Help and information" : "Hilfe und Informationen"}
             </Text>

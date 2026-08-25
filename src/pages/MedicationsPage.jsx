@@ -21,11 +21,17 @@ function MedicationsPage() {
     useState("Alle");
 
   const categories = [
-    ...new Set(
-      medications.map(
-        (medication) => medication.category
-      )
-    ),
+    ...new Map(
+      medications.map((medication) => [
+        medication.category,
+        {
+          value: medication.category,
+          label: isEnglish
+            ? medication.categoryEn ?? medication.category
+            : medication.category,
+        },
+      ])
+    ).values(),
   ];
 
   const filteredMedications = medications.filter(

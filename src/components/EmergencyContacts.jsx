@@ -147,7 +147,7 @@ function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
     }
   }
 
-  function openEmergencyMessage(contact) {
+  function notifyEmergencyContacts() {
     if (!emergencyCallStarted) {
       setMessage(
         isEnglish
@@ -163,10 +163,28 @@ function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
         ? `I have tried to call emergency services on ${emergencyNumber}. Please contact me and check whether I need help.`
         : `Ich habe versucht, den Notruf ${emergencyNumber} zu kontaktieren. Bitte melde dich bei mir und prüfe, ob ich Hilfe benötige.`;
 
-    const smsLink =
-      `sms:${contact.phone}?body=${encodeURIComponent(emergencyText)}`;
+    if (contacts.length === 0) {
+      setMessage(
+        isEnglish
+          ? "No emergency contacts have been saved yet."
+          : "Es wurden noch keine Notfallkontakte gespeichert."
+      );
+      setMessageType("error");
+      return;
+    }
 
-    window.open(smsLink, "_self");
+    const recipients = contacts
+      .map((contact) => contact.phone.trim())
+      .join(",");
+    const smsLink = `sms:${recipients}?body=${encodeURIComponent(emergencyText)}`;
+
+    setMessage(
+      isEnglish
+        ? "The messaging app was opened. Tap Send to notify your emergency contacts."
+        : "Die Nachrichten-App wurde geöffnet. Tippe auf Senden, um deine Notfallkontakte zu benachrichtigen."
+    );
+    setMessageType("success");
+    window.location.href = smsLink;
   }
 
   if (!user) {
@@ -186,6 +204,27 @@ function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
       <Text marginBottom="5">
         {isEnglish ? "You can save up to three people. A message is not sent automatically; it first opens in your messaging app." : "Du kannst bis zu drei Personen speichern. Eine Nachricht wird nicht automatisch versendet, sondern zuerst in deiner Nachrichten-App geöffnet."}
       </Text>
+
+      {emergencyCallStarted && contacts.length > 0 && (
+        <Button
+          marginBottom="5"
+          background="orange.500"
+          color="white"
+          onClick={notifyEmergencyContacts}
+        >
+          {isEnglish
+            ? "Notify emergency contacts now"
+            : "Notfallkontakte jetzt benachrichtigen"}
+        </Button>
+      )}
+
+      {!emergencyCallStarted && contacts.length > 0 && (
+        <Text marginBottom="5" color="gray.600">
+          {isEnglish
+            ? "Start the emergency call first. Then you can notify all saved contacts together."
+            : "Starte zuerst den Notruf. Danach kannst du alle gespeicherten Kontakte gemeinsam benachrichtigen."}
+        </Text>
+      )}
 
       <form onSubmit={handleSubmit}>
         <Stack gap="4">
@@ -248,24 +287,6 @@ function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
             </Text>
 
             <Stack gap="3" marginTop="4">
-              {emergencyCallStarted ? (
-                <Button
-                  background="orange.500"
-                  color="white"
-                  onClick={() => openEmergencyMessage(contact)}
-                >
-                  {isEnglish
-                    ? "Prepare emergency message"
-                    : "Notfallnachricht vorbereiten"}
-                </Button>
-              ) : (
-                <Text fontSize="sm" color="gray.600">
-                  {isEnglish
-                    ? "After starting the emergency call, you can prepare a message here."
-                    : "Nach dem Start des Notrufs kannst du hier eine Nachricht vorbereiten."}
-                </Text>
-              )}
-
               <Button
                 colorPalette="red"
                 variant="outline"

@@ -116,6 +116,15 @@ a {
     border-bottom: 1px solid rgba(255, 255, 255, 0.22);
   }
 
+  header #main-navigation .nav-group-help + .nav-group-account {
+    margin-top: 16px;
+  }
+
+  header #main-navigation .nav-group-help .nav-group-label,
+  header #main-navigation .nav-group-account .nav-group-label {
+    letter-spacing: 0.08em;
+  }
+
   header #main-navigation .header-auth-links {
     width: 100%;
     flex-direction: column;

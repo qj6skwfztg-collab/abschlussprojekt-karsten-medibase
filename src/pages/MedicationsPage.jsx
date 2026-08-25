@@ -91,7 +91,7 @@ function MedicationsPage() {
 
               <Button
                 as="a"
-                href={`${officialMedicationSearchUrl}?resourceId=469750&input_=593296&pageLocale=de&templateQueryString=${encodeURIComponent(searchTerm.trim())}#results`}
+                href={`${officialMedicationSearchUrl}?nn=593296&resourceId=469750&input_=593296&pageLocale=de&templateQueryString=${encodeURIComponent(searchTerm.trim())}&submit=Senden#results`}
                 marginTop="4"
                 colorPalette="teal"
               >

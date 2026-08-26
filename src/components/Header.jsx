@@ -144,8 +144,7 @@ function Header({ onMenuStateChange }) {
             </Link>
           )}
 
-          {!isHomePage && (
-            <Box className="nav-group">
+          <Box className="nav-group">
               <Text className="nav-group-label">
                 {isEnglish ? "Medications" : "Medikamente"}
               </Text>
@@ -166,8 +165,7 @@ function Header({ onMenuStateChange }) {
                   </Link>
                 )}
               </Flex>
-            </Box>
-          )}
+          </Box>
 
           {user && (
             <Box className="nav-group">
@@ -199,25 +197,23 @@ function Header({ onMenuStateChange }) {
                 {isEnglish ? "About Curaelis" : "Über Curaelis"}
               </Link>
 
-              {!isHomePage && (
-                <Link
-                  to="/notfall"
-                  onClick={closeMenu}
-                  style={{
-                    backgroundColor: "#c53030",
-                    color: "white",
-                    padding: "10px 16px",
-                    borderRadius: "8px",
-                    fontWeight: "bold",
-                    boxShadow:
-                      location.pathname === "/notfall"
-                        ? "0 0 0 3px rgba(255, 255, 255, 0.8)"
-                        : "none",
-                  }}
-                >
-                  {isEnglish ? "Emergency help" : "Notfallhilfe"}
-                </Link>
-              )}
+              <Link
+                to="/notfall"
+                onClick={closeMenu}
+                style={{
+                  backgroundColor: "#c53030",
+                  color: "white",
+                  padding: "10px 16px",
+                  borderRadius: "8px",
+                  fontWeight: "bold",
+                  boxShadow:
+                    location.pathname === "/notfall"
+                      ? "0 0 0 3px rgba(255, 255, 255, 0.8)"
+                      : "none",
+                }}
+              >
+                {isEnglish ? "Emergency help" : "Notfallhilfe"}
+              </Link>
             </Flex>
           </Box>
 

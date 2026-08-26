@@ -51,8 +51,16 @@ function MedicationsPage() {
     }
   );
 
-  const officialMedicationDatabaseUrl =
-    "https://portal.bfarm.de/amguifree/";
+  function getOfficialMedicationSearchUrl(term) {
+    const searchParams = new URLSearchParams({
+      resourceId: "468548",
+      input_: "593296",
+      pageLocale: "de",
+      templateQueryString: term.trim(),
+    });
+
+    return `https://www.bfarm.de/SiteGlobals/Forms/Suche/Servicesuche_Formular.html?${searchParams.toString()}`;
+  }
 
   return (
     <Box padding="8">
@@ -85,21 +93,21 @@ function MedicationsPage() {
             <>
               <Text marginTop="2">
                 {isEnglish
-                  ? "This medication is not yet available as a Curaelis card. You can search for it in the official AMIce medication database."
-                  : "Dieses Medikament ist noch nicht als Curaelis-Karte vorhanden. Du kannst es in der offiziellen AMIce-Arzneimitteldatenbank suchen."}
+                  ? "This medication is not yet available as a Curaelis card. You can search for it directly on the official BfArM website."
+                  : "Dieses Medikament ist noch nicht als Curaelis-Karte vorhanden. Du kannst es direkt auf der offiziellen BfArM-Website suchen."}
               </Text>
 
               <Button
                 as="a"
-                href={officialMedicationDatabaseUrl}
+                href={getOfficialMedicationSearchUrl(searchTerm)}
                 target="_blank"
                 rel="noopener noreferrer"
                 marginTop="4"
                 colorPalette="teal"
               >
                 {isEnglish
-                  ? "Open official AMIce database"
-                  : "Offizielle AMIce-Datenbank öffnen"}
+                  ? "Search on the official BfArM website"
+                  : "Offizielle BfArM-Suche öffnen"}
               </Button>
 
               <Text marginTop="2" fontSize="sm" color="gray.600">

@@ -27,18 +27,20 @@ createRoot(document.getElementById("root")).render(
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
-      await navigator.serviceWorker.register(
-        "/medibase-sw.js"
-      );
+      if (import.meta.env.PROD) {
+        await navigator.serviceWorker.register("/medibase-sw.js");
 
-      console.log(
-        "Curaelis Service Worker wurde registriert."
+        console.log("Curaelis Service Worker wurde registriert.");
+        return;
+      }
+
+      const registrations = await navigator.serviceWorker.getRegistrations();
+
+      await Promise.all(
+        registrations.map((registration) => registration.unregister())
       );
     } catch (error) {
-      console.error(
-        "Service Worker konnte nicht registriert werden:",
-        error
-      );
+      console.error("Service Worker konnte nicht eingerichtet werden.", error);
     }
   });
 }

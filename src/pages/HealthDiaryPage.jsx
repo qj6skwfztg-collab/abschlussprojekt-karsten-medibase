@@ -10,6 +10,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import useHealthEntries from "../hooks/useHealthEntries";
 import useLanguage from "../hooks/useLanguage";
 
@@ -103,6 +104,7 @@ function HealthDiaryPage() {
           "Record important measurements, symptoms and medication-related observations in one place.",
         privacy:
           "These entries are private and can only be seen in your own account.",
+        myMedications: "Open my medications",
         addTitle: "Add health entry",
         type: "What would you like to record?",
         bloodPressure: "Blood pressure",
@@ -161,6 +163,7 @@ function HealthDiaryPage() {
           "Dokumentiere wichtige Messwerte, Beschwerden und Beobachtungen zu deinen Medikamenten an einem Ort.",
         privacy:
           "Diese Einträge sind privat und nur in deinem eigenen Konto sichtbar.",
+        myMedications: "Meine Medikamente öffnen",
         addTitle: "Gesundheitseintrag hinzufügen",
         type: "Was möchtest du eintragen?",
         bloodPressure: "Blutdruck",
@@ -457,6 +460,17 @@ function HealthDiaryPage() {
         <Text mt="3" color="teal.800" fontWeight="600">
           🔒 {text.privacy}
         </Text>
+
+        <Button
+          as={Link}
+          to="/meine-medikamente"
+          marginTop="5"
+          variant="outline"
+          colorPalette="teal"
+          size="lg"
+        >
+          💊 {text.myMedications}
+        </Button>
       </Box>
 
       <Box

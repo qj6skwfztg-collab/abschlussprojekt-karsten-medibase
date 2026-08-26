@@ -51,8 +51,8 @@ function MedicationsPage() {
     }
   );
 
-  const officialMedicationSearchUrl =
-    "https://www.bfarm.de/SiteGlobals/Forms/Suche/Expertensuche_Formular.html";
+  const officialMedicationDatabaseUrl =
+    "https://portal.bfarm.de/amguifree/";
 
   return (
     <Box padding="8">
@@ -85,25 +85,27 @@ function MedicationsPage() {
             <>
               <Text marginTop="2">
                 {isEnglish
-                  ? "You can continue searching for this medication in the official BfArM search."
-                  : "Du kannst dieses Medikament in der offiziellen BfArM-Suche weiter suchen."}
+                  ? "This medication is not yet available as a Curaelis card. You can search for it in the official AMIce medication database."
+                  : "Dieses Medikament ist noch nicht als Curaelis-Karte vorhanden. Du kannst es in der offiziellen AMIce-Arzneimitteldatenbank suchen."}
               </Text>
 
               <Button
                 as="a"
-                href={`${officialMedicationSearchUrl}?nn=593296&resourceId=469750&input_=593296&pageLocale=de&templateQueryString=${encodeURIComponent(searchTerm.trim())}&submit=Senden#results`}
+                href={officialMedicationDatabaseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 marginTop="4"
                 colorPalette="teal"
               >
                 {isEnglish
-                  ? "Open official BfArM search"
-                  : "Offizielle BfArM-Suche öffnen"}
+                  ? "Open official AMIce database"
+                  : "Offizielle AMIce-Datenbank öffnen"}
               </Button>
 
               <Text marginTop="2" fontSize="sm" color="gray.600">
                 {isEnglish
-                  ? `The search opens with “${searchTerm.trim()}” already entered.`
-                  : `Die Suche wird bereits mit „${searchTerm.trim()}“ geöffnet.`}
+                  ? `Search term: “${searchTerm.trim()}”`
+                  : `Gesuchter Begriff: „${searchTerm.trim()}“`}
               </Text>
             </>
           )}

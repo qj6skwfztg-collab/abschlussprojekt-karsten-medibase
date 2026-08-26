@@ -178,6 +178,10 @@ function Header({ onMenuStateChange }) {
                 <Link className="header-link" to="/konto" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
                   {isEnglish ? "My account" : "Mein Konto"}
                 </Link>
+
+                <Link className="header-link" to="/gesundheitstagebuch" onClick={closeMenu} {...getNavigationLinkProps("/gesundheitstagebuch")}>
+                  {isEnglish ? "Health diary" : "Gesundheitstagebuch"}
+                </Link>
               </Flex>
             </Box>
           )}

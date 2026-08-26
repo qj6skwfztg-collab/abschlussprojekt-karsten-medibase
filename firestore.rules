@@ -96,6 +96,74 @@ service cloud.firestore {
         && request.resource.data.createdAt is timestamp;
     }
 
+    function validHealthEntry() {
+      return request.resource.data.keys().hasAll([
+          'type',
+          'value',
+          'secondaryValue',
+          'unit',
+          'context',
+          'notes',
+          'measuredAt',
+          'createdAt'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'type',
+          'value',
+          'secondaryValue',
+          'unit',
+          'context',
+          'notes',
+          'measuredAt',
+          'createdAt'
+        ])
+        && request.resource.data.type is string
+        && request.resource.data.type in [
+          'bloodPressure',
+          'bloodSugar',
+          'pulse',
+          'weight',
+          'oxygen',
+          'temperature',
+          'symptom'
+        ]
+        && request.resource.data.value is number
+        && request.resource.data.value >= 0
+        && request.resource.data.secondaryValue is number
+        && request.resource.data.secondaryValue >= 0
+        && request.resource.data.unit is string
+        && request.resource.data.unit.size() >= 1
+        && request.resource.data.unit.size() <= 20
+        && request.resource.data.context is string
+        && request.resource.data.context.size() <= 100
+        && request.resource.data.notes is string
+        && request.resource.data.notes.size() <= 500
+        && request.resource.data.measuredAt is timestamp
+        && request.resource.data.createdAt is timestamp
+        && (request.resource.data.type != 'bloodPressure'
+          || (request.resource.data.value >= 50
+            && request.resource.data.value <= 300
+            && request.resource.data.secondaryValue >= 30
+            && request.resource.data.secondaryValue <= 200
+            && request.resource.data.secondaryValue < request.resource.data.value))
+        && (request.resource.data.type != 'bloodSugar'
+          || request.resource.data.value <= 1000)
+        && (request.resource.data.type != 'pulse'
+          || (request.resource.data.value >= 20
+            && request.resource.data.value <= 250))
+        && (request.resource.data.type != 'weight'
+          || (request.resource.data.value > 0
+            && request.resource.data.value <= 500))
+        && (request.resource.data.type != 'oxygen'
+          || (request.resource.data.value >= 50
+            && request.resource.data.value <= 100))
+        && (request.resource.data.type != 'temperature'
+          || (request.resource.data.value >= 25
+            && request.resource.data.value <= 45))
+        && (request.resource.data.type != 'symptom'
+          || request.resource.data.value <= 10);
+    }
+
     match /medications/{medicationId} {
       allow read: if true;
 
@@ -139,6 +207,15 @@ service cloud.firestore {
         && validEmergencyContact();
 
       allow update: if false;
+
+      allow delete: if isOwner(userId);
+    }
+
+    match /users/{userId}/healthEntries/{entryId} {
+      allow read: if isOwner(userId);
+
+      allow create, update: if isOwner(userId)
+        && validHealthEntry();
 
       allow delete: if isOwner(userId);
     }

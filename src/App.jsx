@@ -19,6 +19,7 @@ import ImprintPage from "./pages/ImprintPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import AccountPage from "./pages/AccountPage";
 import InstallPage from "./pages/InstallPage";
+import HealthDiaryPage from "./pages/HealthDiaryPage";
 import PersonalMedicationReminder from "./components/PersonalMedicationReminder";
 
 function App() {
@@ -72,6 +73,15 @@ function App() {
           element={
             <ProtectedRoute>
               <AccountPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/gesundheitstagebuch"
+          element={
+            <ProtectedRoute>
+              <HealthDiaryPage />
             </ProtectedRoute>
           }
         />

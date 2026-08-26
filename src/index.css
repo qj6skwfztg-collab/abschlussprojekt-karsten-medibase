@@ -322,3 +322,35 @@ html.high-contrast .mobile-bottom-link:last-child.is-active {
   color: #fff !important;
   box-shadow: inset 0 0 0 2px #fff !important;
 }
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  .health-diary-print-area,
+  .health-diary-print-area * {
+    visibility: visible !important;
+  }
+
+  .health-diary-print-area {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 24px !important;
+    background: white !important;
+    color: #1a202c !important;
+  }
+
+  .health-diary-form,
+  .health-diary-actions,
+  .health-diary-edit,
+  .health-diary-delete,
+  .health-diary-warning,
+  .mobile-bottom-navigation,
+  header,
+  footer {
+    display: none !important;
+  }
+}

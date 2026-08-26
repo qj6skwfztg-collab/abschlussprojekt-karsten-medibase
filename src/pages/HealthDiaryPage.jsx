@@ -86,9 +86,12 @@ function HealthDiaryPage() {
     isLoading,
     error,
     addHealthEntry,
+    updateHealthEntry,
     deleteHealthEntry,
   } = useHealthEntries();
   const [formData, setFormData] = useState(emptyForm);
+  const [editingId, setEditingId] = useState(null);
+  const [trendType, setTrendType] = useState("bloodPressure");
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -123,11 +126,21 @@ function HealthDiaryPage() {
         notes: "Note",
         notesPlaceholder: "For example, after taking a medication",
         save: "Save entry",
+        saveChanges: "Save changes",
+        edit: "Edit",
+        cancel: "Cancel editing",
+        editing: "You are editing this entry.",
         saving: "Saving …",
         saved: "Health entry was saved.",
+        updated: "Health entry was updated.",
         saveError: "The health entry could not be saved.",
         invalid: "Please check the values and date.",
         entriesTitle: "My entries",
+        trendTitle: "Progress by area",
+        trendArea: "Area to display",
+        exportPdf: "Save as PDF / print",
+        email: "Send summary by email",
+        reportEmpty: "Add at least one entry before creating a report.",
         loading: "Loading entries …",
         empty: "You have not recorded any health data yet.",
         emptyHint: "Your saved measurements will appear here.",
@@ -169,11 +182,21 @@ function HealthDiaryPage() {
         notes: "Notiz",
         notesPlaceholder: "Zum Beispiel nach der Einnahme eines Medikaments",
         save: "Eintrag speichern",
+        saveChanges: "Änderungen speichern",
+        edit: "Bearbeiten",
+        cancel: "Bearbeitung abbrechen",
+        editing: "Du bearbeitest diesen Eintrag.",
         saving: "Wird gespeichert …",
         saved: "Gesundheitseintrag wurde gespeichert.",
+        updated: "Gesundheitseintrag wurde geändert.",
         saveError: "Der Gesundheitseintrag konnte nicht gespeichert werden.",
         invalid: "Bitte überprüfe die Werte und das Datum.",
         entriesTitle: "Meine Einträge",
+        trendTitle: "Verlauf nach Bereich",
+        trendArea: "Bereich anzeigen",
+        exportPdf: "Als PDF speichern / drucken",
+        email: "Zusammenfassung per E-Mail",
+        reportEmpty: "Füge zuerst mindestens einen Eintrag hinzu.",
         loading: "Einträge werden geladen …",
         empty: "Du hast noch keine Gesundheitsdaten eingetragen.",
         emptyHint: "Deine gespeicherten Messwerte erscheinen hier.",
@@ -188,6 +211,15 @@ function HealthDiaryPage() {
       };
 
   const selectedType = entryTypes[formData.type];
+  const availableTrendTypes = Object.keys(entryTypes).filter((type) =>
+    healthEntries.some((entry) => entry.type === type)
+  );
+  const selectedTrendType = availableTrendTypes.includes(trendType)
+    ? trendType
+    : availableTrendTypes[0];
+  const trendEntries = healthEntries
+    .filter((entry) => entry.type === selectedTrendType)
+    .slice(0, 10);
 
   function showMessage(value, type) {
     setMessage(value);
@@ -209,6 +241,17 @@ function HealthDiaryPage() {
           }
         : {}),
     }));
+  }
+
+  function getLocalDateTimeFromTimestamp(timestamp) {
+    if (!timestamp?.toDate) {
+      return getLocalDateTimeValue();
+    }
+
+    const date = timestamp.toDate();
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60 * 1000);
+    return localDate.toISOString().slice(0, 16);
   }
 
   function getDisplayName(entry) {
@@ -240,6 +283,93 @@ function HealthDiaryPage() {
     return `${entry.value} ${entry.unit}`;
   }
 
+  function getDisplayContext(entry) {
+    if (entry.type !== "bloodSugar") {
+      return entry.context || "";
+    }
+
+    const contextLabels = {
+      fasting: isEnglish ? "Fasting" : "Nüchtern",
+      beforeMeal: isEnglish ? "Before a meal" : "Vor einer Mahlzeit",
+      afterMeal: isEnglish ? "After a meal" : "Nach einer Mahlzeit",
+    };
+
+    return contextLabels[entry.context] || entry.context || "";
+  }
+
+  function getTrendLabel(type) {
+    return {
+      bloodPressure: text.bloodPressure,
+      bloodSugar: text.bloodSugar,
+      pulse: text.pulse,
+      weight: text.weight,
+      oxygen: text.oxygen,
+      temperature: text.temperature,
+      symptom: text.symptom,
+    }[type];
+  }
+
+  function handleEdit(entry) {
+    setEditingId(entry.id);
+    setFormData({
+      type: entry.type,
+      value: String(entry.value ?? ""),
+      secondaryValue:
+        entry.type === "bloodPressure"
+          ? String(entry.secondaryValue ?? "")
+          : "",
+      unit: entry.unit || entryTypes[entry.type].unit,
+      context: entry.context || "",
+      notes: entry.notes || "",
+      measuredAt: getLocalDateTimeFromTimestamp(entry.measuredAt),
+    });
+    showMessage(text.editing, "info");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleCancelEdit() {
+    setEditingId(null);
+    setFormData({ ...emptyForm, measuredAt: getLocalDateTimeValue() });
+    setMessage("");
+    setMessageType("");
+  }
+
+  function getReportLines() {
+    return healthEntries.map((entry) => {
+      const context = entry.type === "bloodSugar" && entry.context
+        ? ` (${getDisplayContext(entry)})`
+        : "";
+
+      return `${getDisplayName(entry)}: ${getDisplayValue(entry)}${context} – ${formatEntryDate(entry.measuredAt, isEnglish)}${entry.notes ? ` – ${entry.notes}` : ""}`;
+    });
+  }
+
+  function handlePrint() {
+    if (healthEntries.length === 0) {
+      showMessage(text.reportEmpty, "error");
+      return;
+    }
+
+    window.print();
+  }
+
+  function handleEmail() {
+    if (healthEntries.length === 0) {
+      showMessage(text.reportEmpty, "error");
+      return;
+    }
+
+    const subject = encodeURIComponent(
+      isEnglish ? "Curaelis health diary" : "Curaelis Gesundheitstagebuch"
+    );
+    const intro = isEnglish
+      ? "My Curaelis health diary entries:\n\n"
+      : "Meine Gesundheitstagebuch-Einträge aus Curaelis:\n\n";
+    const body = encodeURIComponent(`${intro}${getReportLines().join("\n")}`);
+
+    window.location.assign(`mailto:?subject=${subject}&body=${body}`);
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     setMessage("");
@@ -263,8 +393,7 @@ function HealthDiaryPage() {
 
     setIsSaving(true);
 
-    try {
-      await addHealthEntry({
+    const entryData = {
         type: formData.type,
         value,
         secondaryValue,
@@ -275,10 +404,19 @@ function HealthDiaryPage() {
             : formData.context,
         notes: formData.notes,
         measuredAt,
-      });
+    };
+
+    try {
+      if (editingId) {
+        await updateHealthEntry(editingId, entryData);
+        showMessage(text.updated, "success");
+      } else {
+        await addHealthEntry(entryData);
+        showMessage(text.saved, "success");
+      }
 
       setFormData({ ...emptyForm, measuredAt: getLocalDateTimeValue() });
-      showMessage(text.saved, "success");
+      setEditingId(null);
     } catch {
       showMessage(text.saveError, "error");
     } finally {
@@ -300,7 +438,13 @@ function HealthDiaryPage() {
   }
 
   return (
-    <Box maxW="1100px" mx="auto" p={{ base: "5", md: "8" }}>
+    <Box
+      className="health-diary-page"
+      maxW="1100px"
+      mx="auto"
+      p={{ base: "5", md: "8" }}
+    >
+      <Box className="health-diary-print-area">
       <Box borderBottomWidth="1px" borderColor="teal.100" pb="5" mb="8">
         <Heading color="teal.900">{text.title}</Heading>
         <Text mt="3" maxW="760px" fontSize={{ base: "md", md: "lg" }}>
@@ -312,6 +456,7 @@ function HealthDiaryPage() {
       </Box>
 
       <Box
+        className="health-diary-form"
         borderWidth="1px"
         borderRadius="lg"
         background="white"
@@ -320,7 +465,7 @@ function HealthDiaryPage() {
         mb="8"
       >
         <Heading size="md" color="teal.900" mb="6">
-          {text.addTitle}
+          {editingId ? text.edit : text.addTitle}
         </Heading>
 
         <form onSubmit={handleSubmit}>
@@ -484,9 +629,16 @@ function HealthDiaryPage() {
               </Box>
             </SimpleGrid>
 
-            <Button type="submit" colorPalette="teal" size="lg" disabled={isSaving}>
-              {isSaving ? text.saving : text.save}
-            </Button>
+            <Flex direction={{ base: "column", sm: "row" }} gap="3">
+              <Button type="submit" colorPalette="teal" size="lg" disabled={isSaving}>
+                {isSaving ? text.saving : editingId ? text.saveChanges : text.save}
+              </Button>
+              {editingId && (
+                <Button type="button" variant="outline" size="lg" onClick={handleCancelEdit}>
+                  {text.cancel}
+                </Button>
+              )}
+            </Flex>
           </Stack>
         </form>
 
@@ -507,6 +659,7 @@ function HealthDiaryPage() {
       </Box>
 
       <Box
+        className="health-diary-warning"
         padding="4"
         mb="8"
         borderLeftWidth="4px"
@@ -517,6 +670,70 @@ function HealthDiaryPage() {
       </Box>
 
       <Box>
+        {availableTrendTypes.length > 0 && (
+          <Box
+            className="health-diary-trend"
+            borderWidth="1px"
+            borderRadius="lg"
+            background="white"
+            padding={{ base: "5", md: "6" }}
+            mb="8"
+          >
+            <Heading size="md" color="teal.900" mb="4">
+              {text.trendTitle}
+            </Heading>
+            <Text as="label" htmlFor="health-trend-type" display="block" mb="2">
+              {text.trendArea}
+            </Text>
+            <select
+              id="health-trend-type"
+              value={selectedTrendType}
+              onChange={(event) => setTrendType(event.target.value)}
+              style={{ width: "100%", minHeight: "44px", padding: "8px", borderRadius: "6px" }}
+            >
+              {availableTrendTypes.map((type) => (
+                <option key={type} value={type}>
+                  {getTrendLabel(type)}
+                </option>
+              ))}
+            </select>
+            <Stack gap="3" mt="5">
+              {trendEntries.map((entry) => (
+                <Flex key={entry.id} justify="space-between" gap="4" wrap="wrap">
+                  <Text>{formatEntryDate(entry.measuredAt, isEnglish)}</Text>
+                  <Text fontWeight="700">{getDisplayValue(entry)}</Text>
+                </Flex>
+              ))}
+            </Stack>
+          </Box>
+        )}
+
+        <Flex
+          className="health-diary-actions"
+          direction={{ base: "column", sm: "row" }}
+          gap="3"
+          mb="5"
+        >
+          <Button
+            type="button"
+            variant="outline"
+            colorPalette="teal"
+            onClick={handlePrint}
+            disabled={healthEntries.length === 0}
+          >
+            🖨️ {text.exportPdf}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            colorPalette="teal"
+            onClick={handleEmail}
+            disabled={healthEntries.length === 0}
+          >
+            ✉️ {text.email}
+          </Button>
+        </Flex>
+
         <Heading size="md" color="teal.900" mb="5">
           {text.entriesTitle}
         </Heading>
@@ -547,11 +764,22 @@ function HealthDiaryPage() {
                       {formatEntryDate(entry.measuredAt, isEnglish)}
                     </Text>
                     {entry.type === "bloodSugar" && entry.context && (
-                      <Text mt="2">{entry.context}</Text>
+                      <Text mt="2">{getDisplayContext(entry)}</Text>
                     )}
                     <Text mt="2">{entry.notes || text.noNote}</Text>
                   </Box>
+                  <Flex gap="3" direction={{ base: "column", sm: "row" }}>
                   <Button
+                    className="health-diary-edit"
+                    alignSelf={{ base: "stretch", sm: "flex-start" }}
+                    variant="outline"
+                    colorPalette="teal"
+                    onClick={() => handleEdit(entry)}
+                  >
+                    {text.edit}
+                  </Button>
+                  <Button
+                    className="health-diary-delete"
                     alignSelf={{ base: "stretch", sm: "flex-start" }}
                     variant="outline"
                     colorPalette="red"
@@ -559,11 +787,13 @@ function HealthDiaryPage() {
                   >
                     {text.delete}
                   </Button>
+                  </Flex>
                 </Flex>
               </Box>
             ))}
           </Stack>
         )}
+      </Box>
       </Box>
     </Box>
   );

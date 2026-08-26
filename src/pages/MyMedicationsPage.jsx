@@ -10,6 +10,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import useUserMedications from "../hooks/useUserMedications";
 import useLanguage from "../hooks/useLanguage";
 import MedicationReminderPermission from "../components/MedicationReminderPermission";
@@ -95,6 +96,7 @@ function MyMedicationsPage() {
         title: "My medications",
         description:
           "Here you can manage your personal medications and intake times.",
+        healthDiary: "Open health diary",
         reminders: "Reminders",
         editTitle: "Edit personal medication",
         addTitle: "Add personal medication",
@@ -137,6 +139,7 @@ function MyMedicationsPage() {
         title: "Meine Medikamente",
         description:
           "Hier kannst du deine persönlichen Medikamente und Einnahmezeiten verwalten.",
+        healthDiary: "Gesundheitstagebuch öffnen",
         reminders: "Erinnerungen",
         editTitle: "Persönliches Medikament bearbeiten",
         addTitle: "Persönliches Medikament hinzufügen",
@@ -318,6 +321,17 @@ function MyMedicationsPage() {
         <Text marginTop="3" maxW="700px" fontSize={{ base: "md", md: "lg" }}>
           {text.description}
         </Text>
+
+        <Button
+          as={Link}
+          to="/gesundheitstagebuch"
+          marginTop="5"
+          variant="outline"
+          colorPalette="teal"
+          size="lg"
+        >
+          📊 {text.healthDiary}
+        </Button>
       </Box>
 
       <Box mb="8" boxShadow="sm">

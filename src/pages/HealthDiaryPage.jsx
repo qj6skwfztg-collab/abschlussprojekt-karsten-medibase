@@ -141,6 +141,8 @@ function HealthDiaryPage() {
         exportPdf: "Save as PDF / print",
         email: "Send summary by email",
         reportEmpty: "Add at least one entry before creating a report.",
+        reportTitle: "Doctor report",
+        reportHint: "Create a printable PDF or send a summary by email.",
         loading: "Loading entries …",
         empty: "You have not recorded any health data yet.",
         emptyHint: "Your saved measurements will appear here.",
@@ -197,6 +199,8 @@ function HealthDiaryPage() {
         exportPdf: "Als PDF speichern / drucken",
         email: "Zusammenfassung per E-Mail",
         reportEmpty: "Füge zuerst mindestens einen Eintrag hinzu.",
+        reportTitle: "Arztübersicht",
+        reportHint: "Erstelle eine druckbare PDF-Datei oder sende eine Zusammenfassung per E-Mail.",
         loading: "Einträge werden geladen …",
         empty: "Du hast noch keine Gesundheitsdaten eingetragen.",
         emptyHint: "Deine gespeicherten Messwerte erscheinen hier.",
@@ -456,6 +460,40 @@ function HealthDiaryPage() {
       </Box>
 
       <Box
+        className="health-diary-actions"
+        borderWidth="1px"
+        borderRadius="lg"
+        background="white"
+        padding={{ base: "5", md: "6" }}
+        mb="8"
+      >
+        <Heading size="md" color="teal.900" mb="2">
+          {text.reportTitle}
+        </Heading>
+        <Text mb="4">{text.reportHint}</Text>
+        <Flex direction={{ base: "column", sm: "row" }} gap="3">
+          <Button
+            type="button"
+            variant="outline"
+            colorPalette="teal"
+            onClick={handlePrint}
+            disabled={healthEntries.length === 0}
+          >
+            🖨️ {text.exportPdf}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            colorPalette="teal"
+            onClick={handleEmail}
+            disabled={healthEntries.length === 0}
+          >
+            ✉️ {text.email}
+          </Button>
+        </Flex>
+      </Box>
+
+      <Box
         className="health-diary-form"
         borderWidth="1px"
         borderRadius="lg"
@@ -707,32 +745,6 @@ function HealthDiaryPage() {
             </Stack>
           </Box>
         )}
-
-        <Flex
-          className="health-diary-actions"
-          direction={{ base: "column", sm: "row" }}
-          gap="3"
-          mb="5"
-        >
-          <Button
-            type="button"
-            variant="outline"
-            colorPalette="teal"
-            onClick={handlePrint}
-            disabled={healthEntries.length === 0}
-          >
-            🖨️ {text.exportPdf}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            colorPalette="teal"
-            onClick={handleEmail}
-            disabled={healthEntries.length === 0}
-          >
-            ✉️ {text.email}
-          </Button>
-        </Flex>
 
         <Heading size="md" color="teal.900" mb="5">
           {text.entriesTitle}

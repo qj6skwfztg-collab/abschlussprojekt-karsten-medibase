@@ -189,13 +189,17 @@ function Header({ onMenuStateChange }) {
               {isEnglish ? "Help and information" : "Hilfe und Informationen"}
             </Text>
             <Flex className="nav-group-links" gap="2" align="center" flexWrap="wrap">
-              <Link className="header-link" to="/installieren" onClick={closeMenu} {...getNavigationLinkProps("/installieren")}>
-                {isEnglish ? "Install Curaelis" : "Curaelis installieren"}
-              </Link>
+              {isHomePage && (
+                <>
+                  <Link className="header-link" to="/installieren" onClick={closeMenu} {...getNavigationLinkProps("/installieren")}>
+                    {isEnglish ? "Install Curaelis" : "Curaelis installieren"}
+                  </Link>
 
-              <Link className="header-link" to="/ueber" onClick={closeMenu} {...getNavigationLinkProps("/ueber")}>
-                {isEnglish ? "About Curaelis" : "Über Curaelis"}
-              </Link>
+                  <Link className="header-link" to="/ueber" onClick={closeMenu} {...getNavigationLinkProps("/ueber")}>
+                    {isEnglish ? "About Curaelis" : "Über Curaelis"}
+                  </Link>
+                </>
+              )}
 
               <Link
                 to="/notfall"

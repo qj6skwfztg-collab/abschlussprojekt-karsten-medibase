@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Button, Heading, Stack, Text } from "@chakra-ui/react";
 import EmergencyContacts from "../components/EmergencyContacts";
+import EmergencyPass from "../components/EmergencyPass";
 import useLanguage from "../hooks/useLanguage";
 import emergencyCountries from "../data/emergencyCountries";
 
@@ -143,6 +144,11 @@ function EmergencyPage() {
       <Text marginTop="6" fontSize="sm" textAlign="center" color="gray.600">
         {isEnglish ? "Curaelis is not an official emergency system. The app cannot determine whether a call was answered or an ambulance was dispatched." : "Curaelis ersetzt kein offizielles Notrufsystem. Die App kann nicht feststellen, ob der Notruf angenommen oder ein Rettungswagen geschickt wurde."}
       </Text>
+
+      <EmergencyPass
+        selectedCountry={selectedCountry}
+        onEmergencyCallStarted={() => setEmergencyCallStarted(true)}
+      />
 
         <EmergencyContacts
           emergencyNumber={selectedCountry.ambulanceNumber}

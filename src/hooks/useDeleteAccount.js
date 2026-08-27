@@ -60,6 +60,7 @@ async function deleteAccount(password) {
   await reauthenticateWithCredential(currentUser, credential);
   await deleteSubcollection(currentUser.uid, "medications");
   await deleteSubcollection(currentUser.uid, "emergencyContacts");
+  await deleteSubcollection(currentUser.uid, "healthEntries");
   await deleteUser(currentUser);
   clearLocalReminderData();
 }

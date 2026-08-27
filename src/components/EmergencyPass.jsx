@@ -6,6 +6,7 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
+import { Link } from "react-router-dom";
 import {
   Box,
   Button,
@@ -76,7 +77,7 @@ function EmergencyPass({ selectedCountry, onEmergencyCallStarted }) {
         noHealth: "No health measurements saved.",
         contacts: "Emergency contacts",
         noContacts: "No emergency contacts saved.",
-        contactMessage: "Prepare message to contacts",
+        contactMessage: "Prepare message",
         messageConfirm:
           "Open your messaging app with an emergency message prepared for your contacts? You must tap Send yourself.",
         messagePrepared:
@@ -104,7 +105,7 @@ function EmergencyPass({ selectedCountry, onEmergencyCallStarted }) {
         noHealth: "Keine Gesundheitsmesswerte gespeichert.",
         contacts: "Notfallkontakte",
         noContacts: "Keine Notfallkontakte gespeichert.",
-        contactMessage: "Nachricht an Kontakte vorbereiten",
+        contactMessage: "Nachricht vorbereiten",
         messageConfirm:
           "Soll die Nachrichten-App mit einer Notfallnachricht an deine Kontakte geöffnet werden? Du musst selbst auf Senden tippen.",
         messagePrepared:
@@ -303,7 +304,22 @@ function EmergencyPass({ selectedCountry, onEmergencyCallStarted }) {
                     📈 {text.health}
                   </Heading>
                   {healthEntries.length === 0 ? (
-                    <Text>{text.noHealth}</Text>
+                    <>
+                      <Text>{text.noHealth}</Text>
+                      <Button
+                        as={Link}
+                        to="/gesundheitstagebuch"
+                        variant="outline"
+                        colorPalette="teal"
+                        width="100%"
+                        marginTop="4"
+                        whiteSpace="normal"
+                        height="auto"
+                        paddingY="3"
+                      >
+                        📈 {isEnglish ? "Open health diary" : "Gesundheitstagebuch öffnen"}
+                      </Button>
+                    </>
                   ) : (
                     <Stack gap="3">
                       {healthEntries.map((entry) => (
@@ -344,6 +360,10 @@ function EmergencyPass({ selectedCountry, onEmergencyCallStarted }) {
                         variant="outline"
                         colorPalette="teal"
                         onClick={prepareContactMessage}
+                        width="100%"
+                        whiteSpace="normal"
+                        height="auto"
+                        paddingY="3"
                       >
                         ✉️ {text.contactMessage}
                       </Button>

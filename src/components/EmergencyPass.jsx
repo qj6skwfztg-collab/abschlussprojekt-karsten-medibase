@@ -74,6 +74,7 @@ function EmergencyPass({ selectedCountry }) {
         hide: "Hide emergency pass",
         emergencyCall: "Call emergency services",
         medications: "My medications",
+        openMedications: "Open my medications",
         noMedications: "No personal medications saved.",
         health: "Recent health measurements",
         noHealth: "No health measurements saved.",
@@ -102,6 +103,7 @@ function EmergencyPass({ selectedCountry }) {
         hide: "Notfallpass ausblenden",
         emergencyCall: "Rettungsdienst anrufen",
         medications: "Meine Medikamente",
+        openMedications: "Meine Medikamente öffnen",
         noMedications: "Keine persönlichen Medikamente gespeichert.",
         health: "Letzte Gesundheitsmesswerte",
         noHealth: "Keine Gesundheitsmesswerte gespeichert.",
@@ -268,6 +270,21 @@ function EmergencyPass({ selectedCountry }) {
                       ))}
                     </Stack>
                   )}
+                  <Button
+                    as={Link}
+                    to="/meine-medikamente"
+                    variant="outline"
+                    colorPalette="teal"
+                    width="100%"
+                    marginTop="4"
+                    whiteSpace="normal"
+                    height="auto"
+                    minHeight="58px"
+                    paddingY="3"
+                    fontWeight="800"
+                  >
+                    💊 {text.openMedications}
+                  </Button>
                 </Box>
 
                 <Box borderWidth="1px" borderRadius="lg" padding="5">
@@ -286,7 +303,9 @@ function EmergencyPass({ selectedCountry }) {
                         marginTop="4"
                         whiteSpace="normal"
                         height="auto"
+                        minHeight="58px"
                         paddingY="3"
+                        fontWeight="800"
                       >
                         📈 {isEnglish ? "Open health diary" : "Gesundheitstagebuch öffnen"}
                       </Button>
@@ -329,12 +348,14 @@ function EmergencyPass({ selectedCountry }) {
                       <Button
                         type="button"
                         variant="outline"
-                        colorPalette="teal"
+                        colorPalette="red"
                         onClick={prepareContactMessage}
                         width="100%"
                         whiteSpace="normal"
                         height="auto"
+                        minHeight="58px"
                         paddingY="3"
+                        fontWeight="800"
                       >
                         ✉️ {text.contactMessage}
                       </Button>

@@ -69,6 +69,8 @@ const emptyForm = {
   measuredAt: getLocalDateTimeValue(),
 };
 
+const DOCTOR_EMAIL_STORAGE_KEY = "curaelis-doctor-email";
+
 function formatEntryDate(timestamp, isEnglish) {
   if (!timestamp?.toDate) {
     return isEnglish ? "Date is being saved …" : "Datum wird gespeichert …";
@@ -96,6 +98,9 @@ function HealthDiaryPage() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [doctorEmail, setDoctorEmail] = useState(
+    () => localStorage.getItem(DOCTOR_EMAIL_STORAGE_KEY) || ""
+  );
 
   const text = isEnglish
     ? {
@@ -141,10 +146,19 @@ function HealthDiaryPage() {
         trendTitle: "Progress by area",
         trendArea: "Area to display",
         exportPdf: "Save as PDF / print",
-        email: "Send summary by email",
+        email: "Prepare email to doctor's practice",
+        doctorEmail: "Email address of doctor's practice (optional)",
+        doctorEmailPlaceholder: "practice@example.com",
+        doctorEmailHint:
+          "Saved only on this device. Check the address before sending.",
+        emailMissing: "Please enter the doctor's practice email address first.",
+        emailInvalid: "Please check the email address.",
+        emailAttachmentNote:
+          "Please attach the PDF you saved or printed from Curaelis.",
         reportEmpty: "Add at least one entry before creating a report.",
         reportTitle: "Doctor report",
-        reportHint: "Create a printable PDF or send a summary by email.",
+        reportHint:
+          "Create a printable PDF or prepare an email. The PDF must be attached manually.",
         loading: "Loading entries …",
         empty: "You have not recorded any health data yet.",
         emptyHint: "Your saved measurements will appear here.",
@@ -200,10 +214,19 @@ function HealthDiaryPage() {
         trendTitle: "Verlauf nach Bereich",
         trendArea: "Bereich anzeigen",
         exportPdf: "Als PDF speichern / drucken",
-        email: "Zusammenfassung per E-Mail",
+        email: "E-Mail an Arztpraxis vorbereiten",
+        doctorEmail: "E-Mail-Adresse der Arztpraxis (optional)",
+        doctorEmailPlaceholder: "praxis@beispiel.de",
+        doctorEmailHint:
+          "Wird nur auf diesem Gerät gespeichert. Prüfe die Adresse vor dem Versand.",
+        emailMissing: "Gib zuerst die E-Mail-Adresse der Arztpraxis ein.",
+        emailInvalid: "Bitte überprüfe die E-Mail-Adresse.",
+        emailAttachmentNote:
+          "Bitte füge die zuvor gespeicherte oder gedruckte PDF aus Curaelis als Anhang hinzu.",
         reportEmpty: "Füge zuerst mindestens einen Eintrag hinzu.",
         reportTitle: "Arztübersicht",
-        reportHint: "Erstelle eine druckbare PDF-Datei oder sende eine Zusammenfassung per E-Mail.",
+        reportHint:
+          "Erstelle eine druckbare PDF-Datei oder bereite eine E-Mail vor. Die PDF muss anschließend manuell angehängt werden.",
         loading: "Einträge werden geladen …",
         empty: "Du hast noch keine Gesundheitsdaten eingetragen.",
         emptyHint: "Deine gespeicherten Messwerte erscheinen hier.",
@@ -231,6 +254,13 @@ function HealthDiaryPage() {
   function showMessage(value, type) {
     setMessage(value);
     setMessageType(type);
+  }
+
+  function handleDoctorEmailChange(event) {
+    const value = event.target.value;
+
+    setDoctorEmail(value);
+    localStorage.setItem(DOCTOR_EMAIL_STORAGE_KEY, value);
   }
 
   function handleChange(event) {
@@ -366,15 +396,30 @@ function HealthDiaryPage() {
       return;
     }
 
+    const recipient = doctorEmail.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!recipient) {
+      showMessage(text.emailMissing, "error");
+      return;
+    }
+
+    if (!emailPattern.test(recipient)) {
+      showMessage(text.emailInvalid, "error");
+      return;
+    }
+
     const subject = encodeURIComponent(
       isEnglish ? "Curaelis health diary" : "Curaelis Gesundheitstagebuch"
     );
     const intro = isEnglish
       ? "My Curaelis health diary entries:\n\n"
       : "Meine Gesundheitstagebuch-Einträge aus Curaelis:\n\n";
-    const body = encodeURIComponent(`${intro}${getReportLines().join("\n")}`);
+    const body = encodeURIComponent(
+      `${intro}${getReportLines().join("\n")}\n\n${text.emailAttachmentNote}`
+    );
 
-    window.location.assign(`mailto:?subject=${subject}&body=${body}`);
+    window.location.assign(`mailto:${recipient}?subject=${subject}&body=${body}`);
   }
 
   async function handleSubmit(event) {
@@ -495,6 +540,22 @@ function HealthDiaryPage() {
           {text.reportTitle}
         </Heading>
         <Text mb="4">{text.reportHint}</Text>
+        <Box mb="5">
+          <Text as="label" htmlFor="doctor-email" display="block" mb="2" fontWeight="600">
+            {text.doctorEmail}
+          </Text>
+          <Input
+            id="doctor-email"
+            type="email"
+            value={doctorEmail}
+            onChange={handleDoctorEmailChange}
+            placeholder={text.doctorEmailPlaceholder}
+            autoComplete="email"
+          />
+          <Text mt="2" fontSize="sm" color="gray.600">
+            {text.doctorEmailHint}
+          </Text>
+        </Box>
         <Flex direction={{ base: "column", sm: "row" }} gap="3">
           <Button
             type="button"

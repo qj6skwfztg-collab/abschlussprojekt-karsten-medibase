@@ -49,13 +49,15 @@ function getHealthValue(entry) {
   return `${entry.value} ${entry.unit}`;
 }
 
-function EmergencyPass({ selectedCountry, onEmergencyCallStarted }) {
+function EmergencyPass({ selectedCountry }) {
   const { isEnglish } = useLanguage();
   const [user, setUser] = useState(null);
   const [medications, setMedications] = useState([]);
   const [healthEntries, setHealthEntries] = useState([]);
   const [contacts, setContacts] = useState([]);
-  const [isPassVisible, setIsPassVisible] = useState(false);
+  const [isPassVisible, setIsPassVisible] = useState(
+    () => window.location.hash === "#notfallpass"
+  );
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
@@ -207,6 +209,7 @@ function EmergencyPass({ selectedCountry, onEmergencyCallStarted }) {
   return (
     <Box
       className="emergency-pass"
+      id="notfallpass"
       marginTop="8"
       border="2px solid"
       borderColor="teal.300"
@@ -243,38 +246,6 @@ function EmergencyPass({ selectedCountry, onEmergencyCallStarted }) {
 
           {isPassVisible && (
             <Box marginTop="6">
-              <Box
-                borderWidth="1px"
-                borderColor="red.300"
-                borderRadius="lg"
-                background="red.50"
-                padding="5"
-                marginBottom="5"
-              >
-                <Heading size="md" color="red.700" marginBottom="3">
-                  {isEnglish ? "Emergency call" : "Notruf"}
-                </Heading>
-                <Text marginBottom="2">
-                  <strong>{text.country}:</strong>{" "}
-                  {selectedCountry.flag} {isEnglish ? selectedCountry.nameEnglish : selectedCountry.name}
-                </Text>
-                <Text marginBottom="4">
-                  <strong>{text.callNumber}:</strong> {selectedCountry.ambulanceNumber}
-                </Text>
-                <Button
-                  as="a"
-                  href={`tel:${selectedCountry.ambulanceNumber}`}
-                  onClick={onEmergencyCallStarted}
-                  background="red.600"
-                  color="white"
-                  size="lg"
-                  width="100%"
-                  _hover={{ background: "red.700" }}
-                >
-                  {selectedCountry.ambulanceNumber} – {text.emergencyCall}
-                </Button>
-              </Box>
-
               <SimpleGrid columns={{ base: 1, md: 3 }} gap="5">
                 <Box borderWidth="1px" borderRadius="lg" padding="5">
                   <Heading size="md" color="teal.900" marginBottom="3">

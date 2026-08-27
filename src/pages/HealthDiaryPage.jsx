@@ -461,16 +461,26 @@ function HealthDiaryPage() {
           🔒 {text.privacy}
         </Text>
 
-        <Button
-          as={Link}
-          to="/meine-medikamente"
-          marginTop="5"
-          variant="outline"
-          colorPalette="teal"
-          size="lg"
-        >
-          💊 {text.myMedications}
-        </Button>
+        <Flex gap="3" marginTop="5" flexWrap="wrap">
+          <Button
+            as={Link}
+            to="/meine-medikamente"
+            variant="outline"
+            colorPalette="teal"
+            size="lg"
+          >
+            💊 {text.myMedications}
+          </Button>
+          <Button
+            as={Link}
+            to="/notfall#notfallpass"
+            variant="outline"
+            colorPalette="teal"
+            size="lg"
+          >
+            🪪 {isEnglish ? "Open emergency pass" : "Notfallpass öffnen"}
+          </Button>
+        </Flex>
       </Box>
 
       <Box

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Heading, Stack, Text } from "@chakra-ui/react";
+import { useLocation } from "react-router-dom";
 import EmergencyContacts from "../components/EmergencyContacts";
 import EmergencyPass from "../components/EmergencyPass";
 import useLanguage from "../hooks/useLanguage";
@@ -9,6 +10,7 @@ const COUNTRY_STORAGE_KEY = "curaelis-emergency-country";
 
 function EmergencyPage() {
   const { isEnglish } = useLanguage();
+  const location = useLocation();
   const [emergencyCallStarted, setEmergencyCallStarted] = useState(false);
   const [selectedCountryCode, setSelectedCountryCode] = useState(() => {
     const savedCountryCode = localStorage.getItem(COUNTRY_STORAGE_KEY);
@@ -23,6 +25,21 @@ function EmergencyPage() {
   const selectedCountry = emergencyCountries.find(
     (country) => country.code === selectedCountryCode
   ) || emergencyCountries[0];
+
+  useEffect(() => {
+    if (location.hash !== "#notfallpass") {
+      return undefined;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      document.getElementById("notfallpass")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [location.hash]);
 
   function handleCountryChange(event) {
     const countryCode = event.target.value;
@@ -145,10 +162,7 @@ function EmergencyPage() {
         {isEnglish ? "Curaelis is not an official emergency system. The app cannot determine whether a call was answered or an ambulance was dispatched." : "Curaelis ersetzt kein offizielles Notrufsystem. Die App kann nicht feststellen, ob der Notruf angenommen oder ein Rettungswagen geschickt wurde."}
       </Text>
 
-      <EmergencyPass
-        selectedCountry={selectedCountry}
-        onEmergencyCallStarted={() => setEmergencyCallStarted(true)}
-      />
+      <EmergencyPass selectedCountry={selectedCountry} />
 
         <EmergencyContacts
           emergencyNumber={selectedCountry.ambulanceNumber}

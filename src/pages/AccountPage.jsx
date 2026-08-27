@@ -5,6 +5,7 @@ import {
   Flex,
   Heading,
   Input,
+  Textarea,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -12,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import deleteAccount from "../hooks/useDeleteAccount";
+import useEmergencyProfile from "../hooks/useEmergencyProfile";
 import PasswordField from "../components/PasswordField";
 
 function AccountPage() {
@@ -23,6 +25,16 @@ function AccountPage() {
   const [isDeletionConfirmed, setIsDeletionConfirmed] = useState(false);
   const [message, setMessage] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const {
+    profile,
+    isLoading: isProfileLoading,
+    error: profileError,
+    saveEmergencyProfile,
+  } = useEmergencyProfile();
+  const [profileDraft, setProfileDraft] = useState(null);
+  const [profileMessage, setProfileMessage] = useState("");
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const profileForm = profileDraft || profile;
 
   const text = isEnglish
     ? {
@@ -33,11 +45,29 @@ function AccountPage() {
         email: "Email address",
         medications: "Open my medications",
         contacts: "Open emergency contacts",
+        emergencyProfileTitle: "Emergency pass details",
+        emergencyProfileDescription:
+          "Add optional information that should be visible in your private Curaelis emergency pass.",
+        allergies: "Allergies",
+        allergiesPlaceholder: "For example, penicillin or pollen",
+        conditions: "Important conditions",
+        conditionsPlaceholder: "For example, diabetes or asthma",
+        bloodGroup: "Blood group",
+        bloodGroupPlaceholder: "For example, A positive",
+        specialNotes: "Special notes",
+        specialNotesPlaceholder:
+          "For example, important information for emergency helpers",
+        saveEmergencyProfile: "Save emergency pass details",
+        savingEmergencyProfile: "Saving …",
+        emergencyProfileSaved: "Emergency pass details were saved.",
+        emergencyProfileError:
+          "The emergency pass details could not be saved.",
+        emergencyProfileLoading: "Loading emergency pass details …",
         dangerTitle: "Danger zone",
         dangerSummary: "Delete account and personal data",
         dataTitle: "Data that will be deleted",
         data:
-          "Your personal medications, emergency contacts, account and local reminder data will be deleted.",
+          "Your personal medications, emergency contacts, emergency pass details, account and local reminder data will be deleted.",
         warning: "This action cannot be undone.",
         password: "Current password",
         passwordPlaceholder: "Enter your current password",
@@ -66,11 +96,29 @@ function AccountPage() {
         email: "E-Mail-Adresse",
         medications: "Meine Medikamente öffnen",
         contacts: "Notfallkontakte öffnen",
+        emergencyProfileTitle: "Angaben für den Notfallpass",
+        emergencyProfileDescription:
+          "Füge optionale Angaben hinzu, die in deinem privaten Curaelis-Notfallpass angezeigt werden sollen.",
+        allergies: "Allergien",
+        allergiesPlaceholder: "Zum Beispiel Penicillin oder Pollen",
+        conditions: "Wichtige Erkrankungen",
+        conditionsPlaceholder: "Zum Beispiel Diabetes oder Asthma",
+        bloodGroup: "Blutgruppe",
+        bloodGroupPlaceholder: "Zum Beispiel A positiv",
+        specialNotes: "Besondere Hinweise",
+        specialNotesPlaceholder:
+          "Zum Beispiel wichtige Informationen für Ersthelfende",
+        saveEmergencyProfile: "Angaben für Notfallpass speichern",
+        savingEmergencyProfile: "Wird gespeichert …",
+        emergencyProfileSaved: "Angaben für den Notfallpass wurden gespeichert.",
+        emergencyProfileError:
+          "Die Angaben für den Notfallpass konnten nicht gespeichert werden.",
+        emergencyProfileLoading: "Angaben für den Notfallpass werden geladen …",
         dangerTitle: "Gefahrenbereich",
         dangerSummary: "Konto und persönliche Daten löschen",
         dataTitle: "Daten, die gelöscht werden",
         data:
-          "Deine persönlichen Medikamente, Notfallkontakte, dein Konto und lokale Erinnerungsdaten werden gelöscht.",
+          "Deine persönlichen Medikamente, Notfallkontakte, Notfallpass-Angaben, dein Konto und lokale Erinnerungsdaten werden gelöscht.",
         warning: "Diese Aktion kann nicht rückgängig gemacht werden.",
         password: "Aktuelles Passwort",
         passwordPlaceholder: "Gib dein aktuelles Passwort ein",
@@ -91,6 +139,30 @@ function AccountPage() {
         recentLogin:
           "Aus Sicherheitsgründen musst du dich erneut anmelden und die Löschung danach wiederholen.",
       };
+
+  function handleProfileChange(event) {
+    const { name, value } = event.target;
+
+    setProfileDraft((previousProfile) => ({
+      ...(previousProfile || profile),
+      [name]: value,
+    }));
+  }
+
+  async function handleProfileSubmit(event) {
+    event.preventDefault();
+    setProfileMessage("");
+    setIsSavingProfile(true);
+
+    try {
+      await saveEmergencyProfile(profileForm);
+      setProfileMessage(text.emergencyProfileSaved);
+    } catch {
+      setProfileMessage(text.emergencyProfileError);
+    } finally {
+      setIsSavingProfile(false);
+    }
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -158,6 +230,89 @@ function AccountPage() {
             {text.contacts}
           </Button>
         </Stack>
+      </Box>
+
+      <Box
+        borderWidth="1px"
+        borderColor="teal.200"
+        borderRadius="lg"
+        background="white"
+        padding="6"
+        mb="8"
+      >
+        <Heading size="md" mb="2" color="teal.900">
+          {text.emergencyProfileTitle}
+        </Heading>
+        <Text mb="5">{text.emergencyProfileDescription}</Text>
+
+        <form onSubmit={handleProfileSubmit}>
+          <Stack gap="4">
+            <Box>
+              <Text as="label" htmlFor="profile-allergies" display="block" mb="2" fontWeight="600">
+                {text.allergies}
+              </Text>
+              <Input
+                id="profile-allergies"
+                name="allergies"
+                value={profileForm.allergies}
+                onChange={handleProfileChange}
+                placeholder={text.allergiesPlaceholder}
+                maxLength={300}
+              />
+            </Box>
+
+            <Box>
+              <Text as="label" htmlFor="profile-conditions" display="block" mb="2" fontWeight="600">
+                {text.conditions}
+              </Text>
+              <Input
+                id="profile-conditions"
+                name="conditions"
+                value={profileForm.conditions}
+                onChange={handleProfileChange}
+                placeholder={text.conditionsPlaceholder}
+                maxLength={300}
+              />
+            </Box>
+
+            <Box>
+              <Text as="label" htmlFor="profile-blood-group" display="block" mb="2" fontWeight="600">
+                {text.bloodGroup}
+              </Text>
+              <Input
+                id="profile-blood-group"
+                name="bloodGroup"
+                value={profileForm.bloodGroup}
+                onChange={handleProfileChange}
+                placeholder={text.bloodGroupPlaceholder}
+                maxLength={30}
+              />
+            </Box>
+
+            <Box>
+              <Text as="label" htmlFor="profile-special-notes" display="block" mb="2" fontWeight="600">
+                {text.specialNotes}
+              </Text>
+              <Textarea
+                id="profile-special-notes"
+                name="specialNotes"
+                value={profileForm.specialNotes}
+                onChange={handleProfileChange}
+                placeholder={text.specialNotesPlaceholder}
+                maxLength={500}
+                rows={4}
+              />
+            </Box>
+
+            <Button type="submit" colorPalette="teal" size="lg" disabled={isSavingProfile}>
+              {isSavingProfile ? text.savingEmergencyProfile : text.saveEmergencyProfile}
+            </Button>
+
+            {isProfileLoading && <Text color="gray.600">{text.emergencyProfileLoading}</Text>}
+            {profileError && <Text color="red.700">{profileError}</Text>}
+            {profileMessage && <Text color="teal.700" fontWeight="600">{profileMessage}</Text>}
+          </Stack>
+        </form>
       </Box>
 
       <Box

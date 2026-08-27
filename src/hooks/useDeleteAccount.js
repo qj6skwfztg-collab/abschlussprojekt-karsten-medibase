@@ -61,6 +61,7 @@ async function deleteAccount(password) {
   await deleteSubcollection(currentUser.uid, "medications");
   await deleteSubcollection(currentUser.uid, "emergencyContacts");
   await deleteSubcollection(currentUser.uid, "healthEntries");
+  await deleteSubcollection(currentUser.uid, "emergencyProfile");
   await deleteUser(currentUser);
   clearLocalReminderData();
 }

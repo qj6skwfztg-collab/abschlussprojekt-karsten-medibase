@@ -96,6 +96,32 @@ service cloud.firestore {
         && request.resource.data.createdAt is timestamp;
     }
 
+    function validEmergencyProfile() {
+      return request.resource.data.keys().hasAll([
+          'allergies',
+          'conditions',
+          'bloodGroup',
+          'specialNotes',
+          'updatedAt'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'allergies',
+          'conditions',
+          'bloodGroup',
+          'specialNotes',
+          'updatedAt'
+        ])
+        && request.resource.data.allergies is string
+        && request.resource.data.allergies.size() <= 300
+        && request.resource.data.conditions is string
+        && request.resource.data.conditions.size() <= 300
+        && request.resource.data.bloodGroup is string
+        && request.resource.data.bloodGroup.size() <= 30
+        && request.resource.data.specialNotes is string
+        && request.resource.data.specialNotes.size() <= 500
+        && request.resource.data.updatedAt is timestamp;
+    }
+
     function validHealthEntry() {
       return request.resource.data.keys().hasAll([
           'type',
@@ -207,6 +233,16 @@ service cloud.firestore {
         && validEmergencyContact();
 
       allow update: if false;
+
+      allow delete: if isOwner(userId);
+    }
+
+    match /users/{userId}/emergencyProfile/{profileId} {
+      allow read: if isOwner(userId);
+
+      allow create, update: if isOwner(userId)
+        && profileId == 'main'
+        && validEmergencyProfile();
 
       allow delete: if isOwner(userId);
     }

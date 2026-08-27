@@ -6,6 +6,7 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
+import useEmergencyProfile from "../hooks/useEmergencyProfile";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -51,6 +52,7 @@ function getHealthValue(entry) {
 
 function EmergencyPass({ selectedCountry }) {
   const { isEnglish } = useLanguage();
+  const { profile } = useEmergencyProfile();
   const [user, setUser] = useState(null);
   const [medications, setMedications] = useState([]);
   const [healthEntries, setHealthEntries] = useState([]);
@@ -86,6 +88,13 @@ function EmergencyPass({ selectedCountry }) {
         messagePrepared:
           "The messaging app was opened. Tap Send to notify your contacts.",
         noContactsMessage: "Save at least one emergency contact first.",
+        profile: "Important health details",
+        noProfile: "No additional emergency details saved.",
+        openAccount: "Add details in my account",
+        allergies: "Allergies",
+        conditions: "Important conditions",
+        bloodGroup: "Blood group",
+        specialNotes: "Special notes",
         country: "Country",
         callNumber: "Emergency number",
         notMedicalAdvice:
@@ -115,6 +124,13 @@ function EmergencyPass({ selectedCountry }) {
         messagePrepared:
           "Die Nachrichten-App wurde geöffnet. Tippe auf Senden, um deine Kontakte zu benachrichtigen.",
         noContactsMessage: "Speichere zuerst mindestens einen Notfallkontakt.",
+        profile: "Wichtige Gesundheitsangaben",
+        noProfile: "Keine zusätzlichen Notfallangaben gespeichert.",
+        openAccount: "Angaben im Konto ergänzen",
+        allergies: "Allergien",
+        conditions: "Wichtige Erkrankungen",
+        bloodGroup: "Blutgruppe",
+        specialNotes: "Besondere Hinweise",
         country: "Land",
         callNumber: "Notrufnummer",
         notMedicalAdvice:
@@ -186,6 +202,10 @@ function EmergencyPass({ selectedCountry }) {
 
     return () => stopListeners.forEach((stopListening) => stopListening());
   }, [user]);
+
+  const hasEmergencyProfile = Object.values(profile).some(
+    (value) => typeof value === "string" && value.trim()
+  );
 
   function prepareContactMessage() {
     if (contacts.length === 0) {
@@ -369,6 +389,64 @@ function EmergencyPass({ selectedCountry }) {
                   )}
                 </Box>
               </SimpleGrid>
+
+              <Box
+                marginTop="5"
+                borderWidth="1px"
+                borderRadius="lg"
+                padding="5"
+              >
+                <Heading size="md" color="teal.900" marginBottom="3">
+                  🩺 {text.profile}
+                </Heading>
+
+                {!hasEmergencyProfile ? (
+                  <>
+                    <Text>{text.noProfile}</Text>
+                    <Button
+                      as={Link}
+                      to="/konto"
+                      variant="outline"
+                      colorPalette="teal"
+                      marginTop="4"
+                      whiteSpace="normal"
+                      height="auto"
+                      minHeight="58px"
+                      paddingY="3"
+                      fontWeight="800"
+                    >
+                      ⚙️ {text.openAccount}
+                    </Button>
+                  </>
+                ) : (
+                  <SimpleGrid columns={{ base: 1, md: 2 }} gap="4">
+                    {profile.allergies && (
+                      <Box>
+                        <Text fontWeight="700">{text.allergies}</Text>
+                        <Text>{profile.allergies}</Text>
+                      </Box>
+                    )}
+                    {profile.conditions && (
+                      <Box>
+                        <Text fontWeight="700">{text.conditions}</Text>
+                        <Text>{profile.conditions}</Text>
+                      </Box>
+                    )}
+                    {profile.bloodGroup && (
+                      <Box>
+                        <Text fontWeight="700">{text.bloodGroup}</Text>
+                        <Text>{profile.bloodGroup}</Text>
+                      </Box>
+                    )}
+                    {profile.specialNotes && (
+                      <Box>
+                        <Text fontWeight="700">{text.specialNotes}</Text>
+                        <Text>{profile.specialNotes}</Text>
+                      </Box>
+                    )}
+                  </SimpleGrid>
+                )}
+              </Box>
 
               {message && (
                 <Text

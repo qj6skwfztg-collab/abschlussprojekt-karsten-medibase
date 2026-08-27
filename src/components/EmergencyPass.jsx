@@ -306,8 +306,14 @@ function EmergencyPass({ selectedCountry }) {
                         minHeight="58px"
                         paddingY="3"
                         fontWeight="800"
+                        flexDirection="column"
+                        lineHeight="1.25"
+                        textAlign="center"
                       >
-                        📈 {isEnglish ? "Open health diary" : "Gesundheitstagebuch öffnen"}
+                        <span aria-hidden="true">📈</span>
+                        <span style={{ overflowWrap: "anywhere" }}>
+                          {isEnglish ? "Open health diary" : "Gesundheitstagebuch öffnen"}
+                        </span>
                       </Button>
                     </>
                   ) : (

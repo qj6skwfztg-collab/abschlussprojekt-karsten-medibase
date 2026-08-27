@@ -98,6 +98,7 @@ function HealthDiaryPage() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [printMessage, setPrintMessage] = useState("");
   const [doctorEmail, setDoctorEmail] = useState(
     () => localStorage.getItem(DOCTOR_EMAIL_STORAGE_KEY) || ""
   );
@@ -145,7 +146,7 @@ function HealthDiaryPage() {
         entriesTitle: "My entries",
         trendTitle: "Progress by area",
         trendArea: "Area to display",
-        exportPdf: "Save as PDF / print",
+        exportPdf: "Download PDF",
         email: "Prepare email to doctor's practice",
         doctorEmail: "Email address of doctor's practice (optional)",
         doctorEmailPlaceholder: "practice@example.com",
@@ -159,6 +160,14 @@ function HealthDiaryPage() {
         reportTitle: "Doctor report",
         reportHint:
           "Create a printable PDF or prepare an email. The PDF must be attached manually.",
+        pdfCreating: "The PDF is being created …",
+        pdfSaved: "The PDF download has started. Check your Downloads folder.",
+        pdfError: "The PDF could not be created. Please try again.",
+        sharePdf: "Share PDF / send by email",
+        shareUnsupported:
+          "Sharing a PDF is not supported on this device. Download the PDF and attach it manually.",
+        shareReady:
+          "The share menu was opened. Choose your email app and check the data before sending.",
         loading: "Loading entries …",
         empty: "You have not recorded any health data yet.",
         emptyHint: "Your saved measurements will appear here.",
@@ -213,7 +222,7 @@ function HealthDiaryPage() {
         entriesTitle: "Meine Einträge",
         trendTitle: "Verlauf nach Bereich",
         trendArea: "Bereich anzeigen",
-        exportPdf: "Als PDF speichern / drucken",
+        exportPdf: "PDF herunterladen",
         email: "E-Mail an Arztpraxis vorbereiten",
         doctorEmail: "E-Mail-Adresse der Arztpraxis (optional)",
         doctorEmailPlaceholder: "praxis@beispiel.de",
@@ -227,6 +236,14 @@ function HealthDiaryPage() {
         reportTitle: "Arztübersicht",
         reportHint:
           "Erstelle eine druckbare PDF-Datei oder bereite eine E-Mail vor. Die PDF muss anschließend manuell angehängt werden.",
+        pdfCreating: "Die PDF wird erstellt …",
+        pdfSaved: "Der PDF-Download wurde gestartet. Prüfe anschließend deinen Downloads-Ordner.",
+        pdfError: "Die PDF konnte nicht erstellt werden. Bitte versuche es erneut.",
+        sharePdf: "PDF teilen / per E-Mail senden",
+        shareUnsupported:
+          "Das Teilen einer PDF wird auf diesem Gerät nicht unterstützt. Lade die PDF herunter und hänge sie manuell an.",
+        shareReady:
+          "Das Teilen-Menü wurde geöffnet. Wähle deine Mail-App und prüfe die Daten vor dem Senden.",
         loading: "Einträge werden geladen …",
         empty: "Du hast noch keine Gesundheitsdaten eingetragen.",
         emptyHint: "Deine gespeicherten Messwerte erscheinen hier.",
@@ -381,13 +398,104 @@ function HealthDiaryPage() {
     });
   }
 
-  function handlePrint() {
+  function getReportFileName() {
+    return `curaelis-arztuebersicht-${new Date().toISOString().slice(0, 10)}.pdf`;
+  }
+
+  async function createReportPdf() {
+    const { jsPDF } = await import("jspdf");
+    const pdf = new jsPDF({ unit: "mm", format: "a4" });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 16;
+    const textWidth = pageWidth - margin * 2;
+    let yPosition = 20;
+
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(16);
+    pdf.text(text.reportTitle, margin, yPosition);
+    yPosition += 8;
+
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
+    pdf.text(
+      isEnglish ? "Curaelis health diary" : "Curaelis Gesundheitstagebuch",
+      margin,
+      yPosition
+    );
+    yPosition += 10;
+
+    getReportLines()
+      .flatMap((line) => pdf.splitTextToSize(line, textWidth))
+      .forEach((line) => {
+        if (yPosition > pageHeight - 20) {
+          pdf.addPage();
+          yPosition = 20;
+        }
+
+        pdf.text(line, margin, yPosition);
+        yPosition += 6;
+      });
+
+    return pdf;
+  }
+
+  async function handlePrint() {
     if (healthEntries.length === 0) {
       showMessage(text.reportEmpty, "error");
       return;
     }
 
-    window.print();
+    setPrintMessage(text.pdfCreating);
+
+    try {
+      const pdf = await createReportPdf();
+      pdf.save(getReportFileName());
+      setPrintMessage(text.pdfSaved);
+    } catch {
+      setPrintMessage(text.pdfError);
+    }
+  }
+
+  async function handleSharePdf() {
+    if (healthEntries.length === 0) {
+      showMessage(text.reportEmpty, "error");
+      return;
+    }
+
+    if (!navigator.share || !navigator.canShare) {
+      setPrintMessage(text.shareUnsupported);
+      return;
+    }
+
+    setPrintMessage(text.pdfCreating);
+
+    try {
+      const pdf = await createReportPdf();
+      const file = new File([pdf.output("blob")], getReportFileName(), {
+        type: "application/pdf",
+      });
+
+      if (!navigator.canShare({ files: [file] })) {
+        setPrintMessage(text.shareUnsupported);
+        return;
+      }
+
+      const intro = isEnglish
+        ? "My Curaelis health diary entries:\n\n"
+        : "Meine Gesundheitstagebuch-Einträge aus Curaelis:\n\n";
+
+      await navigator.share({
+        title: text.reportTitle,
+        text: `${intro}${getReportLines().join("\n")}`,
+        files: [file],
+      });
+      setPrintMessage(text.shareReady);
+    } catch (error) {
+      if (error?.name !== "AbortError") {
+        setPrintMessage(text.pdfError);
+      }
+    }
   }
 
   function handleEmail() {
@@ -526,6 +634,21 @@ function HealthDiaryPage() {
             🪪 {isEnglish ? "Open emergency pass" : "Notfallpass öffnen"}
           </Button>
         </Flex>
+        {printMessage && (
+          <Box
+            mt="4"
+            padding="3"
+            borderRadius="md"
+            background="teal.50"
+            color="teal.800"
+            borderWidth="1px"
+            borderColor="teal.200"
+            role="status"
+            aria-live="polite"
+          >
+            {printMessage}
+          </Box>
+        )}
       </Box>
 
       <Box
@@ -575,7 +698,32 @@ function HealthDiaryPage() {
           >
             ✉️ {text.email}
           </Button>
+          <Button
+            type="button"
+            variant="outline"
+            colorPalette="teal"
+            onClick={handleSharePdf}
+            disabled={healthEntries.length === 0}
+            display={{ base: "inline-flex", md: "none" }}
+          >
+            📤 {text.sharePdf}
+          </Button>
         </Flex>
+        {printMessage && (
+          <Box
+            mt="4"
+            padding="3"
+            borderRadius="md"
+            background="teal.50"
+            color="teal.800"
+            borderWidth="1px"
+            borderColor="teal.200"
+            role="status"
+            aria-live="polite"
+          >
+            {printMessage}
+          </Box>
+        )}
       </Box>
 
       <Box

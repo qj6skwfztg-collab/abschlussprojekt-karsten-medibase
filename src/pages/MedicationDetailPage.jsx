@@ -43,6 +43,41 @@ function MedicationDetailPage() {
         {isEnglish ? medication.descriptionEn ?? medication.description : medication.description}
       </Text>
 
+      <Box marginTop="6" padding="5" borderWidth="1px" borderRadius="lg">
+        <Heading size="sm">
+          {isEnglish ? "Active ingredient" : "Wirkstoff"}
+        </Heading>
+        <Text marginTop="2">
+          {medication.activeIngredient ?? medication.name}
+        </Text>
+
+        {medication.aliases?.length > 0 && (
+          <Text marginTop="3" fontSize="sm" color="gray.600">
+            {isEnglish ? "Also searchable as" : "Auch suchbar als"}: {medication.aliases.join(", ")}
+          </Text>
+        )}
+
+        <Heading size="sm" marginTop="5">
+          {isEnglish ? "Selected possible side effects" : "Ausgewählte mögliche Nebenwirkungen"}
+        </Heading>
+        <Text marginTop="2">
+          {medication.sideEffects ??
+            (isEnglish
+              ? "Possible side effects depend on the exact product. Please read the package leaflet."
+              : "Mögliche Nebenwirkungen hängen vom genauen Präparat ab. Bitte lies die Packungsbeilage.")}
+        </Text>
+
+        <Heading size="sm" marginTop="5">
+          {isEnglish ? "Important note" : "Wichtiger Hinweis"}
+        </Heading>
+        <Text marginTop="2">
+          {medication.warnings ??
+            (isEnglish
+              ? "Please follow the current package leaflet and ask a doctor or pharmacy if unsure."
+              : "Bitte beachte die aktuelle Packungsbeilage und frage bei Unsicherheit Arzt oder Apotheke.")}
+        </Text>
+      </Box>
+
       <SafetyNotice />
 
       {medication.sourceUrl ? (

@@ -38,10 +38,17 @@ function MedicationsPage() {
     (medication) => {
       const search = searchTerm.toLowerCase();
 
-      const matchesSearch =
-        medication.name.toLowerCase().includes(search) ||
-        medication.category.toLowerCase().includes(search) ||
-        (medication.categoryEn ?? "").toLowerCase().includes(search);
+      const searchableTerms = [
+        medication.name,
+        medication.activeIngredient,
+        medication.category,
+        medication.categoryEn,
+        ...(medication.aliases ?? []),
+      ];
+
+      const matchesSearch = searchableTerms.some((term) =>
+        term?.toLowerCase().includes(search)
+      );
 
       const matchesCategory =
         selectedCategory === "Alle" ||

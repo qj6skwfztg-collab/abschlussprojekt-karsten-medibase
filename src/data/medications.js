@@ -448,4 +448,212 @@ const medications = [
   },
 ];
 
-export default medications;
+const categoryDetails = {
+  "Schmerz- und Fiebermittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Magen-Darm-Beschwerden, Übelkeit oder Hautreaktionen sein.",
+    warnings: "Nicht mehrere Schmerzmittel kombinieren, ohne vorher Arzt oder Apotheke zu fragen. Die aktuelle Packungsbeilage beachten.",
+  },
+  "Schmerz- und Entzündungsmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Magenbeschwerden, Übelkeit, Kopfschmerzen, Schwindel oder Hautreaktionen sein.",
+    warnings: "Diese Wirkstoffgruppe kann unter anderem Magen, Nieren und Herz-Kreislauf-System belasten.",
+  },
+  "Starke Schmerzmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Müdigkeit, Schwindel, Übelkeit, Verstopfung und verlangsamte Reaktionen sein.",
+    warnings: "Nur nach ärztlicher Verordnung anwenden und nicht mit Alkohol kombinieren.",
+  },
+  "Nervenschmerz- und Epilepsiemittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Müdigkeit, Schwindel, Benommenheit oder Konzentrationsprobleme sein.",
+    warnings: "Die Reaktionsfähigkeit kann eingeschränkt sein. Nicht eigenständig absetzen.",
+  },
+  "Krampflösende Mittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Mundtrockenheit, Sehstörungen, Verstopfung oder Herzklopfen sein.",
+    warnings: "Bei Augen-, Herz- oder Prostataerkrankungen vorher ärztlich oder in der Apotheke fragen.",
+  },
+  "Mittel gegen Übelkeit": {
+    sideEffects: "Mögliche Nebenwirkungen können Müdigkeit, Benommenheit, Mundtrockenheit oder Sehstörungen sein.",
+    warnings: "Die Reaktionsfähigkeit kann beeinträchtigt sein. Bei anhaltendem Erbrechen medizinische Hilfe suchen.",
+  },
+  "Mittel für die Verdauung": {
+    sideEffects: "Mögliche Nebenwirkungen können Bauchschmerzen, Blähungen, Durchfall oder Übelkeit sein.",
+    warnings: "Bei starken oder länger anhaltenden Beschwerden ärztlich abklären lassen.",
+  },
+  "Mittel gegen Verstopfung": {
+    sideEffects: "Mögliche Nebenwirkungen können Bauchschmerzen, Blähungen, Durchfall oder Übelkeit sein.",
+    warnings: "Nicht dauerhaft ohne medizinische Rücksprache anwenden.",
+  },
+  "Herz- und Blutdruckmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Schwindel, Müdigkeit, Kopfschmerzen, niedriger Blutdruck oder langsamer Puls sein.",
+    warnings: "Nicht eigenständig absetzen. Blutdruck- und Herzmedikamente können sich gegenseitig beeinflussen.",
+  },
+  "Entwässernde Mittel": {
+    sideEffects: "Mögliche Nebenwirkungen können häufiges Wasserlassen, Schwindel, niedriger Blutdruck oder Veränderungen der Mineralstoffwerte sein.",
+    warnings: "Kontrollen von Blutdruck, Nierenfunktion und Blutwerten können erforderlich sein.",
+  },
+  "Cholesterinsenker": {
+    sideEffects: "Mögliche Nebenwirkungen können Muskelbeschwerden, Kopfschmerzen, Übelkeit oder Verdauungsbeschwerden sein.",
+    warnings: "Ungewöhnliche oder starke Muskelschmerzen sofort ärztlich abklären lassen.",
+  },
+  "Blutgerinnungshemmer": {
+    sideEffects: "Mögliche Nebenwirkungen können blaue Flecken, Nasenbluten, Zahnfleischbluten oder andere Blutungen sein.",
+    warnings: "Starke oder ungewöhnliche Blutungen müssen sofort medizinisch abgeklärt werden. Nicht eigenständig absetzen.",
+  },
+  "Diabetesmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Unterzuckerung, Übelkeit, Bauchbeschwerden, Hautreaktionen oder Gewichtsveränderungen sein.",
+    warnings: "Die Risiken unterscheiden sich je nach Wirkstoff. Die ärztlich vereinbarte Anwendung beachten.",
+  },
+  "Asthma- und Atemwegsmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Zittern, Herzklopfen, Kopfschmerzen, Heiserkeit oder Reizungen im Mund sein.",
+    warnings: "Bei plötzlich zunehmender Atemnot sofort medizinische Hilfe holen.",
+  },
+  "Allergiemittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Müdigkeit, Kopfschmerzen, Mundtrockenheit oder Magen-Darm-Beschwerden sein.",
+    warnings: "Auch moderne Allergiemittel können müde machen. Die Packungsbeilage beachten.",
+  },
+  "Erkältungs- und Nasenmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Reizungen, trockene Schleimhäute, Herzklopfen oder Kopfschmerzen sein.",
+    warnings: "Abschwellende Nasenmittel nur kurzzeitig anwenden. Bei Bluthochdruck vorher nachfragen.",
+  },
+  "Schilddrüsenmittel": {
+    sideEffects: "Bei zu hoher persönlicher Dosis können Herzklopfen, Unruhe, Schwitzen oder Schlafprobleme auftreten.",
+    warnings: "Die Dosis wird individuell eingestellt. Nicht eigenständig ändern.",
+  },
+  "Entzündungshemmende Mittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Magenbeschwerden, Schlafprobleme, Stimmungsschwankungen oder Hautreaktionen sein.",
+    warnings: "Kortisonpräparate nicht eigenständig abrupt absetzen.",
+  },
+  "Antibiotika": {
+    sideEffects: "Mögliche Nebenwirkungen können Durchfall, Übelkeit, Bauchschmerzen, Hautausschlag oder allergische Reaktionen sein.",
+    warnings: "Antibiotika wirken nicht gegen Viren und dürfen nur nach ärztlicher Verordnung eingenommen werden.",
+  },
+  "Antivirale Mittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Übelkeit, Kopfschmerzen, Bauchbeschwerden oder Hautreaktionen sein.",
+    warnings: "Anwendung und Dauer hängen stark von der Infektion und dem Präparat ab.",
+  },
+  "Pilzmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Hautreizungen, Brennen, Übelkeit oder Kopfschmerzen sein.",
+    warnings: "Bei innerlicher Anwendung sind Wechselwirkungen möglich. Die Packungsbeilage beachten.",
+  },
+  "Psychiatrische Medikamente": {
+    sideEffects: "Mögliche Nebenwirkungen können Übelkeit, Schlafveränderungen, Müdigkeit, Unruhe oder Schwindel sein.",
+    warnings: "Nicht eigenständig absetzen. Bei starken Stimmungsschwankungen sofort ärztliche Hilfe suchen.",
+  },
+  "Schlafmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Müdigkeit am nächsten Tag, Schwindel, Konzentrations- oder Gedächtnisprobleme sein.",
+    warnings: "Nicht mit Alkohol oder anderen beruhigenden Mitteln kombinieren.",
+  },
+  "Vitamine und Mineralstoffe": {
+    sideEffects: "Bei zu hoher Einnahme können Übelkeit, Bauchbeschwerden oder Veränderungen von Blutwerten auftreten.",
+    warnings: "Auch Nahrungsergänzung kann Nebenwirkungen haben. Bei Vorerkrankungen vorher nachfragen.",
+  },
+  "Haut- und Pilzmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Rötung, Brennen, Juckreiz, trockene Haut oder allergische Reaktionen sein.",
+    warnings: "Bei starker Verschlechterung oder ausgedehntem Ausschlag medizinischen Rat einholen.",
+  },
+};
+
+const additionalMedicationDefinitions = [
+  ["metamizol", "Metamizol", ["Novalgin"], "Metamizol", "Schmerz- und Fiebermittel", "Pain and fever relief", "Metamizol ist ein stark wirksames Schmerz- und Fiebermittel für bestimmte Situationen."],
+  ["tramadol", "Tramadol", ["Tramal"], "Tramadol", "Starke Schmerzmittel", "Strong pain medication", "Tramadol ist ein verschreibungspflichtiges Schmerzmittel aus der Gruppe der Opioide."],
+  ["morphin", "Morphin", ["Morphium"], "Morphin", "Starke Schmerzmittel", "Strong pain medication", "Morphin wird bei starken Schmerzen unter ärztlicher Kontrolle eingesetzt."],
+  ["pregabalin", "Pregabalin", ["Lyrica"], "Pregabalin", "Nervenschmerz- und Epilepsiemittel", "Nerve pain and epilepsy medication", "Pregabalin wird unter anderem bei bestimmten Nervenschmerzen eingesetzt."],
+  ["gabapentin", "Gabapentin", ["Neurontin"], "Gabapentin", "Nervenschmerz- und Epilepsiemittel", "Nerve pain and epilepsy medication", "Gabapentin wird unter anderem bei bestimmten Nervenschmerzen eingesetzt."],
+  ["celecoxib", "Celecoxib", ["Celebrex"], "Celecoxib", "Schmerz- und Entzündungsmittel", "Pain and inflammation relief", "Celecoxib gehört zu den entzündungshemmenden Schmerzmitteln."],
+  ["etoricoxib", "Etoricoxib", ["Arcoxia"], "Etoricoxib", "Schmerz- und Entzündungsmittel", "Pain and inflammation relief", "Etoricoxib gehört zu den entzündungshemmenden Schmerzmitteln."],
+  ["meloxicam", "Meloxicam", ["Mobic"], "Meloxicam", "Schmerz- und Entzündungsmittel", "Pain and inflammation relief", "Meloxicam wird bei bestimmten entzündlichen Erkrankungen eingesetzt."],
+  ["ketoprofen", "Ketoprofen", [], "Ketoprofen", "Schmerz- und Entzündungsmittel", "Pain and inflammation relief", "Ketoprofen gehört zu den entzündungshemmenden Schmerzmitteln."],
+  ["fentanyl", "Fentanyl", ["Durogesic"], "Fentanyl", "Starke Schmerzmittel", "Strong pain medication", "Fentanyl ist ein sehr starkes Opioid unter ärztlicher Kontrolle."],
+  ["butylscopolamin", "Butylscopolamin", ["Buscopan"], "Butylscopolamin", "Krampflösende Mittel", "Antispasmodics", "Butylscopolamin kann krampfartige Magen-Darm-Beschwerden lindern."],
+  ["ondansetron", "Ondansetron", ["Zofran"], "Ondansetron", "Mittel gegen Übelkeit", "Nausea medication", "Ondansetron wird bei bestimmten Formen von Übelkeit eingesetzt."],
+  ["domperidon", "Domperidon", ["Motilium"], "Domperidon", "Mittel gegen Übelkeit", "Nausea medication", "Domperidon kann bei bestimmten Übelkeitsbeschwerden eingesetzt werden."],
+  ["lactulose", "Lactulose", ["Bifiteral"], "Lactulose", "Mittel gegen Verstopfung", "Constipation relief", "Lactulose bindet Wasser im Darm und kann bei Verstopfung eingesetzt werden."],
+  ["natriumpicosulfat", "Natriumpicosulfat", ["Laxoberal"], "Natriumpicosulfat", "Mittel gegen Verstopfung", "Constipation relief", "Natriumpicosulfat regt die Darmbewegung an."],
+  ["simeticon", "Simeticon", ["Lefax"], "Simeticon", "Mittel für die Verdauung", "Digestive medication", "Simeticon kann Beschwerden durch Blähungen lindern."],
+  ["calcium", "Calcium", ["Calcium-Sandoz"], "Calcium", "Vitamine und Mineralstoffe", "Vitamins and minerals", "Calciumpräparate können bei einem festgestellten Bedarf eingesetzt werden."],
+  ["eisen", "Eisen", ["Ferro Sanol"], "Eisen", "Vitamine und Mineralstoffe", "Vitamins and minerals", "Eisenpräparate werden bei einem festgestellten Eisenmangel eingesetzt."],
+  ["folsaeure", "Folsäure", [], "Folsäure", "Vitamine und Mineralstoffe", "Vitamins and minerals", "Folsäurepräparate können bei einem festgestellten Bedarf eingesetzt werden."],
+  ["cyanocobalamin", "Vitamin B12", ["Cyanocobalamin"], "Cyanocobalamin", "Vitamine und Mineralstoffe", "Vitamins and minerals", "Vitamin B12 wird bei einem festgestellten Mangel eingesetzt."],
+  ["kalium", "Kalium", [], "Kalium", "Vitamine und Mineralstoffe", "Vitamins and minerals", "Kaliumpräparate werden nur bei festgestelltem Bedarf eingesetzt."],
+  ["hydrochlorothiazid", "Hydrochlorothiazid", ["HCT"], "Hydrochlorothiazid", "Entwässernde Mittel", "Diuretics", "Hydrochlorothiazid ist ein entwässernder Wirkstoff."],
+  ["furosemid", "Furosemid", ["Lasix"], "Furosemid", "Entwässernde Mittel", "Diuretics", "Furosemid ist ein stark entwässernder Wirkstoff."],
+  ["torasemid", "Torasemid", ["Torem"], "Torasemid", "Entwässernde Mittel", "Diuretics", "Torasemid wird unter anderem bei Wassereinlagerungen eingesetzt."],
+  ["valsartan", "Valsartan", ["Diovan"], "Valsartan", "Herz- und Blutdruckmittel", "Heart and blood pressure medication", "Valsartan gehört zu den Blutdruckmitteln."],
+  ["candesartan", "Candesartan", ["Atacand"], "Candesartan", "Herz- und Blutdruckmittel", "Heart and blood pressure medication", "Candesartan wird unter anderem bei Bluthochdruck eingesetzt."],
+  ["enalapril", "Enalapril", ["Enahexal"], "Enalapril", "Herz- und Blutdruckmittel", "Heart and blood pressure medication", "Enalapril gehört zu den ACE-Hemmern."],
+  ["nebivolol", "Nebivolol", ["Nebilet"], "Nebivolol", "Herz- und Blutdruckmittel", "Heart and blood pressure medication", "Nebivolol gehört zu den Betablockern."],
+  ["diltiazem", "Diltiazem", ["Dilzem"], "Diltiazem", "Herz- und Blutdruckmittel", "Heart and blood pressure medication", "Diltiazem wird bei bestimmten Herz-Kreislauf-Erkrankungen eingesetzt."],
+  ["verapamil", "Verapamil", ["Isoptin"], "Verapamil", "Herz- und Blutdruckmittel", "Heart and blood pressure medication", "Verapamil wird bei bestimmten Herzrhythmusstörungen eingesetzt."],
+  ["spironolacton", "Spironolacton", ["Aldactone"], "Spironolacton", "Entwässernde Mittel", "Diuretics", "Spironolacton ist ein kaliumsparendes Entwässerungsmittel."],
+  ["clopidogrel", "Clopidogrel", ["Plavix"], "Clopidogrel", "Blutgerinnungshemmer", "Anticoagulant", "Clopidogrel hemmt das Zusammenlagern von Blutplättchen."],
+  ["phenprocoumon", "Phenprocoumon", ["Marcumar"], "Phenprocoumon", "Blutgerinnungshemmer", "Anticoagulant", "Phenprocoumon hemmt die Blutgerinnung und erfordert Kontrollen."],
+  ["dabigatran", "Dabigatran", ["Pradaxa"], "Dabigatran", "Blutgerinnungshemmer", "Anticoagulant", "Dabigatran hemmt die Blutgerinnung."],
+  ["ezetimib", "Ezetimib", ["Ezetrol"], "Ezetimib", "Cholesterinsenker", "Cholesterol-lowering medication", "Ezetimib vermindert die Aufnahme von Cholesterin aus dem Darm."],
+  ["simvastatin", "Simvastatin", ["Zocor"], "Simvastatin", "Cholesterinsenker", "Cholesterol-lowering medication", "Simvastatin gehört zu den Statinen."],
+  ["insulin-aspart", "Insulin aspart", ["NovoRapid"], "Insulin aspart", "Diabetesmittel", "Diabetes medication", "Insulin aspart ist ein schnell wirkendes Insulin."],
+  ["glimepirid", "Glimepirid", ["Amaryl"], "Glimepirid", "Diabetesmittel", "Diabetes medication", "Glimepirid wird bei bestimmten Formen von Typ-2-Diabetes eingesetzt."],
+  ["sitagliptin", "Sitagliptin", ["Januvia"], "Sitagliptin", "Diabetesmittel", "Diabetes medication", "Sitagliptin wird bei Typ-2-Diabetes eingesetzt."],
+  ["liraglutid", "Liraglutid", ["Victoza"], "Liraglutid", "Diabetesmittel", "Diabetes medication", "Liraglutid wird unter anderem bei Typ-2-Diabetes eingesetzt."],
+  ["semaglutid", "Semaglutid", ["Ozempic"], "Semaglutid", "Diabetesmittel", "Diabetes medication", "Semaglutid wird unter anderem bei Typ-2-Diabetes eingesetzt."],
+  ["budesonid", "Budesonid", ["Pulmicort"], "Budesonid", "Asthma- und Atemwegsmittel", "Asthma and respiratory medication", "Budesonid ist ein entzündungshemmender Atemwegswirkstoff."],
+  ["formoterol", "Formoterol", ["Oxis"], "Formoterol", "Asthma- und Atemwegsmittel", "Asthma and respiratory medication", "Formoterol erweitert die Atemwege."],
+  ["tiotropium", "Tiotropium", ["Spiriva"], "Tiotropium", "Asthma- und Atemwegsmittel", "Asthma and respiratory medication", "Tiotropium erweitert die Atemwege."],
+  ["montelukast", "Montelukast", ["Singulair"], "Montelukast", "Asthma- und Atemwegsmittel", "Asthma and respiratory medication", "Montelukast wird bei bestimmten Formen von Asthma eingesetzt."],
+  ["mometason", "Mometason", ["Nasonex"], "Mometason", "Allergiemittel", "Allergy medication", "Mometason wird unter anderem bei allergischen Beschwerden eingesetzt."],
+  ["fluticason", "Fluticason", ["Flixonase"], "Fluticason", "Allergiemittel", "Allergy medication", "Fluticason wird unter anderem bei allergischen Beschwerden eingesetzt."],
+  ["desloratadin", "Desloratadin", ["Aerius"], "Desloratadin", "Allergiemittel", "Allergy medication", "Desloratadin ist ein Antihistaminikum."],
+  ["fexofenadin", "Fexofenadin", ["Allegra"], "Fexofenadin", "Allergiemittel", "Allergy medication", "Fexofenadin ist ein Antihistaminikum."],
+  ["hydrocortison", "Hydrocortison", [], "Hydrocortison", "Haut- und Pilzmittel", "Skin and antifungal medication", "Hydrocortison wird äußerlich bei bestimmten Hautbeschwerden eingesetzt."],
+  ["betamethason", "Betamethason", [], "Betamethason", "Haut- und Pilzmittel", "Skin and antifungal medication", "Betamethason ist ein entzündungshemmender Kortison-Wirkstoff."],
+  ["clotrimazol", "Clotrimazol", ["Canesten"], "Clotrimazol", "Haut- und Pilzmittel", "Skin and antifungal medication", "Clotrimazol wird gegen bestimmte Pilzinfektionen eingesetzt."],
+  ["aciclovir", "Aciclovir", ["Zovirax"], "Aciclovir", "Antivirale Mittel", "Antiviral medication", "Aciclovir wird gegen bestimmte Virusinfektionen eingesetzt."],
+  ["nitrofurantoin", "Nitrofurantoin", ["Furadantin"], "Nitrofurantoin", "Antibiotika", "Antibiotics", "Nitrofurantoin wird unter anderem bei bestimmten Harnwegsinfektionen eingesetzt."],
+  ["cefuroxim", "Cefuroxim", ["Zinnat"], "Cefuroxim", "Antibiotika", "Antibiotics", "Cefuroxim ist ein Antibiotikum gegen bestimmte bakterielle Infektionen."],
+  ["levofloxacin", "Levofloxacin", ["Tavanic"], "Levofloxacin", "Antibiotika", "Antibiotics", "Levofloxacin ist ein Antibiotikum gegen bestimmte bakterielle Infektionen."],
+  ["fluconazol", "Fluconazol", ["Diflucan"], "Fluconazol", "Pilzmittel", "Antifungal medication", "Fluconazol wird gegen bestimmte Pilzinfektionen eingesetzt."],
+  ["valaciclovir", "Valaciclovir", ["Valtrex"], "Valaciclovir", "Antivirale Mittel", "Antiviral medication", "Valaciclovir wird gegen bestimmte Virusinfektionen eingesetzt."],
+  ["escitalopram", "Escitalopram", ["Cipralex"], "Escitalopram", "Psychiatrische Medikamente", "Mental health medication", "Escitalopram gehört zu den SSRI."],
+  ["citalopram", "Citalopram", ["Cipramil"], "Citalopram", "Psychiatrische Medikamente", "Mental health medication", "Citalopram gehört zu den SSRI."],
+  ["mirtazapin", "Mirtazapin", ["Remeron"], "Mirtazapin", "Psychiatrische Medikamente", "Mental health medication", "Mirtazapin wird bei bestimmten psychischen Erkrankungen eingesetzt."],
+  ["quetiapin", "Quetiapin", ["Seroquel"], "Quetiapin", "Psychiatrische Medikamente", "Mental health medication", "Quetiapin wird bei bestimmten psychischen Erkrankungen eingesetzt."],
+  ["amitriptylin", "Amitriptylin", ["Saroten"], "Amitriptylin", "Psychiatrische Medikamente", "Mental health medication", "Amitriptylin wird unter anderem bei bestimmten Depressionen und Nervenschmerzen eingesetzt."],
+  ["zolpidem", "Zolpidem", ["Stilnox"], "Zolpidem", "Schlafmittel", "Sleep medication", "Zolpidem ist ein verschreibungspflichtiges Schlafmittel."],
+  ["duloxetin", "Duloxetin", ["Cymbalta"], "Duloxetin", "Psychiatrische Medikamente", "Mental health medication", "Duloxetin wird bei bestimmten psychischen Erkrankungen und Nervenschmerzen eingesetzt."],
+];
+
+const officialMedicationSource =
+  "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html";
+
+const normalizedMedications = medications.map((medication) => {
+  const details = categoryDetails[medication.category] ?? {
+    sideEffects:
+      "Mögliche Nebenwirkungen hängen vom konkreten Präparat und der persönlichen Situation ab.",
+    warnings:
+      "Bitte die aktuelle Packungsbeilage beachten und bei Fragen Arzt oder Apotheke fragen.",
+  };
+
+  return {
+    ...medication,
+    activeIngredient: medication.activeIngredient ?? medication.name,
+    aliases: medication.aliases ?? [],
+    sideEffects: medication.sideEffects ?? details.sideEffects,
+    warnings: medication.warnings ?? details.warnings,
+  };
+});
+
+const additionalMedications = additionalMedicationDefinitions.map(
+  ([id, name, aliases, activeIngredient, category, categoryEn, description]) => ({
+    id,
+    name,
+    aliases,
+    activeIngredient,
+    category,
+    categoryEn,
+    description,
+    descriptionEn: description,
+    sideEffects: categoryDetails[category]?.sideEffects ?? "Bitte die aktuelle Packungsbeilage beachten.",
+    warnings: categoryDetails[category]?.warnings ?? "Bei Fragen Arzt oder Apotheke fragen.",
+    source: "BfArM AMIce",
+    sourceUrl: officialMedicationSource,
+  })
+);
+
+export default [...normalizedMedications, ...additionalMedications];

@@ -1,8 +1,6 @@
+import { syncEmergencyPassToWatch } from "../native/watchConnectivity";
 import { useEffect, useState } from "react";
-import {
-  collection,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
@@ -74,7 +72,6 @@ function EmergencyPass({ selectedCountry }) {
           "Sign in to use your personal emergency pass with your medications, measurements and contacts.",
         show: "Show emergency pass",
         hide: "Hide emergency pass",
-        emergencyCall: "Call emergency services",
         medications: "My medications",
         openMedications: "Open my medications",
         noMedications: "No personal medications saved.",
@@ -95,8 +92,6 @@ function EmergencyPass({ selectedCountry }) {
         conditions: "Important conditions",
         bloodGroup: "Blood group",
         specialNotes: "Special notes",
-        country: "Country",
-        callNumber: "Emergency number",
         notMedicalAdvice:
           "This pass is an overview for emergencies and is not a medical diagnosis.",
       }
@@ -110,7 +105,6 @@ function EmergencyPass({ selectedCountry }) {
           "Melde dich an, um deinen persönlichen Notfallpass mit Medikamenten, Messwerten und Kontakten zu nutzen.",
         show: "Notfallpass anzeigen",
         hide: "Notfallpass ausblenden",
-        emergencyCall: "Rettungsdienst anrufen",
         medications: "Meine Medikamente",
         openMedications: "Meine Medikamente öffnen",
         noMedications: "Keine persönlichen Medikamente gespeichert.",
@@ -131,8 +125,6 @@ function EmergencyPass({ selectedCountry }) {
         conditions: "Wichtige Erkrankungen",
         bloodGroup: "Blutgruppe",
         specialNotes: "Besondere Hinweise",
-        country: "Land",
-        callNumber: "Notrufnummer",
         notMedicalAdvice:
           "Dieser Pass ist eine Übersicht für Notfälle und keine medizinische Diagnose.",
       };
@@ -140,6 +132,7 @@ function EmergencyPass({ selectedCountry }) {
   useEffect(() => {
     return onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+
       if (!currentUser || !currentUser.emailVerified) {
         setMedications([]);
         setHealthEntries([]);
@@ -166,7 +159,9 @@ function EmergencyPass({ selectedCountry }) {
               id: documentSnapshot.id,
               ...documentSnapshot.data(),
             }))
-            .sort((first, second) => first.name.localeCompare(second.name))
+            .sort((first, second) =>
+              first.name.localeCompare(second.name)
+            )
         );
       })
     );
@@ -200,8 +195,28 @@ function EmergencyPass({ selectedCountry }) {
       })
     );
 
-    return () => stopListeners.forEach((stopListening) => stopListening());
+    return () => {
+      stopListeners.forEach((stopListening) => stopListening());
+    };
   }, [user]);
+
+  useEffect(() => {
+    if (!user?.emailVerified || !isPassVisible) {
+      return;
+    }
+
+    void syncEmergencyPassToWatch({
+      medications,
+      healthEntries,
+      profile,
+    });
+  }, [
+    user,
+    isPassVisible,
+    medications,
+    healthEntries,
+    profile,
+  ]);
 
   const hasEmergencyProfile = Object.values(profile).some(
     (value) => typeof value === "string" && value.trim()
@@ -218,14 +233,19 @@ function EmergencyPass({ selectedCountry }) {
       return;
     }
 
-    const emergencyText = isEnglish
-      ? `I may need help. My Curaelis emergency number is ${selectedCountry.ambulanceNumber}. Please contact me.`
-      : `Ich brauche möglicherweise Hilfe. Die Curaelis-Notrufnummer für mein Land ist ${selectedCountry.ambulanceNumber}. Bitte melde dich bei mir.`;
-    const recipients = contacts.map((contact) => contact.phone.trim()).join(",");
+const emergencyText = isEnglish
+  ? `I may need help. My Curaelis emergency number is ${selectedCountry.ambulanceNumber}. Please contact me.`
+  : `Ich brauche möglicherweise Hilfe. Die Curaelis-Notrufnummer für mein Land ist ${selectedCountry.ambulanceNumber}. Bitte melde dich bei mir.`;
+    const recipients = contacts
+      .map((contact) => contact.phone.trim())
+      .join(",");
 
     setMessage(text.messagePrepared);
     setMessageType("success");
-    window.location.href = `sms:${recipients}?body=${encodeURIComponent(emergencyText)}`;
+
+    window.location.href = `sms:${recipients}?body=${encodeURIComponent(
+      emergencyText
+    )}`;
   }
 
   return (
@@ -243,7 +263,9 @@ function EmergencyPass({ selectedCountry }) {
       <Heading size="lg" color="teal.900" marginBottom="3">
         🪪 {text.title}
       </Heading>
+
       <Text marginBottom="3">{text.description}</Text>
+
       <Text color="teal.800" fontWeight="600" marginBottom="5">
         🔒 {text.privacy}
       </Text>
@@ -273,6 +295,7 @@ function EmergencyPass({ selectedCountry }) {
                   <Heading size="md" color="teal.900" marginBottom="3">
                     💊 {text.medications}
                   </Heading>
+
                   {medications.length === 0 ? (
                     <Text>{text.noMedications}</Text>
                   ) : (
@@ -281,6 +304,7 @@ function EmergencyPass({ selectedCountry }) {
                         <Box key={medication.id}>
                           <Text fontWeight="700">{medication.name}</Text>
                           <Text>{medication.dosage}</Text>
+
                           {Array.isArray(medication.intakeTimes) && (
                             <Text fontSize="sm" color="gray.600">
                               {medication.intakeTimes.join(", ")}
@@ -290,6 +314,7 @@ function EmergencyPass({ selectedCountry }) {
                       ))}
                     </Stack>
                   )}
+
                   <Button
                     as={Link}
                     to="/meine-medikamente"
@@ -311,9 +336,11 @@ function EmergencyPass({ selectedCountry }) {
                   <Heading size="md" color="teal.900" marginBottom="3">
                     📈 {text.health}
                   </Heading>
+
                   {healthEntries.length === 0 ? (
                     <>
                       <Text>{text.noHealth}</Text>
+
                       <Button
                         as={Link}
                         to="/gesundheitstagebuch"
@@ -332,7 +359,9 @@ function EmergencyPass({ selectedCountry }) {
                       >
                         <span aria-hidden="true">📈</span>
                         <span style={{ overflowWrap: "anywhere" }}>
-                          {isEnglish ? "Open health diary" : "Gesundheitstagebuch öffnen"}
+                          {isEnglish
+                            ? "Open health diary"
+                            : "Gesundheitstagebuch öffnen"}
                         </span>
                       </Button>
                     </>
@@ -342,10 +371,13 @@ function EmergencyPass({ selectedCountry }) {
                         <Box key={entry.id}>
                           <Text fontWeight="700">
                             {entry.type === "symptom"
-                              ? entry.context || getHealthLabel(entry.type, isEnglish)
+                              ? entry.context ||
+                                getHealthLabel(entry.type, isEnglish)
                               : getHealthLabel(entry.type, isEnglish)}
                           </Text>
+
                           <Text>{getHealthValue(entry)}</Text>
+
                           <Text fontSize="sm" color="gray.600">
                             {formatDate(entry.measuredAt, isEnglish)}
                           </Text>
@@ -359,6 +391,7 @@ function EmergencyPass({ selectedCountry }) {
                   <Heading size="md" color="teal.900" marginBottom="3">
                     📞 {text.contacts}
                   </Heading>
+
                   {contacts.length === 0 ? (
                     <Text>{text.noContacts}</Text>
                   ) : (
@@ -366,11 +399,17 @@ function EmergencyPass({ selectedCountry }) {
                       {contacts.map((contact) => (
                         <Box key={contact.id}>
                           <Text fontWeight="700">{contact.name}</Text>
-                          <Text as="a" href={`tel:${contact.phone}`} color="teal.700">
+
+                          <Text
+                            as="a"
+                            href={`tel:${contact.phone}`}
+                            color="teal.700"
+                          >
                             {contact.phone}
                           </Text>
                         </Box>
                       ))}
+
                       <Button
                         type="button"
                         variant="outline"
@@ -403,6 +442,7 @@ function EmergencyPass({ selectedCountry }) {
                 {!hasEmergencyProfile ? (
                   <>
                     <Text>{text.noProfile}</Text>
+
                     <Button
                       as={Link}
                       to="/konto"
@@ -426,18 +466,21 @@ function EmergencyPass({ selectedCountry }) {
                         <Text>{profile.allergies}</Text>
                       </Box>
                     )}
+
                     {profile.conditions && (
                       <Box>
                         <Text fontWeight="700">{text.conditions}</Text>
                         <Text>{profile.conditions}</Text>
                       </Box>
                     )}
+
                     {profile.bloodGroup && (
                       <Box>
                         <Text fontWeight="700">{text.bloodGroup}</Text>
                         <Text>{profile.bloodGroup}</Text>
                       </Box>
                     )}
+
                     {profile.specialNotes && (
                       <Box>
                         <Text fontWeight="700">{text.specialNotes}</Text>
@@ -451,7 +494,9 @@ function EmergencyPass({ selectedCountry }) {
               {message && (
                 <Text
                   marginTop="5"
-                  color={messageType === "error" ? "red.700" : "teal.700"}
+                  color={
+                    messageType === "error" ? "red.700" : "teal.700"
+                  }
                   fontWeight="600"
                   role={messageType === "error" ? "alert" : "status"}
                   aria-live="polite"

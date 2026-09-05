@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Curaelis Watch
-//
-//  Created by Karsten Rabeneck-Ketme on 31.08.26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
@@ -13,6 +6,7 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
+
             Text("Hello, world!")
         }
         .padding()
@@ -22,3 +16,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+
+    

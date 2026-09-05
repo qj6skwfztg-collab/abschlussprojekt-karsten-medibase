@@ -3,6 +3,7 @@ import {
   initializeAppCheck,
   ReCaptchaEnterpriseProvider,
 } from "firebase/app-check";
+import { Capacitor } from "@capacitor/core";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -19,7 +20,12 @@ const app = initializeApp(firebaseConfig);
 
 export const ADMIN_UID = "IjelVzBlIIgkJWgLiDdHrhLtwDf1";
 
+const isNativeIOS =
+  Capacitor.isNativePlatform() &&
+  Capacitor.getPlatform() === "ios";
+
 if (
+  !isNativeIOS &&
   import.meta.env.PROD &&
   import.meta.env.VITE_RECAPTCHA_ENTERPRISE_SITE_KEY
 ) {

@@ -173,6 +173,279 @@ const medications = [
     source: "gesund.bund.de",
     sourceUrl: "https://gesund.bund.de/magnesiummangel",
   },
+  {
+    id: "acetylsalicylsaeure",
+    name: "Acetylsalicylsäure (ASS)",
+    category: "Schmerz- und Fiebermittel",
+    categoryEn: "Pain and fever relief",
+    description:
+      "Acetylsalicylsäure kann je nach Präparat und ärztlicher Empfehlung bei Schmerzen, Fieber oder bestimmten Herz-Kreislauf-Erkrankungen eingesetzt werden.",
+    descriptionEn:
+      "Depending on the product and medical advice, acetylsalicylic acid may be used for pain, fever or certain cardiovascular conditions.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "naproxen",
+    name: "Naproxen",
+    category: "Schmerz- und Fiebermittel",
+    categoryEn: "Pain and fever relief",
+    description:
+      "Naproxen gehört zu den entzündungshemmenden Schmerzmitteln. Die passende Anwendung hängt von der persönlichen Situation und dem Präparat ab.",
+    descriptionEn:
+      "Naproxen is an anti-inflammatory pain reliever. Appropriate use depends on the individual situation and the product.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "diclofenac",
+    name: "Diclofenac",
+    category: "Schmerz- und Entzündungsmittel",
+    categoryEn: "Pain and inflammation relief",
+    description:
+      "Diclofenac wird zur Behandlung von Schmerzen und Entzündungen eingesetzt. Es gibt verschiedene Darreichungsformen und wichtige Gegenanzeigen.",
+    descriptionEn:
+      "Diclofenac is used to treat pain and inflammation. It is available in different forms and has important contraindications.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "omeprazol",
+    name: "Omeprazol",
+    category: "Magenmittel",
+    categoryEn: "Stomach medication",
+    description:
+      "Omeprazol vermindert die Bildung von Magensäure und wird unter anderem bei säurebedingten Magen- und Speiseröhrenbeschwerden eingesetzt.",
+    descriptionEn:
+      "Omeprazole reduces stomach acid production and is used, among other things, for acid-related stomach and oesophageal symptoms.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "macrogol",
+    name: "Macrogol",
+    category: "Mittel gegen Verstopfung",
+    categoryEn: "Constipation relief",
+    description:
+      "Macrogol bindet Wasser im Darm und wird zur Behandlung von Verstopfung eingesetzt. Die Anwendung richtet sich nach dem jeweiligen Präparat.",
+    descriptionEn:
+      "Macrogol retains water in the bowel and is used to treat constipation. Use depends on the particular product.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "bisacodyl",
+    name: "Bisacodyl",
+    category: "Mittel gegen Verstopfung",
+    categoryEn: "Constipation relief",
+    description:
+      "Bisacodyl regt die Darmtätigkeit an und wird kurzfristig bei Verstopfung eingesetzt. Eine länger dauernde Anwendung sollte medizinisch geklärt werden.",
+    descriptionEn:
+      "Bisacodyl stimulates bowel movement and is used short-term for constipation. Longer use should be discussed with a healthcare professional.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "salbutamol",
+    name: "Salbutamol",
+    category: "Asthma- und Atemwegsmittel",
+    categoryEn: "Asthma and respiratory medication",
+    description:
+      "Salbutamol erweitert die Atemwege und wird häufig als Bedarfsmedikament bei bestimmten Atemwegserkrankungen eingesetzt.",
+    descriptionEn:
+      "Salbutamol widens the airways and is often used as a reliever medication for certain respiratory conditions.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "beclometason",
+    name: "Beclometason",
+    category: "Asthma- und Atemwegsmittel",
+    categoryEn: "Asthma and respiratory medication",
+    description:
+      "Beclometason ist ein entzündungshemmender Wirkstoff, der unter anderem in Inhalationspräparaten gegen bestimmte Atemwegsbeschwerden vorkommt.",
+    descriptionEn:
+      "Beclometasone is an anti-inflammatory active ingredient found, among other things, in inhaled medicines for certain respiratory conditions.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "xylometazolin",
+    name: "Xylometazolin",
+    category: "Erkältungs- und Nasenmittel",
+    categoryEn: "Cold and nasal medication",
+    description:
+      "Xylometazolin lässt die Schleimhaut der Nase vorübergehend abschwellen. Abschwellende Nasenmittel sind nur für eine begrenzte Dauer vorgesehen.",
+    descriptionEn:
+      "Xylometazoline temporarily reduces swelling of the nasal lining. Decongestant nasal medicines are intended for limited use only.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "levothyroxin",
+    name: "Levothyroxin",
+    category: "Schilddrüsenmittel",
+    categoryEn: "Thyroid medication",
+    description:
+      "Levothyroxin ersetzt ein Schilddrüsenhormon und wird zur Behandlung einer Schilddrüsenunterfunktion eingesetzt.",
+    descriptionEn:
+      "Levothyroxine replaces a thyroid hormone and is used to treat an underactive thyroid.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "bisoprolol",
+    name: "Bisoprolol",
+    category: "Herz- und Blutdruckmittel",
+    categoryEn: "Heart and blood pressure medication",
+    description:
+      "Bisoprolol gehört zu den Betablockern und wird unter anderem bei Bluthochdruck und bestimmten Herzerkrankungen eingesetzt.",
+    descriptionEn:
+      "Bisoprolol is a beta blocker used, among other things, for high blood pressure and certain heart conditions.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "losartan",
+    name: "Losartan",
+    category: "Herz- und Blutdruckmittel",
+    categoryEn: "Heart and blood pressure medication",
+    description:
+      "Losartan gehört zu den Angiotensin-Rezeptorblockern und wird unter anderem zur Behandlung von Bluthochdruck eingesetzt.",
+    descriptionEn:
+      "Losartan is an angiotensin receptor blocker used, among other things, to treat high blood pressure.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "atorvastatin",
+    name: "Atorvastatin",
+    category: "Cholesterinsenker",
+    categoryEn: "Cholesterol-lowering medication",
+    description:
+      "Atorvastatin gehört zu den Statinen und senkt bestimmte Blutfettwerte. Die Behandlung erfolgt nach ärztlicher Verordnung und Kontrolle.",
+    descriptionEn:
+      "Atorvastatin is a statin that lowers certain blood lipid levels. Treatment is prescribed and monitored by a doctor.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "apixaban",
+    name: "Apixaban",
+    category: "Blutgerinnungshemmer",
+    categoryEn: "Anticoagulant",
+    description:
+      "Apixaban hemmt die Blutgerinnung und wird unter anderem zur Vorbeugung von Blutgerinnseln eingesetzt. Änderungen dürfen nur ärztlich begleitet erfolgen.",
+    descriptionEn:
+      "Apixaban reduces blood clotting and is used, among other things, to prevent blood clots. Changes must be medically supervised.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "rivaroxaban",
+    name: "Rivaroxaban",
+    category: "Blutgerinnungshemmer",
+    categoryEn: "Anticoagulant",
+    description:
+      "Rivaroxaban hemmt die Blutgerinnung und wird bei bestimmten Risiken für Blutgerinnsel eingesetzt. Die Einnahme muss ärztlich festgelegt werden.",
+    descriptionEn:
+      "Rivaroxaban reduces blood clotting and is used for certain risks of blood clots. Its use must be determined by a doctor.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "insulin-glargin",
+    name: "Insulin glargin",
+    category: "Diabetesmittel",
+    categoryEn: "Diabetes medication",
+    description:
+      "Insulin glargin ist ein lang wirkendes Insulin zur Behandlung von Diabetes. Die passende Anwendung und Dosis werden individuell festgelegt.",
+    descriptionEn:
+      "Insulin glargine is a long-acting insulin used to treat diabetes. The appropriate use and dose are determined individually.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "empagliflozin",
+    name: "Empagliflozin",
+    category: "Diabetesmittel",
+    categoryEn: "Diabetes medication",
+    description:
+      "Empagliflozin wird unter anderem zur Behandlung von Typ-2-Diabetes und bestimmten Herz- oder Nierenerkrankungen eingesetzt.",
+    descriptionEn:
+      "Empagliflozin is used, among other things, to treat type 2 diabetes and certain heart or kidney conditions.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "prednisolon",
+    name: "Prednisolon",
+    category: "Entzündungshemmende Mittel",
+    categoryEn: "Anti-inflammatory medication",
+    description:
+      "Prednisolon gehört zu den Kortison-Wirkstoffen und wird bei verschiedenen entzündlichen oder immunologischen Erkrankungen eingesetzt.",
+    descriptionEn:
+      "Prednisolone is a corticosteroid used for various inflammatory or immune-related conditions.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "doxycyclin",
+    name: "Doxycyclin",
+    category: "Antibiotika",
+    categoryEn: "Antibiotics",
+    description:
+      "Doxycyclin ist ein verschreibungspflichtiges Antibiotikum gegen bestimmte bakterielle Infektionen. Es darf nur nach ärztlicher Verordnung eingenommen werden.",
+    descriptionEn:
+      "Doxycycline is a prescription antibiotic for certain bacterial infections. It must only be taken as prescribed by a doctor.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "azithromycin",
+    name: "Azithromycin",
+    category: "Antibiotika",
+    categoryEn: "Antibiotics",
+    description:
+      "Azithromycin ist ein Antibiotikum zur Behandlung bestimmter bakterieller Infektionen. Antibiotika wirken nicht gegen Virusinfektionen.",
+    descriptionEn:
+      "Azithromycin is an antibiotic used for certain bacterial infections. Antibiotics do not work against viral infections.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
+  {
+    id: "sertralin",
+    name: "Sertralin",
+    category: "Psychiatrische Medikamente",
+    categoryEn: "Mental health medication",
+    description:
+      "Sertralin gehört zu den SSRI und wird bei bestimmten psychischen Erkrankungen eingesetzt. Die Behandlung muss ärztlich begleitet werden.",
+    descriptionEn:
+      "Sertraline is an SSRI used for certain mental health conditions. Treatment must be medically supervised.",
+    source: "BfArM AMIce",
+    sourceUrl:
+      "https://www.bfarm.de/DE/Arzneimittel/Arzneimittel-recherchieren/AMIce/_node.html",
+  },
 ];
 
 export default medications;

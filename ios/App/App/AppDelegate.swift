@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import WatchConnectivity
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -40,5 +41,75 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                           sessionRole: connectingSceneSession.role)
         config.delegateClass = SceneDelegate.self
         return config
+    }
+}
+
+@objc(CuraelisWatchPlugin)
+public class CuraelisWatchPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "CuraelisWatchPlugin"
+    public let jsName = "CuraelisWatch"
+
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(
+            name: "syncData",
+            returnType: CAPPluginReturnPromise
+        )
+    ]
+
+    private let session = WCSession.default
+
+    public override func load() {
+        super.load()
+
+        guard WCSession.isSupported() else {
+            return
+        }
+
+        session.delegate = self
+        session.activate()
+    }
+
+    @objc func syncData(_ call: CAPPluginCall) {
+        guard WCSession.isSupported() else {
+            call.reject("WatchConnectivity wird auf diesem Gerät nicht unterstützt.")
+            return
+        }
+
+        guard let data = call.getObject("data") else {
+            call.reject("Keine Daten zur Übertragung erhalten.")
+            return
+        }
+
+        do {
+            try session.updateApplicationContext(data)
+            call.resolve([
+                "sent": true
+            ])
+        } catch {
+            call.reject(
+                "Die Daten konnten nicht an die Watch übertragen werden.",
+                nil,
+                error
+            )
+        }
+    }
+}
+
+extension CuraelisWatchPlugin: WCSessionDelegate {
+    public func session(
+        _ session: WCSession,
+        activationDidCompleteWith activationState: WCSessionActivationState,
+        error: Error?
+    ) {
+        if let error = error {
+            print("WatchConnectivity-Fehler: \(error.localizedDescription)")
+        }
+    }
+
+    public func sessionDidBecomeInactive(_ session: WCSession) {
+    }
+
+    public func sessionDidDeactivate(_ session: WCSession) {
+        session.activate()
     }
 }

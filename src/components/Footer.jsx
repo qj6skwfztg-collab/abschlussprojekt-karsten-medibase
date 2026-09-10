@@ -27,6 +27,16 @@ function Footer() {
         © 2026 Curaelis – {isEnglish ? "developed by" : "entwickelt von"} Karsten Rabeneck-Ketme
       </Text>
 
+      <Text marginTop="3" fontSize="sm">
+        Support: {" "}
+        <a
+          href="mailto:support@curaelis.com"
+          style={{ color: "inherit", textDecoration: "underline" }}
+        >
+          support@curaelis.com
+        </a>
+      </Text>
+
       <Flex justify="center" gap="4" marginTop="4" fontSize="sm">
         <Link to="/impressum">
           {isEnglish ? "Legal notice" : "Impressum"}

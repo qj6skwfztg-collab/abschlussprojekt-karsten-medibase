@@ -30,6 +30,11 @@ function ImprintPage() {
         <a href="mailto:karsten.ketme@outlook.com">
           karsten.ketme@outlook.com
         </a>
+        <br />
+        Support: {" "}
+        <a href="mailto:support@curaelis.com">
+          support@curaelis.com
+        </a>
       </Text>
 
       <Heading size="md" mt="8" mb="3">

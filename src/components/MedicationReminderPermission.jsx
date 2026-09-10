@@ -1,15 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Stack, Text } from "@chakra-ui/react";
 import useLanguage from "../hooks/useLanguage";
+import {
+  getMedicationNotificationPermission,
+  requestMedicationNotificationPermission,
+  scheduleMedicationTestNotification,
+  syncNativeMedicationReminders,
+} from "../native/medicationNotifications";
 
-function MedicationReminderPermission() {
+function MedicationReminderPermission({ medications = [] }) {
   const { isEnglish } = useLanguage();
   const [message, setMessage] = useState("");
+  const [isNative, setIsNative] = useState(false);
   const [permission, setPermission] = useState(() =>
     "Notification" in window ? Notification.permission : "unsupported"
   );
 
+  useEffect(() => {
+    let isMounted = true;
+
+    getMedicationNotificationPermission().then((result) => {
+      if (!isMounted) {
+        return;
+      }
+
+      setIsNative(result.native);
+      setPermission(result.display);
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   async function handlePermission() {
+    if (isNative) {
+      const result = await requestMedicationNotificationPermission();
+      setPermission(result.display);
+
+      if (result.display === "granted") {
+        await syncNativeMedicationReminders(medications);
+        setMessage(
+          isEnglish
+            ? "iPhone reminders are now allowed and scheduled."
+            : "iPhone-Erinnerungen sind jetzt erlaubt und eingeplant."
+        );
+        return;
+      }
+
+      setMessage(
+        result.display === "denied"
+          ? (isEnglish
+              ? "Notifications are blocked. Allow them in iPhone Settings."
+              : "Benachrichtigungen sind blockiert. Erlaube sie in den iPhone-Einstellungen.")
+          : (isEnglish
+              ? "Notifications were not allowed."
+              : "Benachrichtigungen wurden nicht erlaubt.")
+      );
+      return;
+    }
+
     if (!("Notification" in window)) {
       setMessage(
         isEnglish ? "This browser does not support notifications." : "Dieser Browser unterstützt keine Benachrichtigungen."
@@ -42,6 +92,21 @@ function MedicationReminderPermission() {
 
   async function handleTestNotification() {
     setMessage("");
+
+    if (isNative) {
+      const wasScheduled = await scheduleMedicationTestNotification();
+
+      setMessage(
+        wasScheduled
+          ? (isEnglish
+              ? "A test notification will appear in about five seconds."
+              : "Eine Testbenachrichtigung erscheint in ungefähr fünf Sekunden.")
+          : (isEnglish
+              ? "Please allow notifications first."
+              : "Bitte erlaube zuerst die Benachrichtigungen.")
+      );
+      return;
+    }
 
     if (!("Notification" in window)) {
       setMessage(
@@ -113,9 +178,13 @@ function MedicationReminderPermission() {
       </Text>
 
       <Text marginTop="2" fontSize="sm" color="gray.600">
-        {isEnglish
-          ? "For now, reminders require Curaelis to be open or active as a web app."
-          : "Aktuell muss Curaelis für Erinnerungen geöffnet oder als Web-App aktiv sein."}
+        {isNative
+          ? (isEnglish
+              ? "On iPhone, reminders are scheduled locally and can appear even when Curaelis is closed."
+              : "Auf dem iPhone werden Erinnerungen lokal eingeplant und können auch erscheinen, wenn Curaelis geschlossen ist.")
+          : (isEnglish
+              ? "In the browser, reminders require Curaelis to be open or active as a web app."
+              : "Im Browser muss Curaelis für Erinnerungen geöffnet oder als Web-App aktiv sein.")}
       </Text>
 
       <Stack

@@ -335,7 +335,7 @@ function MyMedicationsPage() {
       </Box>
 
       <Box mb="8" boxShadow="sm">
-        <MedicationReminderPermission />
+        <MedicationReminderPermission medications={userMedications} />
       </Box>
 
       <Box

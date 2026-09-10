@@ -233,10 +233,59 @@ a {
   header #main-navigation {
     justify-content: flex-end;
     margin-left: 32px;
+    /* Chakra supplies flex-wrap inline. The desktop header must stay one
+       row so the German account action cannot drop below the emergency link. */
+    flex-wrap: nowrap !important;
+    gap: clamp(8px, 1.4vw, 20px);
+    min-width: 0;
   }
 
   header #main-navigation .nav-group-label {
     display: none;
+  }
+
+  /* Keep emergency and account actions on one horizontal row. German
+     labels are longer than their English equivalents. */
+  header #main-navigation .nav-group-help,
+  header #main-navigation .nav-group-account {
+    flex-shrink: 0;
+  }
+
+  header #main-navigation .nav-group-actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    margin-left: auto;
+  }
+
+  header #main-navigation .nav-group-account {
+    margin-left: 0;
+  }
+
+  header #main-navigation .nav-group-help .nav-group-links,
+  header #main-navigation .nav-group-account .nav-group-links {
+    /* Both groups also receive flex-wrap inline from Chakra. */
+    flex-wrap: nowrap !important;
+  }
+
+  header #main-navigation .nav-group-help a,
+  header #main-navigation .nav-group-account .header-link,
+  header #main-navigation .nav-group-account button {
+    white-space: nowrap;
+  }
+
+  header #main-navigation .nav-group-links {
+    gap: 4px !important;
+  }
+
+  header #main-navigation .header-link,
+  header #main-navigation .nav-group-help a,
+  header #main-navigation .nav-group-account button {
+    padding: 8px 8px !important;
+    font-size: 0.82rem !important;
+    line-height: 1.15;
   }
 }
 

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import useLanguage from "../hooks/useLanguage";
+import { syncNativeMedicationReminders } from "../native/medicationNotifications";
 
 function normalizeTime(value) {
   const time = String(value ?? "").trim();
@@ -65,6 +66,10 @@ function MedicationReminderWatcher({ medications }) {
   const isChecking = useRef(false);
 
   useEffect(() => {
+    void syncNativeMedicationReminders(medications).catch(() => {
+      // Browser reminders remain available if native scheduling is unavailable.
+    });
+
     async function checkMedicationTimes() {
       if (isChecking.current) {
         return;

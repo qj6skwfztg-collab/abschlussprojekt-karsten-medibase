@@ -133,7 +133,7 @@ function Header({ onMenuStateChange }) {
           gap={{ base: "2", md: "6" }}
           align={{ base: "stretch", md: "center" }}
           justify="center"
-          flexWrap="wrap"
+          flexWrap={{ base: "wrap", md: "nowrap" }}
           flex={{ base: "none", md: "1" }}
           maxWidth={{ base: "420px", md: "none" }}
           marginX="auto"
@@ -184,11 +184,17 @@ function Header({ onMenuStateChange }) {
             </Box>
           )}
 
+          <Box className="nav-group-actions">
           <Box className="nav-group nav-group-help">
             <Text className="nav-group-label">
               {isEnglish ? "Help and information" : "Hilfe und Informationen"}
             </Text>
-            <Flex className="nav-group-links" gap="2" align="center" flexWrap="wrap">
+            <Flex
+              className="nav-group-links"
+              gap="2"
+              align="center"
+              flexWrap={{ base: "wrap", md: "nowrap" }}
+            >
               {isHomePage && (
                 <>
                   <Link className="header-link" to="/installieren" onClick={closeMenu} {...getNavigationLinkProps("/installieren")}>
@@ -225,7 +231,12 @@ function Header({ onMenuStateChange }) {
             <Text className="nav-group-label">
               {isEnglish ? "Account" : "Konto"}
             </Text>
-            <Flex className="nav-group-links" gap="2" align="center" flexWrap="wrap">
+            <Flex
+              className="nav-group-links"
+              gap="2"
+              align="center"
+              flexWrap={{ base: "wrap", md: "nowrap" }}
+            >
               {user ? (
                 <Button
                   className="header-link"
@@ -249,6 +260,7 @@ function Header({ onMenuStateChange }) {
                 </>
               )}
             </Flex>
+          </Box>
           </Box>
         </Flex>
       </Flex>

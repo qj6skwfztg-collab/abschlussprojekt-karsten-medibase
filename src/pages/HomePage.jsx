@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import heroImage from "../assets/medibase-neu.png";
 import vitruvianImage from "../assets/medibase-vitruvian.png";
+import founderCharacter from "../assets/curaelis-karsten-anime.png";
 import SafetyNotice from "../components/SafetyNotice";
 import useLanguage from "../hooks/useLanguage";
 
@@ -95,6 +96,48 @@ function HomePage() {
               ? "Find medication information, manage your personal medications, set intake reminders and reach emergency help quickly."
               : "Finde verständliche Informationen zu Medikamenten, verwalte deine persönlichen Medikamente, richte Einnahmeerinnerungen ein und erreiche im Notfall schnell Hilfe."}
           </Text>
+
+          <Flex
+            marginTop="8"
+            align="center"
+            justify="center"
+            gap={{ base: "4", md: "8" }}
+            direction={{ base: "column", md: "row" }}
+            textAlign={{ base: "center", md: "left" }}
+          >
+            <Box
+              width={{ base: "280px", md: "360px" }}
+              padding={{ base: "3", md: "4" }}
+              borderRadius="3xl"
+              background="linear-gradient(135deg, rgba(230, 255, 250, 0.95), rgba(255, 255, 255, 0.85))"
+              border="1px solid"
+              borderColor="teal.100"
+              boxShadow="0 18px 40px rgba(13, 148, 136, 0.18)"
+              flexShrink="0"
+            >
+              <Image
+                src={founderCharacter}
+                alt={isEnglish ? "Anime illustration of the Curaelis developer presenting the app" : "Anime-Illustration des Curaelis-Entwicklers, der die App präsentiert"}
+                width="100%"
+                maxHeight={{ base: "330px", md: "420px" }}
+                objectFit="contain"
+                objectPosition="bottom"
+                filter="drop-shadow(0 12px 14px rgba(15, 118, 110, 0.2))"
+              />
+            </Box>
+
+            <Box maxWidth="520px">
+              <Heading size="md" color="teal.900">
+                {isEnglish ? "Personally developed for everyday health" : "Persönlich entwickelt für mehr Sicherheit im Alltag"}
+              </Heading>
+
+              <Text marginTop="3">
+                {isEnglish
+                  ? "Curaelis was created from a personal need: to make medication information, reminders and emergency details easier to understand and access."
+                  : "Curaelis ist aus einem persönlichen Bedürfnis entstanden: Medikamenteninformationen, Erinnerungen und wichtige Notfalldaten verständlicher und leichter zugänglich zu machen."}
+              </Text>
+            </Box>
+          </Flex>
 
           <Box
             marginTop="7"

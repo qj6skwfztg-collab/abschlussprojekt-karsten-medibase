@@ -16,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import PasswordField from "../components/PasswordField";
+import { PUBLIC_REGISTRATION_ENABLED } from "../config/features";
 
 function LoginPage() {
   const { isEnglish } = useLanguage();
@@ -108,12 +109,14 @@ function LoginPage() {
             {isEnglish ? "Forgot password" : "Passwort vergessen"}
           </Button>
 
-          <Text>
-            {isEnglish ? "No account yet? " : "Noch kein Konto? "}
-            <Link to="/registrieren">
-              {isEnglish ? "Create account" : "Konto erstellen"}
-            </Link>
-          </Text>
+          {PUBLIC_REGISTRATION_ENABLED && (
+            <Text>
+              {isEnglish ? "No account yet? " : "Noch kein Konto? "}
+              <Link to="/registrieren">
+                {isEnglish ? "Create account" : "Konto erstellen"}
+              </Link>
+            </Text>
+          )}
 
           {message && <Text>{message}</Text>}
         </Stack>

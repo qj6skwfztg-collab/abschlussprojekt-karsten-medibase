@@ -5,6 +5,7 @@ import EmergencyContacts from "../components/EmergencyContacts";
 import EmergencyPass from "../components/EmergencyPass";
 import useLanguage from "../hooks/useLanguage";
 import emergencyCountries from "../data/emergencyCountries";
+import { EMERGENCY_CALLS_ENABLED } from "../config/features";
 
 const COUNTRY_STORAGE_KEY = "curaelis-emergency-country";
 
@@ -47,6 +48,24 @@ function EmergencyPage() {
     setSelectedCountryCode(countryCode);
     setEmergencyCallStarted(false);
     localStorage.setItem(COUNTRY_STORAGE_KEY, countryCode);
+  }
+
+  function handleEmergencyCall(event) {
+    if (!EMERGENCY_CALLS_ENABLED) {
+      event.preventDefault();
+      return;
+    }
+
+    const confirmationText = isEnglish
+      ? `Call emergency services at ${selectedCountry.ambulanceNumber} now? Only confirm if there is an actual emergency.`
+      : `Soll der Rettungsdienst unter ${selectedCountry.ambulanceNumber} angerufen werden? Bitte nur bei einem echten Notfall bestätigen.`;
+
+    if (!window.confirm(confirmationText)) {
+      event.preventDefault();
+      return;
+    }
+
+    setEmergencyCallStarted(true);
   }
 
   return (
@@ -123,38 +142,43 @@ function EmergencyPage() {
         <Stack gap="4">
           <Button
             as="a"
-            href={`tel:${selectedCountry.ambulanceNumber}`}
-            onClick={() => setEmergencyCallStarted(true)}
+            href={EMERGENCY_CALLS_ENABLED ? `tel:${selectedCountry.ambulanceNumber}` : undefined}
+            onClick={handleEmergencyCall}
             background="red.600"
             color="white"
             size="lg"
             minHeight="70px"
             fontSize="xl"
+            disabled={!EMERGENCY_CALLS_ENABLED}
             _hover={{ background: "red.700" }}
           >
             {isEnglish
-              ? `${selectedCountry.ambulanceNumber} – Call emergency services`
-              : `${selectedCountry.ambulanceNumber} – Rettungsdienst anrufen`}
+              ? `${selectedCountry.ambulanceNumber} – ${EMERGENCY_CALLS_ENABLED ? "Call emergency services" : "Emergency call disabled in demo"}`
+              : `${selectedCountry.ambulanceNumber} – ${EMERGENCY_CALLS_ENABLED ? "Rettungsdienst anrufen" : "Notruf in der Demo deaktiviert"}`}
           </Button>
 
           <Button
             as="a"
-            href={`tel:${selectedCountry.policeNumber}`}
+            href={EMERGENCY_CALLS_ENABLED ? `tel:${selectedCountry.policeNumber}` : undefined}
+            onClick={handleEmergencyCall}
             background="blue.700"
             color="white"
             size="lg"
             minHeight="60px"
             fontSize="lg"
+            disabled={!EMERGENCY_CALLS_ENABLED}
             _hover={{ background: "blue.800" }}
           >
             {isEnglish
-              ? `${selectedCountry.policeNumber} – Call the police`
-              : `${selectedCountry.policeNumber} – Polizei anrufen`}
+              ? `${selectedCountry.policeNumber} – ${EMERGENCY_CALLS_ENABLED ? "Call the police" : "Police call disabled in demo"}`
+              : `${selectedCountry.policeNumber} – ${EMERGENCY_CALLS_ENABLED ? "Polizei anrufen" : "Polizeinotruf in der Demo deaktiviert"}`}
           </Button>
         </Stack>
 
         <Text fontSize="sm" color="gray.700" marginTop="6">
-          {isEnglish ? "On a smartphone, the phone function opens. You must then confirm the call." : "Auf einem Smartphone öffnet sich die Telefonfunktion. Der Anruf muss anschließend bestätigt werden."}
+          {EMERGENCY_CALLS_ENABLED
+            ? (isEnglish ? "On a smartphone, the phone function opens. You must then confirm the call." : "Auf einem Smartphone öffnet sich die Telefonfunktion. Der Anruf muss anschließend bestätigt werden.")
+            : (isEnglish ? "Demo notice: Real phone calls are temporarily disabled on this public preview page. They will be enabled in the released app." : "Demo-Hinweis: Echte Telefonanrufe sind auf dieser öffentlichen Vorschauseite vorübergehend deaktiviert. In der veröffentlichten App werden sie aktiviert.")}
         </Text>
       </Box>
 

@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { auth } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import PasswordField from "../components/PasswordField";
+import { PUBLIC_REGISTRATION_ENABLED } from "../config/features";
 
 function RegisterPage() {
   const { isEnglish } = useLanguage();
@@ -26,6 +27,34 @@ function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [registrationComplete, setRegistrationComplete] =
     useState(false);
+
+  if (!PUBLIC_REGISTRATION_ENABLED) {
+    return (
+      <Box maxWidth="600px" margin="0 auto" padding="6">
+        <Box
+          background="white"
+          padding="8"
+          borderRadius="lg"
+          boxShadow="md"
+          textAlign="center"
+        >
+          <Heading marginBottom="4">
+            {isEnglish ? "Registration coming soon" : "Registrierung bald verfügbar"}
+          </Heading>
+
+          <Text marginBottom="6">
+            {isEnglish
+              ? "Curaelis is currently being prepared for its official app launch. Account creation will be enabled when the app goes online."
+              : "Curaelis wird derzeit für den offiziellen Start der App vorbereitet. Die Kontoerstellung wird freigeschaltet, sobald die App online geht."}
+          </Text>
+
+          <Link to="/login">
+            {isEnglish ? "Go to sign in" : "Zur Anmeldung"}
+          </Link>
+        </Box>
+      </Box>
+    );
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();

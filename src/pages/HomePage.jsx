@@ -97,50 +97,64 @@ function HomePage() {
               : "Finde verständliche Informationen zu Medikamenten, verwalte deine persönlichen Medikamente, richte Einnahmeerinnerungen ein und erreiche im Notfall schnell Hilfe."}
           </Text>
 
-          <Flex
-            marginTop="8"
-            align="center"
-            justify="center"
-            gap={{ base: "4", md: "8" }}
-            direction={{ base: "column", md: "row" }}
-            textAlign={{ base: "center", md: "left" }}
+          <Box
+            display={{ base: "none", md: "block" }}
+            position="absolute"
+            top="205px"
+            left="0"
+            width="190px"
+            padding="2"
+            borderRadius="3xl"
+            background="linear-gradient(135deg, rgba(230, 255, 250, 0.95), rgba(255, 255, 255, 0.85))"
+            border="1px solid"
+            borderColor="teal.100"
+            boxShadow="0 14px 30px rgba(13, 148, 136, 0.16)"
+            zIndex="2"
           >
             <Box
-              width={{ base: "280px", md: "360px" }}
-              padding={{ base: "3", md: "4" }}
-              borderRadius="3xl"
-              background="linear-gradient(135deg, rgba(230, 255, 250, 0.95), rgba(255, 255, 255, 0.85))"
+              marginBottom="2"
+              padding="2"
+              borderRadius="xl"
+              background="white"
               border="1px solid"
-              borderColor="teal.100"
-              boxShadow="0 18px 40px rgba(13, 148, 136, 0.18)"
-              flexShrink="0"
+              borderColor="teal.200"
+              color="teal.900"
+              fontSize="xs"
+              fontWeight="700"
+              lineHeight="1.3"
+              textAlign="center"
+              boxShadow="sm"
             >
-              <Image
-                src={founderCharacter}
-                alt={isEnglish ? "Anime illustration of the Curaelis developer presenting the app" : "Anime-Illustration des Curaelis-Entwicklers, der die App präsentiert"}
-                width="100%"
-                maxHeight={{ base: "330px", md: "420px" }}
-                objectFit="contain"
-                objectPosition="bottom"
-                filter="drop-shadow(0 12px 14px rgba(15, 118, 110, 0.2))"
-              />
+              {isEnglish ? "Take a look at what Curaelis can do!" : "Schau dir an, was Curaelis kann!"}
             </Box>
 
-            <Box maxWidth="520px">
-              <Heading size="md" color="teal.900">
-                {isEnglish ? "Personally developed for everyday health" : "Persönlich entwickelt für mehr Sicherheit im Alltag"}
-              </Heading>
+            <Image
+              src={founderCharacter}
+              alt={isEnglish ? "Anime illustration of the Curaelis developer presenting the app" : "Anime-Illustration des Curaelis-Entwicklers, der die App präsentiert"}
+              width="100%"
+              maxHeight="205px"
+              objectFit="contain"
+              objectPosition="bottom"
+              filter="drop-shadow(0 10px 12px rgba(15, 118, 110, 0.18))"
+            />
 
-              <Text marginTop="3">
-                {isEnglish
-                  ? "Curaelis was created from a personal need: to make medication information, reminders and emergency details easier to understand and access."
-                  : "Curaelis ist aus einem persönlichen Bedürfnis entstanden: Medikamenteninformationen, Erinnerungen und wichtige Notfalldaten verständlicher und leichter zugänglich zu machen."}
-              </Text>
-            </Box>
-          </Flex>
+            <Text
+              marginTop="1"
+              color="gray.600"
+              fontSize="2xs"
+              lineHeight="1.2"
+              textAlign="center"
+            >
+              {isEnglish
+                ? "Demo image – removed again before publication."
+                : "Demo-Bild – wird vor der Veröffentlichung wieder entfernt."}
+            </Text>
+          </Box>
 
           <Box
             marginTop="7"
+            marginLeft={{ base: "0", md: "190px" }}
+            width={{ base: "100%", md: "calc(100% - 190px)" }}
             padding={{ base: "4", md: "6" }}
             background="white"
             borderWidth="1px"

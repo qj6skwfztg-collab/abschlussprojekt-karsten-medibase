@@ -20,7 +20,12 @@ import {
 import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 
-function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
+function EmergencyContacts({
+  emergencyNumber,
+  emergencyCallStarted,
+  hideNotifyAction = false,
+  allowDirectNotify = false,
+}) {
   const { isEnglish } = useLanguage();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -148,7 +153,7 @@ function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
   }
 
   function notifyEmergencyContacts() {
-    if (!emergencyCallStarted) {
+    if (!allowDirectNotify && !emergencyCallStarted) {
       setMessage(
         isEnglish
           ? "Start the emergency call first."
@@ -158,10 +163,13 @@ function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
       return;
     }
 
-    const emergencyText =
-      isEnglish
-        ? `I have tried to call emergency services on ${emergencyNumber}. Please contact me and check whether I need help.`
-        : `Ich habe versucht, den Notruf ${emergencyNumber} zu kontaktieren. Bitte melde dich bei mir und prüfe, ob ich Hilfe benötige.`;
+    const emergencyText = allowDirectNotify
+      ? (isEnglish
+          ? "I may need help. Please contact me as soon as possible."
+          : "Ich brauche möglicherweise Hilfe. Bitte melde dich so schnell wie möglich bei mir.")
+      : (isEnglish
+          ? `I have tried to call emergency services on ${emergencyNumber}. Please contact me and check whether I need help.`
+          : `Ich habe versucht, den Notruf ${emergencyNumber} zu kontaktieren. Bitte melde dich bei mir und prüfe, ob ich Hilfe benötige.`);
 
     if (contacts.length === 0) {
       setMessage(
@@ -196,7 +204,7 @@ function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
   }
 
   return (
-    <Box marginTop="10">
+    <Box id="emergency-contacts" className="account-emergency-contacts" marginTop="10">
       <Heading size="lg" marginBottom="4">
         {isEnglish ? "My emergency contacts" : "Meine Notfallkontakte"}
       </Heading>
@@ -205,7 +213,7 @@ function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
         {isEnglish ? "You can save up to three people. A message is not sent automatically; it first opens in your messaging app." : "Du kannst bis zu drei Personen speichern. Eine Nachricht wird nicht automatisch versendet, sondern zuerst in deiner Nachrichten-App geöffnet."}
       </Text>
 
-      {emergencyCallStarted && contacts.length > 0 && (
+      {!hideNotifyAction && (emergencyCallStarted || allowDirectNotify) && contacts.length > 0 && (
         <Button
           marginBottom="5"
           background="orange.500"
@@ -213,12 +221,12 @@ function EmergencyContacts({ emergencyNumber, emergencyCallStarted }) {
           onClick={notifyEmergencyContacts}
         >
           {isEnglish
-            ? "Notify emergency contacts now"
-            : "Notfallkontakte jetzt benachrichtigen"}
+            ? (allowDirectNotify ? "Send help message" : "Notify emergency contacts now")
+            : (allowDirectNotify ? "Hilfenachricht senden" : "Notfallkontakte jetzt benachrichtigen")}
         </Button>
       )}
 
-      {!emergencyCallStarted && contacts.length > 0 && (
+      {!hideNotifyAction && !allowDirectNotify && !emergencyCallStarted && contacts.length > 0 && (
         <Text marginBottom="5" color="gray.600">
           {isEnglish
             ? "Start the emergency call first. Then you can notify all saved contacts together."

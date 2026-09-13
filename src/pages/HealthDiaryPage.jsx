@@ -377,7 +377,7 @@ function HealthDiaryPage() {
         fileHint: "Choose photos or documents from your phone. They stay on this device until you share them.",
         shareFilesHint: "On a phone, use “Share PDF / send by email” to include the selected files.",
         pdfCreating: "The PDF is being created …",
-        pdfSaved: "The PDF download has started. Check your Downloads folder.",
+        pdfSaved: "The PDF was created. On iPhone, use Share → Save to Files if the PDF preview opens. For a doctor email, use “Share PDF / send by email”.",
         pdfError: "The PDF could not be created. Please try again.",
         sharePdf: "Share PDF / send by email",
         shareUnsupported:
@@ -464,7 +464,7 @@ function HealthDiaryPage() {
         fileHint: "Wähle Bilder oder Dokumente vom Handy aus. Sie bleiben auf diesem Gerät, bis du sie teilst.",
         shareFilesHint: "Auf dem Handy nutzt du anschließend „PDF teilen / per E-Mail senden“, damit die Dateien mitgegeben werden.",
         pdfCreating: "Die PDF wird erstellt …",
-        pdfSaved: "Der PDF-Download wurde gestartet. Prüfe anschließend deinen Downloads-Ordner.",
+        pdfSaved: "Die PDF wurde erstellt. Wenn sich auf dem iPhone die Vorschau öffnet, tippe auf Teilen → In Dateien sichern. Für den Arztversand nutze „PDF teilen / per E-Mail senden“.",
         pdfError: "Die PDF konnte nicht erstellt werden. Bitte versuche es erneut.",
         sharePdf: "PDF teilen / per E-Mail senden",
         shareUnsupported:
@@ -759,6 +759,27 @@ function HealthDiaryPage() {
     return pdf;
   }
 
+  function triggerPdfDownload(pdf, fileName) {
+    const blob = pdf.output("blob");
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = fileName;
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  }
+
+  function createReportFile(pdf) {
+    return new File([pdf.output("blob")], getReportFileName(), {
+      type: "application/pdf",
+    });
+  }
+
   async function handlePrint() {
     if (healthEntries.length === 0) {
       showMessage(text.reportEmpty, "error");
@@ -769,7 +790,7 @@ function HealthDiaryPage() {
 
     try {
       const pdf = await createReportPdf();
-      pdf.save(getReportFileName());
+      triggerPdfDownload(pdf, getReportFileName());
       setPrintMessage(text.pdfSaved);
     } catch {
       setPrintMessage(text.pdfError);
@@ -791,9 +812,7 @@ function HealthDiaryPage() {
 
     try {
       const pdf = await createReportPdf();
-      const file = new File([pdf.output("blob")], getReportFileName(), {
-        type: "application/pdf",
-      });
+      const file = createReportFile(pdf);
 
       const shareFiles = [file, ...reportFiles];
 
@@ -935,8 +954,9 @@ function HealthDiaryPage() {
           🔒 {text.privacy}
         </Text>
 
-        <Flex gap="3" marginTop="5" flexWrap="wrap">
+        <Flex className="health-diary-shortcuts" gap="3" marginTop="5" flexWrap="wrap">
           <Button
+            className="health-diary-medications-link"
             as={Link}
             to="/meine-medikamente"
             variant="outline"
@@ -946,6 +966,7 @@ function HealthDiaryPage() {
             💊 {text.myMedications}
           </Button>
           <Button
+            className="health-diary-emergency-link"
             as={Link}
             to="/notfall#notfallpass"
             variant="outline"
@@ -953,6 +974,15 @@ function HealthDiaryPage() {
             size="lg"
           >
             🪪 {isEnglish ? "Open emergency pass" : "Notfallpass öffnen"}
+          </Button>
+          <Button
+            className="health-diary-contacts-link"
+            as={Link}
+            to="/konto#emergency-contacts"
+            variant="outline"
+            size="lg"
+          >
+            👥 {isEnglish ? "Open emergency contacts" : "Notfallkontakte öffnen"}
           </Button>
         </Flex>
         {printMessage && (

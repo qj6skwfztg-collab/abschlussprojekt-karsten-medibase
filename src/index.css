@@ -121,6 +121,11 @@ header #main-navigation .header-diary-link {
   border-color: rgba(178, 245, 234, 0.62);
 }
 
+header #main-navigation .header-emergency-contacts-link {
+  background: rgba(246, 173, 85, 0.2) !important;
+  border-color: rgba(246, 173, 85, 0.68);
+}
+
 header #main-navigation .header-account-link[aria-current="page"] {
   background: #bee3f8 !important;
   color: #1a365d;
@@ -131,6 +136,12 @@ header #main-navigation .header-diary-link[aria-current="page"] {
   background: #b2f5ea !important;
   color: #234e52;
   box-shadow: 0 0 0 2px rgba(178, 245, 234, 0.45);
+}
+
+header #main-navigation .header-emergency-contacts-link[aria-current="page"] {
+  background: #feebc8 !important;
+  color: #7b341e;
+  box-shadow: 0 0 0 2px rgba(246, 173, 85, 0.42);
 }
 
 .nav-group {
@@ -151,6 +162,97 @@ header #main-navigation .header-diary-link[aria-current="page"] {
 
 .nav-group-links {
   display: flex;
+}
+
+.medication-reminders-panel,
+.personal-medication-form {
+  border-width: 2px !important;
+  border-radius: 24px !important;
+}
+
+.medication-reminders-panel {
+  border-color: #f6ad55 !important;
+  background: linear-gradient(135deg, #fffaf0 0%, #ffffff 72%);
+  box-shadow: 0 10px 26px rgba(246, 173, 85, 0.11);
+}
+
+.personal-medication-form {
+  border-color: #63b3ed !important;
+  background: linear-gradient(135deg, #f7fbff 0%, #ffffff 72%);
+  box-shadow: 0 10px 26px rgba(99, 179, 237, 0.11);
+}
+
+.medication-reminders-primary,
+.medication-reminders-secondary,
+.my-medications-diary-link,
+.health-diary-shortcuts > button {
+  min-height: 54px !important;
+  border-radius: 16px !important;
+  font-weight: 800 !important;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.medication-reminders-primary:hover,
+.medication-reminders-secondary:hover,
+.my-medications-diary-link:hover,
+.health-diary-shortcuts > button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(45, 55, 72, 0.13);
+}
+
+.medication-reminders-primary {
+  box-shadow: 0 7px 16px rgba(15, 118, 110, 0.17);
+}
+
+.medication-reminders-secondary {
+  border-width: 2px !important;
+}
+
+.my-medications-diary-link {
+  border-width: 2px !important;
+}
+
+.health-diary-shortcuts > button {
+  border-width: 2px !important;
+}
+
+.health-diary-medications-link {
+  border-color: #319795 !important;
+  background: #e6fffa !important;
+  color: #234e52 !important;
+}
+
+.health-diary-emergency-link {
+  border-color: #fc8181 !important;
+  background: #fff5f5 !important;
+  color: #9b2c2c !important;
+}
+
+.health-diary-contacts-link {
+  border-color: #f6ad55 !important;
+  background: #fffaf0 !important;
+  color: #7b341e !important;
+}
+
+.health-diary-actions {
+  border: 1px solid #9ed4d0 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 10px 26px rgba(15, 118, 110, 0.08);
+}
+
+.health-diary-form {
+  border: 2px solid #81e6d9 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 10px 26px rgba(49, 151, 149, 0.1);
+}
+
+.account-emergency-contacts {
+  padding: 24px;
+  border: 2px solid #f6ad55;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #fffaf0 0%, #ffffff 72%);
+  box-shadow: 0 10px 26px rgba(246, 173, 85, 0.1);
+  scroll-margin-top: 24px;
 }
 
 @media (max-width: 767px) {
@@ -632,6 +734,22 @@ header #main-navigation .header-diary-link[aria-current="page"] {
 
   .home-hero-image {
     border-radius: 22px !important;
+  }
+
+  .medication-reminders-panel,
+  .personal-medication-form,
+  .health-diary-actions,
+  .health-diary-form,
+  .account-emergency-contacts {
+    border-radius: 20px !important;
+  }
+
+  .account-emergency-contacts {
+    padding: 18px;
+  }
+
+  .health-diary-shortcuts > button {
+    width: 100%;
   }
 
   .health-overview-accent {

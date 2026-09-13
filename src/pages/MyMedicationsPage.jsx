@@ -309,8 +309,9 @@ function MyMedicationsPage() {
   }
 
   return (
-    <Box maxW="1200px" mx="auto" p={{ base: "5", md: "8" }}>
+    <Box className="my-medications-page" maxW="1200px" mx="auto" p={{ base: "5", md: "8" }}>
       <Box
+        className="my-medications-header"
         borderBottomWidth="1px"
         borderColor="teal.100"
         paddingBottom="5"
@@ -323,6 +324,7 @@ function MyMedicationsPage() {
         </Text>
 
         <Button
+          className="my-medications-diary-link"
           as={Link}
           to="/gesundheitstagebuch"
           marginTop="5"
@@ -334,11 +336,12 @@ function MyMedicationsPage() {
         </Button>
       </Box>
 
-      <Box mb="8" boxShadow="sm">
+      <Box className="my-medications-reminders" mb="8" boxShadow="sm">
         <MedicationReminderPermission medications={userMedications} />
       </Box>
 
       <Box
+        className="personal-medication-form"
         borderWidth="1px"
         borderRadius="lg"
         background="white"

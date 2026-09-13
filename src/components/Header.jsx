@@ -159,6 +159,10 @@ function Header({ onMenuStateChange }) {
                 <Link className="header-link header-diary-link" to="/gesundheitstagebuch" onClick={closeMenu} {...getNavigationLinkProps("/gesundheitstagebuch")}>
                   {isEnglish ? "Health diary" : "Gesundheitstagebuch"}
                 </Link>
+
+                <Link className="header-link header-emergency-contacts-link" to="/konto#emergency-contacts" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
+                  {isEnglish ? "Emergency contacts" : "Notfallkontakte"}
+                </Link>
               </Flex>
             </Box>
           )}

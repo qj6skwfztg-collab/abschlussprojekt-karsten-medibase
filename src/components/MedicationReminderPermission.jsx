@@ -154,6 +154,7 @@ function MedicationReminderPermission({ medications = [] }) {
 
   return (
     <Box
+      className="medication-reminders-panel"
       padding="5"
       borderWidth="1px"
       borderRadius="lg"
@@ -193,6 +194,7 @@ function MedicationReminderPermission({ medications = [] }) {
         gap="3"
       >
         <Button
+          className="medication-reminders-primary"
           colorPalette="teal"
           onClick={handlePermission}
         >
@@ -200,6 +202,7 @@ function MedicationReminderPermission({ medications = [] }) {
         </Button>
 
         <Button
+          className="medication-reminders-secondary"
           variant="outline"
           colorPalette="teal"
           onClick={handleTestNotification}

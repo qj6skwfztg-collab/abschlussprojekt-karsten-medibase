@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -9,15 +9,17 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import deleteAccount from "../hooks/useDeleteAccount";
 import useEmergencyProfile from "../hooks/useEmergencyProfile";
 import PasswordField from "../components/PasswordField";
+import EmergencyContacts from "../components/EmergencyContacts";
 
 function AccountPage() {
   const { isEnglish } = useLanguage();
+  const location = useLocation();
   const navigate = useNavigate();
   const userEmail = auth.currentUser?.email || "";
   const [password, setPassword] = useState("");
@@ -35,6 +37,21 @@ function AccountPage() {
   const [profileMessage, setProfileMessage] = useState("");
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const profileForm = profileDraft || profile;
+
+  useEffect(() => {
+    if (location.hash !== "#emergency-contacts") {
+      return undefined;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      document.getElementById("emergency-contacts")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [location.hash]);
 
   const text = isEnglish
     ? {
@@ -226,11 +243,13 @@ function AccountPage() {
           <Button as={Link} to="/meine-medikamente" colorPalette="teal">
             {text.medications}
           </Button>
-          <Button as={Link} to="/notfall" variant="outline">
+          <Button as={Link} to="/konto#emergency-contacts" variant="outline">
             {text.contacts}
           </Button>
         </Stack>
       </Box>
+
+      <EmergencyContacts allowDirectNotify />
 
       <Box
         borderWidth="1px"

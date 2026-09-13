@@ -301,6 +301,7 @@ function HealthDiaryPage() {
   const [messageType, setMessageType] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [printMessage, setPrintMessage] = useState("");
+  const [pdfDownloadInfo, setPdfDownloadInfo] = useState(false);
   const healthFormRef = useRef(null);
   const reportFileInputRef = useRef(null);
   const [reportFiles, setReportFiles] = useState([]);
@@ -360,6 +361,7 @@ function HealthDiaryPage() {
         diastolicShort: "Diastolic",
         exportPdf: "Download PDF",
         email: "Prepare email to doctor's practice",
+        shareContacts: "Share with contacts / Mail",
         doctorEmail: "Email address of doctor's practice (optional)",
         doctorEmailPlaceholder: "practice@example.com",
         doctorEmailHint:
@@ -378,6 +380,7 @@ function HealthDiaryPage() {
         shareFilesHint: "On a phone, use “Share PDF / send by email” to include the selected files.",
         pdfCreating: "The PDF is being created …",
         pdfSaved: "The PDF was created. On iPhone, use Share → Save to Files if the PDF preview opens. For a doctor email, use “Share PDF / send by email”.",
+        pdfLocation: "File: {fileName}. On a computer it is usually in Downloads. On iPhone, tap Share → Save to Files and choose Downloads or another folder.",
         pdfError: "The PDF could not be created. Please try again.",
         sharePdf: "Share PDF / send by email",
         shareUnsupported:
@@ -447,6 +450,7 @@ function HealthDiaryPage() {
         diastolicShort: "Diastolisch",
         exportPdf: "PDF herunterladen",
         email: "E-Mail an Arztpraxis vorbereiten",
+        shareContacts: "An Kontakte / Mail teilen",
         doctorEmail: "E-Mail-Adresse der Arztpraxis (optional)",
         doctorEmailPlaceholder: "praxis@beispiel.de",
         doctorEmailHint:
@@ -465,6 +469,7 @@ function HealthDiaryPage() {
         shareFilesHint: "Auf dem Handy nutzt du anschließend „PDF teilen / per E-Mail senden“, damit die Dateien mitgegeben werden.",
         pdfCreating: "Die PDF wird erstellt …",
         pdfSaved: "Die PDF wurde erstellt. Wenn sich auf dem iPhone die Vorschau öffnet, tippe auf Teilen → In Dateien sichern. Für den Arztversand nutze „PDF teilen / per E-Mail senden“.",
+        pdfLocation: "Datei: {fileName}. Am PC liegt sie normalerweise im Ordner Downloads. Auf dem iPhone tippe auf Teilen → In Dateien sichern und wähle Downloads oder einen anderen Ordner.",
         pdfError: "Die PDF konnte nicht erstellt werden. Bitte versuche es erneut.",
         sharePdf: "PDF teilen / per E-Mail senden",
         shareUnsupported:
@@ -787,11 +792,13 @@ function HealthDiaryPage() {
     }
 
     setPrintMessage(text.pdfCreating);
+    setPdfDownloadInfo(false);
 
     try {
       const pdf = await createReportPdf();
       triggerPdfDownload(pdf, getReportFileName());
       setPrintMessage(text.pdfSaved);
+      setPdfDownloadInfo(true);
     } catch {
       setPrintMessage(text.pdfError);
     }
@@ -809,6 +816,7 @@ function HealthDiaryPage() {
     }
 
     setPrintMessage(text.pdfCreating);
+    setPdfDownloadInfo(false);
 
     try {
       const pdf = await createReportPdf();
@@ -1014,6 +1022,16 @@ function HealthDiaryPage() {
           {text.reportTitle}
         </Heading>
         <Text mb="4">{text.reportHint}</Text>
+        <Box className="health-report-send-guide" mb="5">
+          <Text fontWeight="800" color="teal.900">
+            {isEnglish ? "PDF created – what happens next?" : "PDF erstellt – wie geht es weiter?"}
+          </Text>
+          <Text mt="1" fontSize="sm" color="gray.700">
+            {isEnglish
+              ? "The PDF preview only shows the document. Use the buttons below to save it, share it with contacts or prepare an email to your saved doctor's practice."
+              : "Die PDF-Vorschau zeigt nur das Dokument. Mit den Buttons unten kannst du sie speichern, mit Kontakten teilen oder eine Mail an deine hinterlegte Arztpraxis vorbereiten."}
+          </Text>
+        </Box>
         <Flex className="health-report-visual" align="center" gap="4" mb="5">
           <Box className="health-report-visual-icon" aria-hidden="true">PDF</Box>
           <Box>
@@ -1072,6 +1090,7 @@ function HealthDiaryPage() {
           </Button>
           <Button
             type="button"
+            className="health-report-pdf-button"
             colorPalette="teal"
             size="lg"
             borderRadius="xl"
@@ -1082,24 +1101,25 @@ function HealthDiaryPage() {
           </Button>
           <Button
             type="button"
+            className="health-report-doctor-button"
             colorPalette="teal"
             size="lg"
             borderRadius="xl"
             onClick={handleEmail}
-            disabled={healthEntries.length === 0}
+            disabled={healthEntries.length === 0 || !doctorEmail.trim()}
           >
-            ✉️ {text.email}
+            🩺 {doctorEmail.trim() ? text.email : (isEnglish ? "Enter doctor's email first" : "Arztpraxis-E-Mail zuerst eintragen")}
           </Button>
           <Button
             type="button"
+            className="health-report-share-button"
             colorPalette="teal"
             size="lg"
             borderRadius="xl"
             onClick={handleSharePdf}
             disabled={healthEntries.length === 0}
-            display={{ base: "inline-flex", md: "none" }}
           >
-            📤 {text.sharePdf}
+            📤 {text.shareContacts}
           </Button>
         </Flex>
         {printMessage && (
@@ -1115,6 +1135,16 @@ function HealthDiaryPage() {
             aria-live="polite"
           >
             {printMessage}
+          </Box>
+        )}
+        {pdfDownloadInfo && (
+          <Box className="health-report-download-info" mt="3" role="status" aria-live="polite">
+            <Text fontWeight="800" color="teal.900">
+              {isEnglish ? "Where is my PDF?" : "Wo ist meine PDF?"}
+            </Text>
+            <Text mt="1" fontSize="sm" color="gray.700">
+              {text.pdfLocation.replace("{fileName}", getReportFileName())}
+            </Text>
           </Box>
         )}
       </Box>

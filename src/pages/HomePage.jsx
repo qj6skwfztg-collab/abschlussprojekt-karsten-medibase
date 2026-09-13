@@ -190,6 +190,7 @@ function HomePage() {
             zIndex="2"
           >
             <Box
+              className="founder-callout"
               marginBottom="2"
               padding="2"
               borderRadius="xl"
@@ -197,9 +198,9 @@ function HomePage() {
               border="1px solid"
               borderColor="teal.200"
               color="teal.900"
-              fontSize="xs"
+              fontSize="sm"
               fontWeight="700"
-              lineHeight="1.3"
+              lineHeight="1.35"
               textAlign="center"
               boxShadow="sm"
             >

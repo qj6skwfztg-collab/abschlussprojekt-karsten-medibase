@@ -452,8 +452,16 @@ header #main-navigation .header-emergency-contacts-link[aria-current="page"] {
   /* Keep emergency and account actions on one horizontal row. German
      labels are longer than their English equivalents. */
   header #main-navigation .nav-group-help,
-  header #main-navigation .nav-group-account {
+  header #main-navigation .nav-group-account,
+  header #main-navigation .nav-group-medications,
+  header #main-navigation .nav-group-personal {
     flex-shrink: 0;
+  }
+
+  header #main-navigation .nav-group-medications .nav-group-links,
+  header #main-navigation .nav-group-personal .nav-group-links {
+    flex-wrap: nowrap !important;
+    align-items: center;
   }
 
   header #main-navigation .nav-group-actions {
@@ -670,6 +678,49 @@ header #main-navigation .header-emergency-contacts-link[aria-current="page"] {
   background: #f7fafc;
   border: 1px solid #e2e8f0;
   border-radius: 18px;
+}
+
+.health-report-send-guide {
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #ebf8ff, #f0fdfa);
+  border: 1px solid #90cdf4;
+  border-radius: 18px;
+}
+
+.health-report-download-info {
+  padding: 14px 16px;
+  background: #fffaf0;
+  border: 1px solid #f6ad55;
+  border-radius: 18px;
+}
+
+.founder-callout {
+  letter-spacing: 0.005em;
+  text-rendering: optimizeLegibility;
+}
+
+.health-report-pdf-button,
+.health-report-doctor-button,
+.health-report-share-button {
+  border-width: 2px !important;
+}
+
+.health-report-pdf-button {
+  border-color: #319795 !important;
+  background: #e6fffa !important;
+  color: #234e52 !important;
+}
+
+.health-report-doctor-button {
+  border-color: #63b3ed !important;
+  background: #ebf8ff !important;
+  color: #2a4365 !important;
+}
+
+.health-report-share-button {
+  border-color: #81e6d9 !important;
+  background: #e6fffa !important;
+  color: #234e52 !important;
 }
 
 .home-page button:not(:disabled),

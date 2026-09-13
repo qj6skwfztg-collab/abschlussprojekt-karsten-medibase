@@ -142,7 +142,7 @@ function HomePage() {
       maxWidth="1200px"
       margin="0 auto"
       position="relative"
-      overflow="hidden"
+      overflow="visible"
     >
       {/* Transparente Figur im Hintergrund */}
       <Image
@@ -178,8 +178,8 @@ function HomePage() {
           <Box
             display={{ base: "none", md: "block" }}
             position="absolute"
-            top="205px"
-            left={{ base: "0", md: "-180px" }}
+            top={{ base: "20px", md: "350px" }}
+            left={{ base: "0", md: "-10px" }}
             width="190px"
             padding="2"
             borderRadius="3xl"

@@ -486,6 +486,20 @@ header #main-navigation .header-emergency-link:focus-visible {
   font-weight: 800 !important;
 }
 
+.health-report-buttons > button {
+  min-height: 54px;
+  flex: 1 1 0;
+  padding-inline: 18px;
+  font-weight: 800;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.health-report-buttons > button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow: 0 10px 20px rgba(15, 118, 110, 0.18);
+}
+
 .health-report-files {
   padding: 14px 16px;
   background: #f7fafc;

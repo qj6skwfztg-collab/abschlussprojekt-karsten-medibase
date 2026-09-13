@@ -1016,16 +1016,6 @@ function HealthDiaryPage() {
           onChange={handleReportFilesChange}
           hidden
         />
-        <Button
-          type="button"
-          className="health-report-attach"
-          colorPalette="teal"
-          size="lg"
-          borderRadius="xl"
-          onClick={() => reportFileInputRef.current?.click()}
-        >
-          📎 {text.attachFiles}
-        </Button>
         {reportFiles.length > 0 && (
           <Box className="health-report-files" mt="4">
             <Text fontWeight="800" color="teal.900">{text.filesSelected}</Text>
@@ -1039,11 +1029,22 @@ function HealthDiaryPage() {
             <Text mt="2" fontSize="sm" color="gray.600">{text.shareFilesHint}</Text>
           </Box>
         )}
-        <Flex direction={{ base: "column", sm: "row" }} gap="3">
+        <Flex className="health-report-buttons" direction={{ base: "column", md: "row" }} gap="3" align="stretch">
           <Button
             type="button"
-            variant="outline"
+            className="health-report-attach"
             colorPalette="teal"
+            size="lg"
+            borderRadius="xl"
+            onClick={() => reportFileInputRef.current?.click()}
+          >
+            📎 {text.attachFiles}
+          </Button>
+          <Button
+            type="button"
+            colorPalette="teal"
+            size="lg"
+            borderRadius="xl"
             onClick={handlePrint}
             disabled={healthEntries.length === 0}
           >
@@ -1051,8 +1052,9 @@ function HealthDiaryPage() {
           </Button>
           <Button
             type="button"
-            variant="outline"
             colorPalette="teal"
+            size="lg"
+            borderRadius="xl"
             onClick={handleEmail}
             disabled={healthEntries.length === 0}
           >
@@ -1060,8 +1062,9 @@ function HealthDiaryPage() {
           </Button>
           <Button
             type="button"
-            variant="outline"
             colorPalette="teal"
+            size="lg"
+            borderRadius="xl"
             onClick={handleSharePdf}
             disabled={healthEntries.length === 0}
             display={{ base: "inline-flex", md: "none" }}

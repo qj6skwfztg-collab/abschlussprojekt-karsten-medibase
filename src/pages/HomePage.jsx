@@ -90,7 +90,7 @@ function SafetyVisual({ isEnglish }) {
           <Link className="home-safety-chip" to="/notfall#notfallpass">
             🪪 {isEnglish ? "Emergency pass" : "Notfallpass"}
           </Link>
-          <Link className="home-safety-chip" to="/konto#emergency-contacts">
+          <Link className="home-safety-chip" to="/notfall#emergency-contacts">
             👥 {isEnglish ? "Trusted contacts" : "Notfallkontakte"}
           </Link>
         </Flex>

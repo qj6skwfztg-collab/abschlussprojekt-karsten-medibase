@@ -8,6 +8,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { Link } from "react-router-dom";
 import {
   Box,
   Button,
@@ -197,9 +198,19 @@ function EmergencyContacts({
 
   if (!user) {
     return (
-      <Text marginTop="6">
-        {isEnglish ? "Sign in to save personal emergency contacts." : "Melde dich an, um persönliche Notfallkontakte zu speichern."}
-      </Text>
+      <Box id="emergency-contacts" className="account-emergency-contacts" marginTop="10">
+        <Heading size="lg" marginBottom="4">
+          {isEnglish ? "My emergency contacts" : "Meine Notfallkontakte"}
+        </Heading>
+        <Text marginBottom="5">
+          {isEnglish
+            ? "Your personal contacts are protected and are shown only after you sign in."
+            : "Deine persönlichen Kontakte sind geschützt und werden erst nach der Anmeldung angezeigt."}
+        </Text>
+        <Button as={Link} to="/login" colorPalette="teal" size="lg">
+          {isEnglish ? "Sign in to continue" : "Anmelden und fortfahren"}
+        </Button>
+      </Box>
     );
   }
 

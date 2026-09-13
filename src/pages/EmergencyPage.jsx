@@ -28,12 +28,12 @@ function EmergencyPage() {
   ) || emergencyCountries[0];
 
   useEffect(() => {
-    if (location.hash !== "#notfallpass") {
+    if (!['#notfallpass', '#emergency-contacts'].includes(location.hash)) {
       return undefined;
     }
 
     const frameId = window.requestAnimationFrame(() => {
-      document.getElementById("notfallpass")?.scrollIntoView({
+      document.getElementById(location.hash.slice(1))?.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });

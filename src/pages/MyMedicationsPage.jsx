@@ -336,7 +336,7 @@ function MyMedicationsPage() {
         </Button>
       </Box>
 
-      <Box className="my-medications-reminders" mb="8" boxShadow="sm">
+      <Box className="my-medications-reminders" mb="8">
         <MedicationReminderPermission medications={userMedications} />
       </Box>
 
@@ -523,46 +523,48 @@ function MyMedicationsPage() {
         </form>
       </Box>
 
-      <Box marginBottom="6">
-        <Heading size="lg" color="teal.900">
-          {text.savedHeading}
-        </Heading>
+      <Box className="saved-medications-section">
+        <Box marginBottom="6">
+          <Heading size="lg" color="teal.900">
+            {text.savedHeading}
+          </Heading>
+        </Box>
+
+        {isLoading && <Text>{text.loading}</Text>}
+
+        {error && <Text color="red.600">{error}</Text>}
+
+        {!isLoading &&
+          !error &&
+          userMedications.length === 0 && (
+            <Box
+              role="status"
+              background="teal.50"
+              borderLeftWidth="4px"
+              borderColor="teal.500"
+              padding="4"
+              borderRadius="md"
+              marginBottom="6"
+            >
+              <Text fontWeight="700" color="teal.900">
+                {text.empty}
+              </Text>
+              <Text marginTop="2">{text.emptyHint}</Text>
+            </Box>
+          )}
+
+        <SimpleGrid minChildWidth="280px" gap="6">
+          {userMedications.map((medication) => (
+            <MedicationCard
+              key={medication.id}
+              medication={medication}
+              text={text}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </SimpleGrid>
       </Box>
-
-      {isLoading && <Text>{text.loading}</Text>}
-
-      {error && <Text color="red.600">{error}</Text>}
-
-      {!isLoading &&
-        !error &&
-        userMedications.length === 0 && (
-          <Box
-            role="status"
-            background="teal.50"
-            borderLeftWidth="4px"
-            borderColor="teal.500"
-            padding="4"
-            borderRadius="md"
-            marginBottom="6"
-          >
-            <Text fontWeight="700" color="teal.900">
-              {text.empty}
-            </Text>
-            <Text marginTop="2">{text.emptyHint}</Text>
-          </Box>
-        )}
-
-      <SimpleGrid minChildWidth="280px" gap="6">
-        {userMedications.map((medication) => (
-          <MedicationCard
-            key={medication.id}
-            medication={medication}
-            text={text}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        ))}
-      </SimpleGrid>
     </Box>
   );
 }
@@ -572,6 +574,7 @@ function MedicationCard({ medication, text, onEdit, onDelete }) {
 
   return (
     <Box
+      className="saved-medication-card"
       borderWidth="1px"
       borderRadius="lg"
       borderColor="gray.200"

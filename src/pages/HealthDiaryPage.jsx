@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -154,19 +154,37 @@ function HealthTrendChart({ entries, type, isEnglish, text }) {
       month: "2-digit",
     }).format(date);
   };
+  const latestEntry = plottedEntries[plottedEntries.length - 1];
+  const latestValue = isBloodPressure
+    ? `${latestEntry.value}/${latestEntry.secondaryValue}`
+    : latestEntry.value;
+  const latestUnit = latestEntry.unit || entryTypes[type].unit;
+  const dateLabelIndexes = new Set([
+    0,
+    Math.floor((plottedEntries.length - 1) / 2),
+    plottedEntries.length - 1,
+  ]);
 
   return (
     <Box className="health-trend-chart" aria-label={text.trendTitle}>
-      <Flex className="health-trend-legend" gap="4" wrap="wrap" mb="3">
-        {series.map((item) => (
-          <Flex key={item.key} align="center" gap="2" fontSize="sm" fontWeight="600">
-            <Box className="health-trend-legend-dot" background={item.color} />
-            <Text>{item.label}</Text>
-          </Flex>
-        ))}
-        <Text color="gray.500" fontSize="sm">
-          {text.lastEntries.replace("{count}", String(plottedEntries.length))}
-        </Text>
+      <Flex className="health-trend-chart-topline" align="center" justify="space-between" gap="4" wrap="wrap" mb="3">
+        <Flex className="health-trend-legend" gap="4" wrap="wrap">
+          {series.map((item) => (
+            <Flex key={item.key} align="center" gap="2" fontSize="sm" fontWeight="600">
+              <Box className="health-trend-legend-dot" background={item.color} />
+              <Text>{item.label}</Text>
+            </Flex>
+          ))}
+          <Text color="gray.500" fontSize="sm">
+            {text.lastEntries.replace("{count}", String(plottedEntries.length))}
+          </Text>
+        </Flex>
+        <Box className="health-trend-latest">
+          <Text className="health-trend-latest-label">{text.latest}</Text>
+          <Text className="health-trend-latest-value">
+            {latestValue} <Text as="span" className="health-trend-latest-unit">{latestUnit}</Text>
+          </Text>
+        </Box>
       </Flex>
       <Box overflowX="auto">
         <svg
@@ -175,6 +193,12 @@ function HealthTrendChart({ entries, type, isEnglish, text }) {
           role="img"
           aria-label={`${text.trendTitle}: ${text.trendArea}`}
         >
+          <defs>
+            <linearGradient id={`health-trend-fill-${type}`} x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#319795" stopOpacity="0.24" />
+              <stop offset="100%" stopColor="#319795" stopOpacity="0.02" />
+            </linearGradient>
+          </defs>
           {tickValues.map((tick, index) => {
             const y = padding.top + (index / 3) * plotHeight;
 
@@ -207,9 +231,13 @@ function HealthTrendChart({ entries, type, isEnglish, text }) {
               })
               .filter(Boolean)
               .join(" ");
+            const areaPoints = `${xFor(0)},${padding.top + plotHeight} ${points} ${xFor(plottedEntries.length - 1)},${padding.top + plotHeight}`;
 
             return (
               <g key={item.key}>
+                {!isBloodPressure && item.key === "value" && (
+                  <polygon points={areaPoints} fill={`url(#health-trend-fill-${type})`} />
+                )}
                 <polyline
                   points={points}
                   fill="none"
@@ -237,17 +265,19 @@ function HealthTrendChart({ entries, type, isEnglish, text }) {
               </g>
             );
           })}
-          {plottedEntries.map((entry, index) => (
-            <text
-              key={`date-${entry.id}`}
-              x={xFor(index)}
-              y={height - 12}
-              textAnchor="middle"
-              className="health-trend-axis-label"
-            >
-              {formatAxisDate(entry)}
-            </text>
-          ))}
+          {plottedEntries.map((entry, index) =>
+            dateLabelIndexes.has(index) ? (
+              <text
+                key={`date-${entry.id}`}
+                x={xFor(index)}
+                y={height - 12}
+                textAnchor="middle"
+                className="health-trend-axis-label"
+              >
+                {formatAxisDate(entry)}
+              </text>
+            ) : null
+          )}
         </svg>
       </Box>
     </Box>
@@ -271,6 +301,9 @@ function HealthDiaryPage() {
   const [messageType, setMessageType] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [printMessage, setPrintMessage] = useState("");
+  const healthFormRef = useRef(null);
+  const reportFileInputRef = useRef(null);
+  const [reportFiles, setReportFiles] = useState([]);
   const [doctorEmail, setDoctorEmail] = useState(
     () => localStorage.getItem(DOCTOR_EMAIL_STORAGE_KEY) || ""
   );
@@ -338,7 +371,11 @@ function HealthDiaryPage() {
         reportEmpty: "Add at least one entry before creating a report.",
         reportTitle: "Doctor report",
         reportHint:
-          "Create a printable PDF or prepare an email. The PDF must be attached manually.",
+          "Create a clear PDF for a medical appointment or share it together with additional files and images.",
+        attachFiles: "Attach files",
+        filesSelected: "Selected files",
+        fileHint: "Choose photos or documents from your phone. They stay on this device until you share them.",
+        shareFilesHint: "On a phone, use “Share PDF / send by email” to include the selected files.",
         pdfCreating: "The PDF is being created …",
         pdfSaved: "The PDF download has started. Check your Downloads folder.",
         pdfError: "The PDF could not be created. Please try again.",
@@ -421,7 +458,11 @@ function HealthDiaryPage() {
         reportEmpty: "Füge zuerst mindestens einen Eintrag hinzu.",
         reportTitle: "Arztübersicht",
         reportHint:
-          "Erstelle eine druckbare PDF-Datei oder bereite eine E-Mail vor. Die PDF muss anschließend manuell angehängt werden.",
+          "Erstelle eine übersichtliche PDF für den Arzttermin oder teile sie zusammen mit zusätzlichen Dateien und Bildern.",
+        attachFiles: "Dateien anfügen",
+        filesSelected: "Ausgewählte Dateien",
+        fileHint: "Wähle Bilder oder Dokumente vom Handy aus. Sie bleiben auf diesem Gerät, bis du sie teilst.",
+        shareFilesHint: "Auf dem Handy nutzt du anschließend „PDF teilen / per E-Mail senden“, damit die Dateien mitgegeben werden.",
         pdfCreating: "Die PDF wird erstellt …",
         pdfSaved: "Der PDF-Download wurde gestartet. Prüfe anschließend deinen Downloads-Ordner.",
         pdfError: "Die PDF konnte nicht erstellt werden. Bitte versuche es erneut.",
@@ -475,6 +516,10 @@ function HealthDiaryPage() {
 
     setDoctorEmail(value);
     localStorage.setItem(DOCTOR_EMAIL_STORAGE_KEY, value);
+  }
+
+  function handleReportFilesChange(event) {
+    setReportFiles(Array.from(event.target.files || []));
   }
 
   function handleChange(event) {
@@ -575,7 +620,10 @@ function HealthDiaryPage() {
       measuredAt: getLocalDateTimeFromTimestamp(entry.measuredAt),
     });
     showMessage(text.editing, "info");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.requestAnimationFrame(() => {
+      healthFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("health-value")?.focus({ preventScroll: true });
+    });
   }
 
   function handleCancelEdit() {
@@ -747,7 +795,9 @@ function HealthDiaryPage() {
         type: "application/pdf",
       });
 
-      if (!navigator.canShare({ files: [file] })) {
+      const shareFiles = [file, ...reportFiles];
+
+      if (!navigator.canShare({ files: shareFiles })) {
         setPrintMessage(text.shareUnsupported);
         return;
       }
@@ -759,7 +809,7 @@ function HealthDiaryPage() {
       await navigator.share({
         title: text.reportTitle,
         text: `${intro}${getReportLines().join("\n")}`,
-        files: [file],
+        files: shareFiles,
       });
       setPrintMessage(text.shareReady);
     } catch (error) {
@@ -934,6 +984,13 @@ function HealthDiaryPage() {
           {text.reportTitle}
         </Heading>
         <Text mb="4">{text.reportHint}</Text>
+        <Flex className="health-report-visual" align="center" gap="4" mb="5">
+          <Box className="health-report-visual-icon" aria-hidden="true">PDF</Box>
+          <Box>
+            <Text fontWeight="800" color="teal.900">{text.trendTitle} + PDF</Text>
+            <Text fontSize="sm" color="gray.600">{text.fileHint}</Text>
+          </Box>
+        </Flex>
         <Box mb="5">
           <Text as="label" htmlFor="doctor-email" display="block" mb="2" fontWeight="600">
             {text.doctorEmail}
@@ -950,6 +1007,38 @@ function HealthDiaryPage() {
             {text.doctorEmailHint}
           </Text>
         </Box>
+        <input
+          ref={reportFileInputRef}
+          id="health-report-files"
+          type="file"
+          accept="image/*,.pdf,.doc,.docx"
+          multiple
+          onChange={handleReportFilesChange}
+          hidden
+        />
+        <Button
+          type="button"
+          className="health-report-attach"
+          colorPalette="teal"
+          size="lg"
+          borderRadius="xl"
+          onClick={() => reportFileInputRef.current?.click()}
+        >
+          📎 {text.attachFiles}
+        </Button>
+        {reportFiles.length > 0 && (
+          <Box className="health-report-files" mt="4">
+            <Text fontWeight="800" color="teal.900">{text.filesSelected}</Text>
+            <Stack gap="1" mt="2">
+              {reportFiles.map((file, index) => (
+                <Text key={`${file.name}-${index}`} fontSize="sm" color="gray.700">
+                  📄 {file.name}
+                </Text>
+              ))}
+            </Stack>
+            <Text mt="2" fontSize="sm" color="gray.600">{text.shareFilesHint}</Text>
+          </Box>
+        )}
         <Flex direction={{ base: "column", sm: "row" }} gap="3">
           <Button
             type="button"
@@ -998,6 +1087,7 @@ function HealthDiaryPage() {
       </Box>
 
       <Box
+        ref={healthFormRef}
         className="health-diary-form"
         borderWidth="1px"
         borderRadius="lg"

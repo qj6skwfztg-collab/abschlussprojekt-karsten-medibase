@@ -145,7 +145,7 @@ function Header({ onMenuStateChange }) {
             </Link>
           )}
 
-          <Box className="nav-group">
+          <Box className="nav-group nav-group-medications">
               <Text className="nav-group-label">
                 {isEnglish ? "Medications" : "Medikamente"}
               </Text>
@@ -169,7 +169,7 @@ function Header({ onMenuStateChange }) {
           </Box>
 
           {user && (
-            <Box className="nav-group">
+            <Box className="nav-group nav-group-personal">
               <Text className="nav-group-label">
                 {isEnglish ? "Personal data" : "Meine persönlichen Daten"}
               </Text>
@@ -209,6 +209,7 @@ function Header({ onMenuStateChange }) {
               )}
 
               <Link
+                className="header-emergency-link"
                 to="/notfall"
                 onClick={closeMenu}
                 style={{

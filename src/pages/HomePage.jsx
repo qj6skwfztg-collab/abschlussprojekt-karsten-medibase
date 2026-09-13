@@ -179,7 +179,7 @@ function HomePage() {
             display={{ base: "none", md: "block" }}
             position="absolute"
             top="205px"
-            left="0"
+            left={{ base: "0", md: "-180px" }}
             width="190px"
             padding="2"
             borderRadius="3xl"
@@ -231,8 +231,8 @@ function HomePage() {
 
           <Box
             marginTop="7"
-            marginLeft={{ base: "0", md: "190px" }}
-            width={{ base: "100%", md: "calc(100% - 190px)" }}
+            marginLeft="0"
+            width="100%"
             padding={{ base: "4", md: "6" }}
             background="white"
             borderWidth="1px"
@@ -258,6 +258,13 @@ function HomePage() {
                 minHeight="76px"
                 fontSize="lg"
                 width="100%"
+                borderRadius="2xl"
+                boxShadow="0 8px 18px rgba(15, 118, 110, 0.18)"
+                _hover={{
+                  background: "teal.800",
+                  transform: "translateY(-3px)",
+                  boxShadow: "0 14px 24px rgba(15, 118, 110, 0.24)",
+                }}
               >
                 <Link to="/medikamente#medication-search">
                   <Flex as="span" align="center" justify="center">
@@ -276,6 +283,14 @@ function HomePage() {
                 color="teal.900"
                 borderColor="teal.700"
                 width="100%"
+                borderRadius="2xl"
+                background="white"
+                boxShadow="0 8px 18px rgba(45, 55, 72, 0.08)"
+                _hover={{
+                  background: "teal.50",
+                  transform: "translateY(-3px)",
+                  boxShadow: "0 14px 24px rgba(45, 55, 72, 0.14)",
+                }}
               >
                 <Link to="/meine-medikamente">
                   <Flex as="span" align="center" justify="center">
@@ -292,7 +307,13 @@ function HomePage() {
                 minHeight="76px"
                 fontSize="lg"
                 width="100%"
-                _hover={{ background: "red.700" }}
+                borderRadius="2xl"
+                boxShadow="0 8px 18px rgba(229, 62, 62, 0.18)"
+                _hover={{
+                  background: "red.700",
+                  transform: "translateY(-3px)",
+                  boxShadow: "0 14px 24px rgba(229, 62, 62, 0.24)",
+                }}
               >
                 <Link to="/notfall">
                   <Flex as="span" align="center" justify="center">

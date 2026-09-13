@@ -50,6 +50,46 @@ a {
   text-decoration: none;
 }
 
+header #main-navigation .header-link,
+header #main-navigation .header-emergency-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center;
+  transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  header #main-navigation .header-link:hover,
+  header #main-navigation .header-emergency-link:hover {
+    transform: translateY(-2px) scale(1.06);
+    filter: brightness(1.08);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.16);
+  }
+}
+
+header #main-navigation .header-link:active,
+header #main-navigation .header-link:focus-visible,
+header #main-navigation .header-emergency-link:active,
+header #main-navigation .header-emergency-link:focus-visible {
+  transform: scale(1.03);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  header #main-navigation .nav-group-medications .header-link:hover {
+    box-shadow: inset 0 -3px 0 #81e6d9, 0 8px 16px rgba(0, 0, 0, 0.16);
+  }
+
+  header #main-navigation .nav-group-personal .header-link:hover {
+    box-shadow: inset 0 -3px 0 #90cdf4, 0 8px 16px rgba(0, 0, 0, 0.16);
+  }
+
+  header #main-navigation .nav-group-help .header-link:hover {
+    box-shadow: inset 0 -3px 0 #f6ad55, 0 8px 16px rgba(0, 0, 0, 0.16);
+  }
+}
+
 .nav-group {
   display: flex;
   align-items: center;
@@ -415,6 +455,42 @@ a {
   fill: #718096;
   font-size: 12px;
   font-weight: 700;
+}
+
+.health-report-visual {
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #f0fdfa, #fff7ed);
+  border: 1px solid #cde7e4;
+  border-radius: 22px;
+}
+
+.health-report-visual-icon {
+  display: inline-flex;
+  width: 54px;
+  height: 54px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 17px;
+  background: #0f766e;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.2);
+}
+
+.health-report-attach {
+  min-height: 54px !important;
+  padding-inline: 22px !important;
+  font-weight: 800 !important;
+}
+
+.health-report-files {
+  padding: 14px 16px;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
 }
 
 .home-page button:not(:disabled),

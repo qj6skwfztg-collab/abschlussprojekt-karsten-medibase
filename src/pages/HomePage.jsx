@@ -1,13 +1,15 @@
+import { useState } from "react";
 import {
   Box,
   Button,
   Flex,
   Heading,
   Image,
+  Input,
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import heroImage from "../assets/medibase-neu.png";
 import vitruvianImage from "../assets/medibase-vitruvian.png";
 import founderCharacter from "../assets/curaelis-karsten-anime.png";
@@ -56,10 +58,86 @@ function FeatureIcon({ symbol, background }) {
   );
 }
 
+function QuickSearchDialog({ isOpen, onClose, isEnglish }) {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  if (!isOpen) return null;
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const term = searchTerm.trim();
+    if (!term) return;
+
+    navigate(`/medikamente?search=${encodeURIComponent(term)}#medication-search`);
+  }
+
+  return (
+    <Box className="quick-search-modal-backdrop" onClick={onClose}>
+      <Box
+        as="section"
+        className="quick-search-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quick-search-title"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <Flex align="start" justify="space-between" gap="4">
+          <Box>
+            <Text className="quick-search-kicker">CURAELIS</Text>
+            <Heading id="quick-search-title" size="lg" color="teal.900">
+              {isEnglish ? "Find a medication" : "Medikament schnell suchen"}
+            </Heading>
+            <Text mt="2" color="gray.600">
+              {isEnglish
+                ? "Enter a name or active ingredient to open the matching Curaelis information."
+                : "Gib einen Namen oder Wirkstoff ein und öffne direkt die passende Curaelis-Information."}
+            </Text>
+          </Box>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            aria-label={isEnglish ? "Close search" : "Suche schließen"}
+            onClick={onClose}
+          >
+            ×
+          </Button>
+        </Flex>
+
+        <form onSubmit={handleSubmit}>
+          <Text as="label" htmlFor="quick-medication-search" display="block" mt="6" mb="2" fontWeight="700">
+            {isEnglish ? "Medication name or active ingredient" : "Medikament oder Wirkstoff"}
+          </Text>
+          <Input
+            id="quick-medication-search"
+            type="search"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder={isEnglish ? "For example, paracetamol" : "Zum Beispiel Paracetamol"}
+            autoFocus
+            size="lg"
+          />
+          <Flex justify="end" gap="3" mt="6" wrap="wrap">
+            <Button type="button" variant="outline" onClick={onClose}>
+              {isEnglish ? "Cancel" : "Abbrechen"}
+            </Button>
+            <Button type="submit" colorPalette="teal" disabled={!searchTerm.trim()}>
+              {isEnglish ? "Search now" : "Jetzt suchen"}
+            </Button>
+          </Flex>
+        </form>
+      </Box>
+    </Box>
+  );
+}
+
 function HomePage() {
   const { isEnglish } = useLanguage();
+  const [isQuickSearchOpen, setIsQuickSearchOpen] = useState(false);
   return (
     <Box
+      className="home-page"
       padding={{ base: "6", md: "10" }}
       maxWidth="1200px"
       margin="0 auto"
@@ -83,7 +161,7 @@ function HomePage() {
       <Box position="relative" zIndex="1">
         <Box textAlign="center">
           <Heading size="2xl">
-            {isEnglish ? "Understand your medications" : "Medikamente verständlich nachschlagen"}
+            {isEnglish ? "Your health. Clearer every day." : "Deine Gesundheit. Klarer im Alltag."}
           </Heading>
 
           <Text
@@ -93,8 +171,8 @@ function HomePage() {
             fontSize={{ base: "md", md: "lg" }}
           >
             {isEnglish
-              ? "Find medication information, manage your personal medications, set intake reminders and reach emergency help quickly."
-              : "Finde verständliche Informationen zu Medikamenten, verwalte deine persönlichen Medikamente, richte Einnahmeerinnerungen ein und erreiche im Notfall schnell Hilfe."}
+              ? "Understand medications, manage your personal plan, track health values, set reminders and keep important safety information close at hand."
+              : "Verstehe Medikamente, verwalte deinen persönlichen Plan, dokumentiere Gesundheitswerte, richte Erinnerungen ein und behalte wichtige Sicherheitsinformationen griffbereit."}
           </Text>
 
           <Box
@@ -181,7 +259,7 @@ function HomePage() {
                 fontSize="lg"
                 width="100%"
               >
-                <Link to="/medikamente">
+                <Link to="/medikamente#medication-search">
                   <Flex as="span" align="center" justify="center">
                     <ActionIcon symbol="🔎" />
                     {isEnglish ? "Search medications" : "Medikamente suchen"}
@@ -244,7 +322,9 @@ function HomePage() {
           marginTop="10"
         >
           <Box
-            asChild
+            as="div"
+            role="button"
+            tabIndex="0"
             background="white"
             padding={{ base: "5", md: "6" }}
             borderRadius="xl"
@@ -263,18 +343,26 @@ function HomePage() {
               outlineColor: "teal.500",
               outlineOffset: "3px",
             }}
+            onClick={() => setIsQuickSearchOpen(true)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                setIsQuickSearchOpen(true);
+              }
+            }}
+            aria-haspopup="dialog"
+            aria-expanded={isQuickSearchOpen}
+            textAlign="left"
           >
-            <Link to="/medikamente">
-              <FeatureIcon symbol="🔎" background="teal.100" />
+            <FeatureIcon symbol="🔎" background="teal.100" />
 
-              <Heading size="md">
-                {isEnglish ? "Quick search" : "Schnell suchen"}
-              </Heading>
+            <Heading size="md">
+              {isEnglish ? "Quick search" : "Schnell suchen"}
+            </Heading>
 
-              <Text marginTop="3">
-                {isEnglish ? "Find medications by name or category." : "Finde Medikamente nach ihrem Namen oder ihrer Kategorie."}
-              </Text>
-            </Link>
+            <Text marginTop="3">
+              {isEnglish ? "Search by name or active ingredient without leaving the start page." : "Suche nach Name oder Wirkstoff, ohne die Startseite zu verlassen."}
+            </Text>
           </Box>
 
           <Box
@@ -298,15 +386,15 @@ function HomePage() {
               outlineOffset: "3px",
             }}
           >
-            <Link to="/medikamente">
+            <Link to="/gesundheitstagebuch">
               <FeatureIcon symbol="📖" background="orange.100" />
 
               <Heading size="md">
-                {isEnglish ? "Details & sources" : "Details & Quellen"}
+                {isEnglish ? "Health overview" : "Gesundheitsübersicht"}
               </Heading>
 
               <Text marginTop="3">
-                {isEnglish ? "Open the referenced information sources directly from the detail pages." : "Rufe die hinterlegten Informationsquellen direkt über die Detailseiten auf."}
+                {isEnglish ? "Track weight, blood pressure and other values in a clear trend." : "Verfolge Gewicht, Blutdruck und weitere Werte in einem klaren Verlauf."}
               </Text>
             </Link>
           </Box>
@@ -348,6 +436,12 @@ function HomePage() {
 
         <SafetyNotice />
       </Box>
+
+      <QuickSearchDialog
+        isOpen={isQuickSearchOpen}
+        onClose={() => setIsQuickSearchOpen(false)}
+        isEnglish={isEnglish}
+      />
     </Box>
   );
 }

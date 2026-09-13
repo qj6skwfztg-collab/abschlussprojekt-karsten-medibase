@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:ios:release": "VITE_PUBLIC_REGISTRATION_ENABLED=true VITE_EMERGENCY_CALLS_ENABLED=true npm run build && npx cap copy ios",
+    "build:ios:preview": "VITE_PUBLIC_REGISTRATION_ENABLED=false VITE_EMERGENCY_CALLS_ENABLED=false npm run build && npx cap copy ios",
+    "open:ios": "npx cap open ios",
     "lint": "eslint .",
     "preview": "vite preview"
   },

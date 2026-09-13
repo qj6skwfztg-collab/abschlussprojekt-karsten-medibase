@@ -4,10 +4,11 @@ import useLanguage from "../hooks/useLanguage";
 function MedicationSearch({
   searchTerm,
   onSearchChange,
+  id = "medication-search",
 }) {
   const { isEnglish } = useLanguage();
   return (
-    <Box marginTop="6" maxWidth="500px">
+    <Box id={id} marginTop="6" maxWidth="500px" scrollMarginTop="24px">
       <Text
         as="label"
         htmlFor="medication-search"

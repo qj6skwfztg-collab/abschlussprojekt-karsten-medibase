@@ -9,6 +9,7 @@ function MedicationCard({ medication }) {
       background="white"
       borderWidth="1px"
       borderColor="gray.300"
+      borderRadius="2xl"
       boxShadow="md"
     >
       <Card.Body>

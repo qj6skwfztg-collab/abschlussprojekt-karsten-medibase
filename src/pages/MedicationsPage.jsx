@@ -5,7 +5,7 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MedicationCard from "../components/MedicationCard";
 import MedicationSearch from "../components/MedicationSearch";
 import MedicationCategoryFilter from "../components/MedicationCategoryFilter";
@@ -16,9 +16,23 @@ function MedicationsPage() {
   const { isEnglish } = useLanguage();
   const { medications } = useMedications();
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(
+    () => new URLSearchParams(window.location.search).get("search") || ""
+  );
   const [selectedCategory, setSelectedCategory] =
     useState("Alle");
+
+  useEffect(() => {
+    const targetId = window.location.hash.slice(1);
+    if (!targetId) return;
+
+    window.requestAnimationFrame(() => {
+      document.getElementById(targetId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }, []);
 
   const categories = [
     ...new Map(
@@ -70,7 +84,7 @@ function MedicationsPage() {
   }
 
   return (
-    <Box padding="8">
+    <Box id="medication-overview" padding={{ base: "6", md: "8" }} maxWidth="1200px" margin="0 auto" scrollMarginTop="24px">
       <Heading>{isEnglish ? "Medication overview" : "Medikamentenübersicht"}</Heading>
 
       <Text marginTop="4">
@@ -78,6 +92,7 @@ function MedicationsPage() {
       </Text>
 
       <MedicationSearch
+        id="medication-search"
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
       />

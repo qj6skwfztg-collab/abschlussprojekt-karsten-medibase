@@ -14,15 +14,20 @@ function AboutPage() {
 
       <Text marginTop="4">
         {isEnglish
-          ? "Curaelis is a React web application that clearly presents general information about commonly used medications."
-          : "Curaelis ist eine React-Webanwendung, die allgemeine Informationen über häufig verwendete Medikamente übersichtlich darstellt."}
+          ? "Curaelis brings medication information, personal medication plans, intake reminders, health measurements and emergency details together in one calm, clearly structured place. The goal is to make everyday health organisation easier to understand and easier to manage."
+          : "Curaelis verbindet verständliche Medikamenteninformationen, persönliche Medikamentenpläne, Einnahmeerinnerungen, Gesundheitsmesswerte und wichtige Notfalldaten an einem ruhigen, klar strukturierten Ort. So wird die Organisation im Gesundheitsalltag verständlicher und leichter handhabbar."}
       </Text>
 
-      <Text marginTop="4" fontStyle="italic">
-        {isEnglish
-          ? "This app is dedicated to my beloved wife, Pervin Ketme. The application was developed by Karsten Rabeneck-Ketme."
-          : "Diese App ist meiner lieben Ehefrau Pervin Ketme gewidmet. Entwickelt wurde die Anwendung von Karsten Rabeneck-Ketme."}
-      </Text>
+      <Box as="details" marginTop="5" className="about-founder-details">
+        <Box as="summary" cursor="pointer" color="teal.800" fontWeight="700">
+          {isEnglish ? "About the developer" : "Über den Entwickler"}
+        </Box>
+        <Text marginTop="3" fontStyle="italic" color="gray.600">
+          {isEnglish
+            ? "This app is dedicated to my beloved wife, Pervin Ketme. Curaelis was developed by Karsten Rabeneck-Ketme."
+            : "Diese App ist meiner lieben Ehefrau Pervin Ketme gewidmet. Entwickelt wurde Curaelis von Karsten Rabeneck-Ketme."}
+        </Text>
+      </Box>
 
       <Heading size="md" marginTop="8">
         {isEnglish ? "Application features" : "Funktionen der Anwendung"}
@@ -44,17 +49,19 @@ function AboutPage() {
         <List.Item>
           {isEnglish ? "Save personal entries securely in the user account" : "Eigene Einträge sicher im Benutzerkonto speichern"}
         </List.Item>
+
+        <List.Item>
+          {isEnglish ? "Record weight, blood pressure, pulse and other health values" : "Gewicht, Blutdruck, Puls und weitere Gesundheitswerte dokumentieren"}
+        </List.Item>
+
+        <List.Item>
+          {isEnglish ? "View saved measurements in a clear visual trend" : "Gespeicherte Messwerte in einem klaren grafischen Verlauf ansehen"}
+        </List.Item>
+
+        <List.Item>
+          {isEnglish ? "Prepare a printable health overview for a medical appointment" : "Eine druckbare Gesundheitsübersicht für den Arzttermin erstellen"}
+        </List.Item>
       </List.Root>
-
-      <Heading size="md" marginTop="8">
-        {isEnglish ? "Project goal" : "Ziel des Projekts"}
-      </Heading>
-
-      <Text marginTop="4">
-        {isEnglish
-          ? "The project demonstrates modern React techniques such as routing, components, hooks, context and Firebase."
-          : "Das Projekt zeigt den Einsatz moderner React-Techniken wie Routing, Komponenten, Hooks, Context und Firebase."}
-      </Text>
 
       <SafetyNotice />
     </Box>

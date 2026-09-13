@@ -82,6 +82,178 @@ function formatEntryDate(timestamp, isEnglish) {
   }).format(timestamp.toDate());
 }
 
+const metricVisuals = {
+  bloodPressure: { icon: "BP", color: "#0f766e" },
+  bloodSugar: { icon: "GL", color: "#2563eb" },
+  pulse: { icon: "♥", color: "#db2777" },
+  weight: { icon: "KG", color: "#7c3aed" },
+  oxygen: { icon: "O₂", color: "#0891b2" },
+  temperature: { icon: "°", color: "#ea580c" },
+  symptom: { icon: "!", color: "#ca8a04" },
+};
+
+function getTimestampDate(timestamp) {
+  if (timestamp?.toDate) {
+    return timestamp.toDate();
+  }
+
+  const date = new Date(timestamp);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function HealthTrendChart({ entries, type, isEnglish, text }) {
+  const plottedEntries = entries
+    .filter((entry) => entry.type === type)
+    .slice(0, 12)
+    .reverse();
+
+  if (plottedEntries.length === 0) {
+    return null;
+  }
+
+  const isBloodPressure = type === "bloodPressure";
+  const series = isBloodPressure
+    ? [
+        { key: "value", label: text.systolic, color: "#0f766e" },
+        { key: "secondaryValue", label: text.diastolicShort, color: "#f59e0b" },
+      ]
+    : [{ key: "value", label: text.value, color: "#0f766e" }];
+  const values = series.flatMap(({ key }) =>
+    plottedEntries
+      .map((entry) => Number(entry[key]))
+      .filter((value) => Number.isFinite(value))
+  );
+  const dataMin = Math.min(...values);
+  const dataMax = Math.max(...values);
+  const range = Math.max(dataMax - dataMin, 1);
+  const min = Math.max(0, dataMin - range * 0.15);
+  const max = dataMax + range * 0.15;
+  const width = 760;
+  const height = 280;
+  const padding = { top: 24, right: 20, bottom: 42, left: 56 };
+  const plotWidth = width - padding.left - padding.right;
+  const plotHeight = height - padding.top - padding.bottom;
+  const xFor = (index) =>
+    padding.left +
+    (plottedEntries.length === 1
+      ? plotWidth / 2
+      : (index / (plottedEntries.length - 1)) * plotWidth);
+  const yFor = (value) =>
+    padding.top + ((max - value) / (max - min)) * plotHeight;
+  const tickValues = Array.from({ length: 4 }, (_, index) =>
+    max - ((max - min) / 3) * index
+  );
+  const formatAxisValue = (value) =>
+    Number.isInteger(value) ? String(value) : value.toFixed(1);
+  const formatAxisDate = (entry) => {
+    const date = getTimestampDate(entry.measuredAt);
+    if (!date) return "—";
+
+    return new Intl.DateTimeFormat(isEnglish ? "en-GB" : "de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+    }).format(date);
+  };
+
+  return (
+    <Box className="health-trend-chart" aria-label={text.trendTitle}>
+      <Flex className="health-trend-legend" gap="4" wrap="wrap" mb="3">
+        {series.map((item) => (
+          <Flex key={item.key} align="center" gap="2" fontSize="sm" fontWeight="600">
+            <Box className="health-trend-legend-dot" background={item.color} />
+            <Text>{item.label}</Text>
+          </Flex>
+        ))}
+        <Text color="gray.500" fontSize="sm">
+          {text.lastEntries.replace("{count}", String(plottedEntries.length))}
+        </Text>
+      </Flex>
+      <Box overflowX="auto">
+        <svg
+          className="health-trend-svg"
+          viewBox={`0 0 ${width} ${height}`}
+          role="img"
+          aria-label={`${text.trendTitle}: ${text.trendArea}`}
+        >
+          {tickValues.map((tick, index) => {
+            const y = padding.top + (index / 3) * plotHeight;
+
+            return (
+              <g key={tick}>
+                <line
+                  x1={padding.left}
+                  x2={width - padding.right}
+                  y1={y}
+                  y2={y}
+                  stroke="#d9e8e7"
+                  strokeDasharray="4 6"
+                />
+                <text
+                  x={padding.left - 10}
+                  y={y + 4}
+                  textAnchor="end"
+                  className="health-trend-axis-label"
+                >
+                  {formatAxisValue(tick)}
+                </text>
+              </g>
+            );
+          })}
+          {series.map((item) => {
+            const points = plottedEntries
+              .map((entry, index) => {
+                const value = Number(entry[item.key]);
+                return Number.isFinite(value) ? `${xFor(index)},${yFor(value)}` : null;
+              })
+              .filter(Boolean)
+              .join(" ");
+
+            return (
+              <g key={item.key}>
+                <polyline
+                  points={points}
+                  fill="none"
+                  stroke={item.color}
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                {plottedEntries.map((entry, index) => {
+                  const value = Number(entry[item.key]);
+                  if (!Number.isFinite(value)) return null;
+
+                  return (
+                    <circle
+                      key={`${item.key}-${entry.id}`}
+                      cx={xFor(index)}
+                      cy={yFor(value)}
+                      r="5"
+                      fill="#ffffff"
+                      stroke={item.color}
+                      strokeWidth="3"
+                    />
+                  );
+                })}
+              </g>
+            );
+          })}
+          {plottedEntries.map((entry, index) => (
+            <text
+              key={`date-${entry.id}`}
+              x={xFor(index)}
+              y={height - 12}
+              textAnchor="middle"
+              className="health-trend-axis-label"
+            >
+              {formatAxisDate(entry)}
+            </text>
+          ))}
+        </svg>
+      </Box>
+    </Box>
+  );
+}
+
 function HealthDiaryPage() {
   const { isEnglish } = useLanguage();
   const {
@@ -146,6 +318,13 @@ function HealthDiaryPage() {
         entriesTitle: "My entries",
         trendTitle: "Progress by area",
         trendArea: "Area to display",
+        overviewTitle: "Your health snapshot",
+        overviewHint: "A clear view of your latest saved measurements.",
+        latest: "Latest",
+        records: "{count} records",
+        lastEntries: "Last {count} measurements",
+        systolic: "Systolic",
+        diastolicShort: "Diastolic",
         exportPdf: "Download PDF",
         email: "Prepare email to doctor's practice",
         doctorEmail: "Email address of doctor's practice (optional)",
@@ -222,6 +401,13 @@ function HealthDiaryPage() {
         entriesTitle: "Meine Einträge",
         trendTitle: "Verlauf nach Bereich",
         trendArea: "Bereich anzeigen",
+        overviewTitle: "Deine Gesundheitsübersicht",
+        overviewHint: "Deine zuletzt gespeicherten Messwerte auf einen Blick.",
+        latest: "Zuletzt",
+        records: "{count} Einträge",
+        lastEntries: "Letzte {count} Messungen",
+        systolic: "Systolisch",
+        diastolicShort: "Diastolisch",
         exportPdf: "PDF herunterladen",
         email: "E-Mail an Arztpraxis vorbereiten",
         doctorEmail: "E-Mail-Adresse der Arztpraxis (optional)",
@@ -264,9 +450,20 @@ function HealthDiaryPage() {
   const selectedTrendType = availableTrendTypes.includes(trendType)
     ? trendType
     : availableTrendTypes[0];
-  const trendEntries = healthEntries
-    .filter((entry) => entry.type === selectedTrendType)
-    .slice(0, 10);
+
+  function getOverviewValue(type) {
+    const latestEntry = healthEntries.find((entry) => entry.type === type);
+    if (!latestEntry) return "—";
+
+    return latestEntry.type === "bloodPressure"
+      ? `${latestEntry.value}/${latestEntry.secondaryValue}`
+      : String(latestEntry.value);
+  }
+
+  function getOverviewUnit(type) {
+    const latestEntry = healthEntries.find((entry) => entry.type === type);
+    return latestEntry?.unit || entryTypes[type].unit;
+  }
 
   function showMessage(value, type) {
     setMessage(value);
@@ -424,6 +621,80 @@ function HealthDiaryPage() {
       yPosition
     );
     yPosition += 10;
+
+    const reportTrendType = selectedTrendType || availableTrendTypes[0];
+    const reportTrendEntries = healthEntries
+      .filter((entry) => entry.type === reportTrendType)
+      .slice(0, 8)
+      .reverse();
+
+    if (reportTrendEntries.length >= 2) {
+      const chartX = margin;
+      const chartY = yPosition;
+      const chartWidth = textWidth;
+      const chartHeight = 58;
+      const chartLeft = chartX + 10;
+      const chartRight = chartX + chartWidth - 10;
+      const chartTop = chartY + 20;
+      const chartBottom = chartY + chartHeight - 12;
+      const chartValues = reportTrendEntries
+        .map((entry) => Number(entry.value))
+        .filter((value) => Number.isFinite(value));
+      const chartMin = Math.min(...chartValues);
+      const chartMax = Math.max(...chartValues);
+      const chartRange = Math.max(chartMax - chartMin, 1);
+      const chartValueMin = Math.max(0, chartMin - chartRange * 0.15);
+      const chartValueMax = chartMax + chartRange * 0.15;
+      const chartXFor = (index) =>
+        chartLeft +
+        (index / (reportTrendEntries.length - 1)) * (chartRight - chartLeft);
+      const chartYFor = (value) =>
+        chartTop +
+        ((chartValueMax - value) / (chartValueMax - chartValueMin)) *
+          (chartBottom - chartTop);
+
+      pdf.setFillColor(240, 253, 250);
+      pdf.setDrawColor(190, 226, 222);
+      pdf.roundedRect(chartX, chartY, chartWidth, chartHeight, 4, 4, "FD");
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(10);
+      pdf.setTextColor(23, 63, 66);
+      pdf.text(
+        `${text.trendTitle}: ${getTrendLabel(reportTrendType)}${reportTrendType === "bloodPressure" ? ` (${text.systolic})` : ""}`,
+        chartX + 10,
+        chartY + 13
+      );
+      pdf.setDrawColor(15, 118, 110);
+      pdf.setLineWidth(0.8);
+      reportTrendEntries.forEach((entry, index) => {
+        const value = Number(entry.value);
+        if (!Number.isFinite(value) || index === 0) return;
+
+        const previousValue = Number(reportTrendEntries[index - 1].value);
+        if (!Number.isFinite(previousValue)) return;
+
+        pdf.line(
+          chartXFor(index - 1),
+          chartYFor(previousValue),
+          chartXFor(index),
+          chartYFor(value)
+        );
+      });
+      reportTrendEntries.forEach((entry, index) => {
+        const value = Number(entry.value);
+        if (!Number.isFinite(value)) return;
+
+        pdf.setFillColor(255, 255, 255);
+        pdf.setDrawColor(15, 118, 110);
+        pdf.circle(chartXFor(index), chartYFor(value), 1.5, "FD");
+      });
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(7);
+      pdf.setTextColor(113, 128, 150);
+      pdf.text(formatEntryDate(reportTrendEntries[0].measuredAt, isEnglish).slice(0, 10), chartLeft, chartY + chartHeight - 4);
+      pdf.text(formatEntryDate(reportTrendEntries[reportTrendEntries.length - 1].measuredAt, isEnglish).slice(0, 10), chartRight, chartY + chartHeight - 4, { align: "right" });
+      yPosition += chartHeight + 10;
+    }
 
     getReportLines()
       .flatMap((line) => pdf.splitTextToSize(line, textWidth))
@@ -942,40 +1213,76 @@ function HealthDiaryPage() {
 
       <Box>
         {availableTrendTypes.length > 0 && (
-          <Box
-            className="health-diary-trend"
-            borderWidth="1px"
-            borderRadius="lg"
-            background="white"
-            padding={{ base: "5", md: "6" }}
-            mb="8"
-          >
-            <Heading size="md" color="teal.900" mb="4">
-              {text.trendTitle}
-            </Heading>
-            <Text as="label" htmlFor="health-trend-type" display="block" mb="2">
-              {text.trendArea}
-            </Text>
-            <select
-              id="health-trend-type"
-              value={selectedTrendType}
-              onChange={(event) => setTrendType(event.target.value)}
-              style={{ width: "100%", minHeight: "44px", padding: "8px", borderRadius: "6px" }}
-            >
-              {availableTrendTypes.map((type) => (
-                <option key={type} value={type}>
-                  {getTrendLabel(type)}
-                </option>
-              ))}
-            </select>
-            <Stack gap="3" mt="5">
-              {trendEntries.map((entry) => (
-                <Flex key={entry.id} justify="space-between" gap="4" wrap="wrap">
-                  <Text>{formatEntryDate(entry.measuredAt, isEnglish)}</Text>
-                  <Text fontWeight="700">{getDisplayValue(entry)}</Text>
-                </Flex>
-              ))}
-            </Stack>
+          <Box className="health-diary-overview" mb="8">
+            <Flex className="health-overview-heading" align="end" justify="space-between" gap="4" wrap="wrap" mb="5">
+              <Box>
+                <Heading size="lg" color="teal.900">
+                  {text.overviewTitle}
+                </Heading>
+                <Text mt="2" color="gray.600">
+                  {text.overviewHint}
+                </Text>
+              </Box>
+              <Box className="health-overview-accent" aria-hidden="true" />
+            </Flex>
+
+            <SimpleGrid className="health-overview-grid" columns={{ base: 1, sm: 2, lg: 4 }} gap="4" mb="5">
+              {availableTrendTypes.map((type) => {
+                const visual = metricVisuals[type];
+                const count = healthEntries.filter((entry) => entry.type === type).length;
+
+                return (
+                  <Box key={type} className="health-metric-card" borderTopColor={visual.color}>
+                    <Flex align="center" justify="space-between" gap="3">
+                      <Text className="health-metric-icon" color={visual.color}>
+                        {visual.icon}
+                      </Text>
+                      <Text className="health-metric-count">
+                        {text.records.replace("{count}", String(count))}
+                      </Text>
+                    </Flex>
+                    <Text className="health-metric-label">{getTrendLabel(type)}</Text>
+                    <Flex align="baseline" gap="2" mt="2">
+                      <Text className="health-metric-value">{getOverviewValue(type)}</Text>
+                      <Text className="health-metric-unit">{getOverviewUnit(type)}</Text>
+                    </Flex>
+                    <Text className="health-metric-latest" mt="2">{text.latest}</Text>
+                  </Box>
+                );
+              })}
+            </SimpleGrid>
+
+            <Box className="health-trend-panel">
+              <Flex align={{ base: "stretch", md: "center" }} justify="space-between" gap="4" direction={{ base: "column", md: "row" }} mb="4">
+                <Box>
+                  <Heading size="md" color="teal.900">
+                    {text.trendTitle}
+                  </Heading>
+                  <Text mt="1" color="gray.600" fontSize="sm">
+                    {text.trendArea}
+                  </Text>
+                </Box>
+                <select
+                  id="health-trend-type"
+                  value={selectedTrendType || ""}
+                  onChange={(event) => setTrendType(event.target.value)}
+                  aria-label={text.trendArea}
+                  className="health-trend-select"
+                >
+                  {availableTrendTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {getTrendLabel(type)}
+                    </option>
+                  ))}
+                </select>
+              </Flex>
+              <HealthTrendChart
+                entries={healthEntries}
+                type={selectedTrendType}
+                isEnglish={isEnglish}
+                text={text}
+              />
+            </Box>
           </Box>
         )}
 

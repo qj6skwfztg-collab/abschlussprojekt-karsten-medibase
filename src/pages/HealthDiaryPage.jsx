@@ -1108,7 +1108,7 @@ function HealthDiaryPage() {
             onClick={handleEmail}
             disabled={healthEntries.length === 0 || !doctorEmail.trim()}
           >
-            🩺 {doctorEmail.trim() ? text.email : (isEnglish ? "Enter doctor's email first" : "Arztpraxis-E-Mail zuerst eintragen")}
+            🩺 {doctorEmail.trim() ? text.email : (isEnglish ? "Enter practice email" : "Arztpraxis-E-Mail eintragen")}
           </Button>
           <Button
             type="button"
@@ -1439,6 +1439,7 @@ function HealthDiaryPage() {
           </Box>
         )}
 
+        <Box className="health-diary-entries">
         <Heading size="md" color="teal.900" mb="5">
           {text.entriesTitle}
         </Heading>
@@ -1498,6 +1499,7 @@ function HealthDiaryPage() {
             ))}
           </Stack>
         )}
+        </Box>
       </Box>
       </Box>
     </Box>

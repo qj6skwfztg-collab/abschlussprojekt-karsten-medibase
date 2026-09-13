@@ -76,12 +76,16 @@ function Header({ onMenuStateChange }) {
         marginX="auto"
       >
         <Flex
+          as={Link}
+          to="/"
+          onClick={closeMenu}
           className="header-brand"
           align="center"
           justify="center"
           gap="3"
           flexShrink="0"
           width={{ base: "100%", md: "auto" }}
+          aria-label={isEnglish ? "Curaelis home page" : "Curaelis Startseite"}
         >
           <Image
             className="header-brand-icon"
@@ -203,10 +207,6 @@ function Header({ onMenuStateChange }) {
             >
               {isHomePage && (
                 <>
-                  <Link className="header-link" to="/installieren" onClick={closeMenu} {...getNavigationLinkProps("/installieren")}>
-                    {isEnglish ? "Install Curaelis" : "Curaelis installieren"}
-                  </Link>
-
                   <Link className="header-link" to="/ueber" onClick={closeMenu} {...getNavigationLinkProps("/ueber")}>
                     {isEnglish ? "About Curaelis" : "Über Curaelis"}
                   </Link>

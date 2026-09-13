@@ -10,7 +10,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import heroImage from "../assets/medibase-neu.png";
 import vitruvianImage from "../assets/medibase-vitruvian.png";
 import founderCharacter from "../assets/curaelis-karsten-anime.png";
 import SafetyNotice from "../components/SafetyNotice";
@@ -54,6 +53,55 @@ function FeatureIcon({ symbol, background }) {
       lineHeight="1"
     >
       {symbol}
+    </Box>
+  );
+}
+
+function SafetyVisual({ isEnglish }) {
+  return (
+    <Box
+      className="home-safety-visual"
+      role="region"
+      aria-label={isEnglish ? "Curaelis safety centre" : "Curaelis Sicherheitszentrale"}
+    >
+      <Box className="home-safety-core" aria-hidden="true">
+        <Box className="home-safety-ring home-safety-ring-one" />
+        <Box className="home-safety-ring home-safety-ring-two" />
+        <Box className="home-safety-shield">
+          <Text as="span">✓</Text>
+        </Box>
+        <Box className="home-safety-core-label">CURAELIS</Box>
+      </Box>
+
+      <Box className="home-safety-copy">
+        <Text className="home-safety-kicker">
+          {isEnglish ? "CURAELIS · SAFETY" : "CURAELIS · SICHERHEIT"}
+        </Text>
+        <Heading size="lg" color="teal.950">
+          {isEnglish ? "Ready when it matters." : "Bereit, wenn es darauf ankommt."}
+        </Heading>
+        <Text marginTop="3" color="gray.700" maxWidth="520px">
+          {isEnglish
+            ? "Keep your emergency pass and trusted contacts close at hand — clearly organised in one place."
+            : "Notfallpass und vertraute Kontakte griffbereit – klar geordnet an einem Ort."}
+        </Text>
+
+        <Flex className="home-safety-links" gap="3" marginTop="5" wrap="wrap">
+          <Link className="home-safety-chip" to="/notfall#notfallpass">
+            🪪 {isEnglish ? "Emergency pass" : "Notfallpass"}
+          </Link>
+          <Link className="home-safety-chip" to="/konto#emergency-contacts">
+            👥 {isEnglish ? "Trusted contacts" : "Notfallkontakte"}
+          </Link>
+        </Flex>
+
+        <Flex className="home-safety-status" align="center" gap="3" marginTop="6">
+          <Box className="home-safety-status-dot" aria-hidden="true" />
+          <Text fontSize="sm" color="teal.900" fontWeight="700">
+            {isEnglish ? "Your safety information stays within reach" : "Deine Sicherheitsinformationen bleiben griffbereit"}
+          </Text>
+        </Flex>
+      </Box>
     </Box>
   );
 }
@@ -331,17 +379,7 @@ function HomePage() {
           </Box>
         </Box>
 
-        <Image
-          className="home-hero-image"
-          src={heroImage}
-          alt={isEnglish ? "Illustration about finding medication information" : "Illustration zur Suche nach Medikamenteninformationen"}
-          width="100%"
-          maxHeight="500px"
-          objectFit="cover"
-          borderRadius="2xl"
-          marginTop="10"
-          boxShadow="lg"
-        />
+        <SafetyVisual isEnglish={isEnglish} />
 
         <SimpleGrid
           columns={{ base: 1, md: 3 }}

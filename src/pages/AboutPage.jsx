@@ -1,9 +1,12 @@
-import { Box, Heading, List, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, List, Text } from "@chakra-ui/react";
+import { Capacitor } from "@capacitor/core";
+import { Link } from "react-router-dom";
 import SafetyNotice from "../components/SafetyNotice";
 import useLanguage from "../hooks/useLanguage";
 
 function AboutPage() {
   const { isEnglish } = useLanguage();
+  const isNativeApp = Capacitor.isNativePlatform();
   return (
     <Box
       padding={{ base: "6", md: "10" }}
@@ -17,6 +20,29 @@ function AboutPage() {
           ? "Curaelis brings medication information, personal medication plans, intake reminders, health measurements and emergency details together in one calm, clearly structured place. The goal is to make everyday health organisation easier to understand and easier to manage."
           : "Curaelis verbindet verständliche Medikamenteninformationen, persönliche Medikamentenpläne, Einnahmeerinnerungen, Gesundheitsmesswerte und wichtige Notfalldaten an einem ruhigen, klar strukturierten Ort. So wird die Organisation im Gesundheitsalltag verständlicher und leichter handhabbar."}
       </Text>
+
+      {!isNativeApp && (
+        <Box className="about-install-card">
+          <Heading size="md">
+            {isEnglish ? "Use Curaelis like an app" : "Curaelis wie eine App nutzen"}
+          </Heading>
+          <Text marginTop="2">
+            {isEnglish
+              ? "Install the Curaelis web app on your device for quick access from the home screen."
+              : "Installiere die Curaelis-Web-App auf deinem Gerät und öffne sie schnell über den Startbildschirm."}
+          </Text>
+          <Button
+            as={Link}
+            to="/installieren"
+            marginTop="4"
+            size="lg"
+            colorPalette="teal"
+            className="about-install-button"
+          >
+            📱 Curaelis installieren
+          </Button>
+        </Box>
+      )}
 
       <Box as="details" marginTop="5" className="about-founder-details">
         <Box as="summary" cursor="pointer" color="teal.800" fontWeight="700">

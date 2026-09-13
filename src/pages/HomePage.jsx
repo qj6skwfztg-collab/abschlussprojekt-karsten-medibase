@@ -230,6 +230,7 @@ function HomePage() {
           </Box>
 
           <Box
+            className="home-action-panel"
             marginTop="7"
             marginLeft="0"
             width="100%"
@@ -253,6 +254,7 @@ function HomePage() {
             >
               <Button
                 asChild
+                className="home-action-button"
                 background="teal.700"
                 color="white"
                 minHeight="76px"
@@ -276,6 +278,7 @@ function HomePage() {
 
               <Button
                 asChild
+                className="home-action-button"
                 variant="outline"
                 borderWidth="2px"
                 minHeight="76px"
@@ -302,6 +305,7 @@ function HomePage() {
 
               <Button
                 asChild
+                className="home-action-button"
                 background="red.600"
                 color="white"
                 minHeight="76px"
@@ -327,6 +331,7 @@ function HomePage() {
         </Box>
 
         <Image
+          className="home-hero-image"
           src={heroImage}
           alt={isEnglish ? "Illustration about finding medication information" : "Illustration zur Suche nach Medikamenteninformationen"}
           width="100%"

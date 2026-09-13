@@ -84,12 +84,13 @@ function Header({ onMenuStateChange }) {
           width={{ base: "100%", md: "auto" }}
         >
           <Image
+            className="header-brand-icon"
             src="/curaelis-icon.svg"
             alt=""
             aria-hidden="true"
-            width={{ base: "9", md: "10" }}
-            height={{ base: "9", md: "10" }}
-            borderRadius="lg"
+            width={{ base: "11", md: "12" }}
+            height={{ base: "11", md: "12" }}
+            borderRadius="18px"
           />
 
           <Heading size="lg" color="white">
@@ -145,6 +146,23 @@ function Header({ onMenuStateChange }) {
             </Link>
           )}
 
+          {user && (
+            <Box className="nav-group nav-group-personal">
+              <Text className="nav-group-label">
+                {isEnglish ? "Personal data" : "Meine persönlichen Daten"}
+              </Text>
+              <Flex className="nav-group-links" gap="2" align="center">
+                <Link className="header-link header-account-link" to="/konto" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
+                  {isEnglish ? "My account" : "Mein Konto"}
+                </Link>
+
+                <Link className="header-link header-diary-link" to="/gesundheitstagebuch" onClick={closeMenu} {...getNavigationLinkProps("/gesundheitstagebuch")}>
+                  {isEnglish ? "Health diary" : "Gesundheitstagebuch"}
+                </Link>
+              </Flex>
+            </Box>
+          )}
+
           <Box className="nav-group nav-group-medications">
               <Text className="nav-group-label">
                 {isEnglish ? "Medications" : "Medikamente"}
@@ -167,23 +185,6 @@ function Header({ onMenuStateChange }) {
                 )}
               </Flex>
           </Box>
-
-          {user && (
-            <Box className="nav-group nav-group-personal">
-              <Text className="nav-group-label">
-                {isEnglish ? "Personal data" : "Meine persönlichen Daten"}
-              </Text>
-              <Flex className="nav-group-links" gap="2" align="center">
-                <Link className="header-link" to="/konto" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
-                  {isEnglish ? "My account" : "Mein Konto"}
-                </Link>
-
-                <Link className="header-link" to="/gesundheitstagebuch" onClick={closeMenu} {...getNavigationLinkProps("/gesundheitstagebuch")}>
-                  {isEnglish ? "Health diary" : "Gesundheitstagebuch"}
-                </Link>
-              </Flex>
-            </Box>
-          )}
 
           <Box className="nav-group-actions">
           <Box className="nav-group nav-group-help">

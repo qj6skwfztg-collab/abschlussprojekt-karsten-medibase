@@ -9,11 +9,15 @@ import { Link } from "react-router-dom";
 import {
   Box,
   Button,
+  Flex,
   Heading,
   SimpleGrid,
   Stack,
   Text,
 } from "@chakra-ui/react";
+
+const OFFLINE_PASS_STORAGE_KEY = "curaelis-emergency-pass-offline";
+const OFFLINE_PASS_ENABLED_KEY = "curaelis-emergency-pass-offline-enabled";
 
 function formatDate(timestamp, isEnglish) {
   if (!timestamp?.toDate) {
@@ -60,6 +64,23 @@ function EmergencyPass({ selectedCountry }) {
   );
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [shareOptions, setShareOptions] = useState({
+    medications: true,
+    health: true,
+    profile: false,
+  });
+  const [offlineEnabled, setOfflineEnabled] = useState(
+    () => localStorage.getItem(OFFLINE_PASS_ENABLED_KEY) === "true"
+  );
+  const [offlineSnapshot, setOfflineSnapshot] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(OFFLINE_PASS_STORAGE_KEY) || "null");
+    } catch {
+      return null;
+    }
+  });
+  const [isOnline, setIsOnline] = useState(() => navigator.onLine);
 
   const text = isEnglish
     ? {
@@ -88,6 +109,24 @@ function EmergencyPass({ selectedCountry }) {
         profile: "Important health details",
         noProfile: "No additional emergency details saved.",
         openAccount: "Add details in my account",
+        sharePass: "Share selected pass information",
+        sharePassHint: "Choose exactly which information you want to share. Contacts are not included by default.",
+        shareMedications: "My medications",
+        shareHealth: "Recent health measurements",
+        shareProfile: "Important health details",
+        shareNow: "Review and share",
+        cancelShare: "Cancel",
+        shareUnsupported: "Sharing is not available here. You can use the email app that opens next and check the text before sending.",
+        shareReady: "The share menu was opened. Check the selected information before sending.",
+        offlineTitle: "Offline emergency view",
+        offlineDescription: "Keep a read-only copy of your pass on this device for moments without an internet connection.",
+        offlineEnable: "Keep an offline copy on this device",
+        offlineEnabled: "Offline copy is enabled",
+        offlineDelete: "Delete offline copy",
+        offlineSaved: "The offline copy was updated.",
+        lastUpdated: "Last updated",
+        completeness: "Pass completeness",
+        completenessHint: "Add the missing sections in your account.",
         allergies: "Allergies",
         conditions: "Important conditions",
         bloodGroup: "Blood group",
@@ -121,6 +160,24 @@ function EmergencyPass({ selectedCountry }) {
         profile: "Wichtige Gesundheitsangaben",
         noProfile: "Keine zusätzlichen Notfallangaben gespeichert.",
         openAccount: "Angaben im Konto ergänzen",
+        sharePass: "Ausgewählte Passdaten teilen",
+        sharePassHint: "Wähle genau aus, welche Informationen du teilen möchtest. Kontakte werden standardmäßig nicht mitgeteilt.",
+        shareMedications: "Meine Medikamente",
+        shareHealth: "Letzte Gesundheitsmesswerte",
+        shareProfile: "Wichtige Gesundheitsangaben",
+        shareNow: "Prüfen und teilen",
+        cancelShare: "Abbrechen",
+        shareUnsupported: "Das Teilen ist hier nicht verfügbar. Die Mail-App wird geöffnet; prüfe den Text vor dem Senden.",
+        shareReady: "Das Teilen-Menü wurde geöffnet. Prüfe die ausgewählten Informationen vor dem Senden.",
+        offlineTitle: "Offline-Notfallansicht",
+        offlineDescription: "Bewahre eine schreibgeschützte Kopie deines Passes auf diesem Gerät auf, falls kein Internet verfügbar ist.",
+        offlineEnable: "Offline-Kopie auf diesem Gerät behalten",
+        offlineEnabled: "Offline-Kopie ist aktiviert",
+        offlineDelete: "Offline-Kopie löschen",
+        offlineSaved: "Die Offline-Kopie wurde aktualisiert.",
+        lastUpdated: "Zuletzt aktualisiert",
+        completeness: "Vollständigkeit des Passes",
+        completenessHint: "Ergänze die fehlenden Bereiche in deinem Konto.",
         allergies: "Allergien",
         conditions: "Wichtige Erkrankungen",
         bloodGroup: "Blutgruppe",
@@ -201,6 +258,34 @@ function EmergencyPass({ selectedCountry }) {
   }, [user]);
 
   useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!offlineEnabled || !user?.emailVerified) {
+      return;
+    }
+
+    const nextSnapshot = {
+      savedAt: new Date().toISOString(),
+      medications,
+      healthEntries,
+      profile,
+    };
+
+    localStorage.setItem(OFFLINE_PASS_STORAGE_KEY, JSON.stringify(nextSnapshot));
+  }, [offlineEnabled, user, medications, healthEntries, profile]);
+
+  useEffect(() => {
     if (!user?.emailVerified || !isPassVisible) {
       return;
     }
@@ -218,9 +303,142 @@ function EmergencyPass({ selectedCountry }) {
     profile,
   ]);
 
-  const hasEmergencyProfile = Object.values(profile).some(
-    (value) => typeof value === "string" && value.trim()
+  const passData = !isOnline && offlineSnapshot
+    ? offlineSnapshot
+    : { medications, healthEntries, profile };
+  const passMedications = passData.medications || [];
+  const passHealthEntries = passData.healthEntries || [];
+  const passProfile = passData.profile || {};
+  const hasEmergencyProfile = Object.entries(passProfile).some(
+    ([key, value]) => key !== "updatedAt" && typeof value === "string" && value.trim()
   );
+  const completenessItems = [
+    passMedications.length > 0,
+    passHealthEntries.length > 0,
+    contacts.length > 0,
+    hasEmergencyProfile,
+  ];
+  const completenessPercent = Math.round(
+    (completenessItems.filter(Boolean).length / completenessItems.length) * 100
+  );
+
+  function getPassLastUpdated() {
+    const dates = [
+      passProfile.updatedAt,
+      ...passMedications.map((medication) => medication.createdAt),
+      ...passHealthEntries.map((entry) => entry.measuredAt),
+      ...contacts.map((contact) => contact.createdAt),
+    ]
+      .map((value) => value?.toDate?.() || (value ? new Date(value) : null))
+      .filter((date) => date && !Number.isNaN(date.getTime()));
+
+    if (dates.length === 0) {
+      return isEnglish ? "Not yet available" : "Noch nicht vorhanden";
+    }
+
+    return new Intl.DateTimeFormat(isEnglish ? "en-GB" : "de-DE", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(new Date(Math.max(...dates.map((date) => date.getTime()))));
+  }
+
+  function getShareText() {
+    const lines = [
+      isEnglish ? "Curaelis emergency pass" : "Curaelis-Notfallpass",
+      "",
+    ];
+
+    if (shareOptions.medications) {
+      lines.push(isEnglish ? "My medications:" : "Meine Medikamente:");
+      passMedications.forEach((medication) => {
+        lines.push(`• ${medication.name} – ${medication.dosage}`);
+      });
+    }
+
+    if (shareOptions.health) {
+      lines.push(isEnglish ? "Recent health measurements:" : "Letzte Gesundheitsmesswerte:");
+      passHealthEntries.slice(0, 5).forEach((entry) => {
+        lines.push(`• ${getHealthLabel(entry.type, isEnglish)}: ${getHealthValue(entry)} (${formatDate(entry.measuredAt, isEnglish)})`);
+      });
+    }
+
+    if (shareOptions.profile) {
+      lines.push(isEnglish ? "Important health details:" : "Wichtige Gesundheitsangaben:");
+      [
+        [text.allergies, passProfile.allergies],
+        [text.conditions, passProfile.conditions],
+        [text.bloodGroup, passProfile.bloodGroup],
+        [text.specialNotes, passProfile.specialNotes],
+      ].forEach(([label, value]) => {
+        if (value) lines.push(`• ${label}: ${value}`);
+      });
+    }
+
+    lines.push("", isEnglish ? "Shared manually from Curaelis." : "Manuell aus Curaelis geteilt.");
+    return lines.join("\n");
+  }
+
+  async function handleSharePass() {
+    if (!shareOptions.medications && !shareOptions.health && !shareOptions.profile) {
+      setMessage(isEnglish ? "Select at least one section first." : "Wähle zuerst mindestens einen Bereich aus.");
+      setMessageType("error");
+      return;
+    }
+
+    const shareText = getShareText();
+    setIsShareOpen(false);
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: text.title,
+          text: shareText,
+        });
+        setMessage(text.shareReady);
+        setMessageType("success");
+        return;
+      }
+
+      window.location.assign(`mailto:?subject=${encodeURIComponent(text.title)}&body=${encodeURIComponent(shareText)}`);
+      setMessage(text.shareUnsupported);
+      setMessageType("success");
+    } catch (error) {
+      if (error?.name !== "AbortError") {
+        setMessage(text.shareUnsupported);
+        setMessageType("error");
+      }
+    }
+  }
+
+  function handleOfflineChange(event) {
+    const shouldEnable = event.target.checked;
+    setOfflineEnabled(shouldEnable);
+
+    if (shouldEnable) {
+      localStorage.setItem(OFFLINE_PASS_ENABLED_KEY, "true");
+      const nextSnapshot = {
+        savedAt: new Date().toISOString(),
+        medications,
+        healthEntries,
+        profile,
+      };
+      localStorage.setItem(OFFLINE_PASS_STORAGE_KEY, JSON.stringify(nextSnapshot));
+      setOfflineSnapshot(nextSnapshot);
+      setMessage(text.offlineSaved);
+      setMessageType("success");
+    } else {
+      localStorage.removeItem(OFFLINE_PASS_ENABLED_KEY);
+      localStorage.removeItem(OFFLINE_PASS_STORAGE_KEY);
+      setOfflineSnapshot(null);
+    }
+  }
+
+  function deleteOfflineCopy() {
+    localStorage.removeItem(OFFLINE_PASS_STORAGE_KEY);
+    setOfflineSnapshot(null);
+    setMessageType("success");
+    setMessage(isEnglish ? "The offline copy was deleted." : "Die Offline-Kopie wurde gelöscht.");
+  }
 
   function prepareContactMessage() {
     if (contacts.length === 0) {
@@ -270,6 +488,24 @@ const emergencyText = isEnglish
         🔒 {text.privacy}
       </Text>
 
+      <Flex className="emergency-pass-status-row" gap="3" wrap="wrap" marginBottom="5">
+        <Box className="emergency-pass-status-card">
+          <Text className="emergency-pass-status-label">{text.completeness}</Text>
+          <Text className="emergency-pass-status-value">{completenessPercent}%</Text>
+        </Box>
+        <Box className="emergency-pass-status-card">
+          <Text className="emergency-pass-status-label">{text.lastUpdated}</Text>
+          <Text className="emergency-pass-status-value emergency-pass-status-date">{getPassLastUpdated()}</Text>
+        </Box>
+      </Flex>
+
+      {!isOnline && offlineSnapshot && (
+        <Box className="emergency-pass-offline-banner" role="status">
+          <Text fontWeight="800">{text.offlineTitle}</Text>
+          <Text fontSize="sm" mt="1">{text.offlineDescription}</Text>
+        </Box>
+      )}
+
       {!user || !user.emailVerified ? (
         <Text color="gray.700">{text.signIn}</Text>
       ) : (
@@ -288,19 +524,67 @@ const emergencyText = isEnglish
             {isPassVisible ? text.hide : text.show}
           </Button>
 
+          <Box className="emergency-pass-offline-settings" marginTop="4">
+            <label className="emergency-pass-checkbox">
+              <input
+                type="checkbox"
+                checked={offlineEnabled}
+                onChange={handleOfflineChange}
+              />
+              <span>{offlineEnabled ? text.offlineEnabled : text.offlineEnable}</span>
+            </label>
+            {offlineEnabled && offlineSnapshot && (
+              <Button type="button" variant="ghost" size="sm" onClick={deleteOfflineCopy}>
+                {text.offlineDelete}
+              </Button>
+            )}
+          </Box>
+
           {isPassVisible && (
             <Box marginTop="6">
+              <Box className="emergency-pass-share-panel">
+                <Flex align="center" justify="space-between" gap="4" wrap="wrap">
+                  <Box>
+                    <Heading size="md" color="teal.900">{text.sharePass}</Heading>
+                    <Text mt="1" fontSize="sm" color="gray.600">{text.sharePassHint}</Text>
+                  </Box>
+                  <Button type="button" colorPalette="teal" onClick={() => setIsShareOpen((value) => !value)}>
+                    {isShareOpen ? text.cancelShare : text.shareNow}
+                  </Button>
+                </Flex>
+                {isShareOpen && (
+                  <Box marginTop="4">
+                    {[
+                      ["medications", text.shareMedications],
+                      ["health", text.shareHealth],
+                      ["profile", text.shareProfile],
+                    ].map(([name, label]) => (
+                      <label key={name} className="emergency-pass-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={shareOptions[name]}
+                          onChange={(event) => setShareOptions((previous) => ({ ...previous, [name]: event.target.checked }))}
+                        />
+                        <span>{label}</span>
+                      </label>
+                    ))}
+                    <Button type="button" marginTop="3" colorPalette="teal" onClick={handleSharePass}>
+                      {text.shareNow}
+                    </Button>
+                  </Box>
+                )}
+              </Box>
               <SimpleGrid columns={{ base: 1, md: 3 }} gap="5">
                 <Box borderWidth="1px" borderRadius="lg" padding="5">
                   <Heading size="md" color="teal.900" marginBottom="3">
                     💊 {text.medications}
                   </Heading>
 
-                  {medications.length === 0 ? (
+                  {passMedications.length === 0 ? (
                     <Text>{text.noMedications}</Text>
                   ) : (
                     <Stack gap="3">
-                      {medications.map((medication) => (
+                      {passMedications.map((medication) => (
                         <Box key={medication.id}>
                           <Text fontWeight="700">{medication.name}</Text>
                           <Text>{medication.dosage}</Text>
@@ -337,7 +621,7 @@ const emergencyText = isEnglish
                     📈 {text.health}
                   </Heading>
 
-                  {healthEntries.length === 0 ? (
+                  {passHealthEntries.length === 0 ? (
                     <>
                       <Text>{text.noHealth}</Text>
 
@@ -367,7 +651,7 @@ const emergencyText = isEnglish
                     </>
                   ) : (
                     <Stack gap="3">
-                      {healthEntries.map((entry) => (
+                      {passHealthEntries.map((entry) => (
                         <Box key={entry.id}>
                           <Text fontWeight="700">
                             {entry.type === "symptom"
@@ -460,31 +744,31 @@ const emergencyText = isEnglish
                   </>
                 ) : (
                   <SimpleGrid columns={{ base: 1, md: 2 }} gap="4">
-                    {profile.allergies && (
+                    {passProfile.allergies && (
                       <Box>
                         <Text fontWeight="700">{text.allergies}</Text>
-                        <Text>{profile.allergies}</Text>
+                        <Text>{passProfile.allergies}</Text>
                       </Box>
                     )}
 
-                    {profile.conditions && (
+                    {passProfile.conditions && (
                       <Box>
                         <Text fontWeight="700">{text.conditions}</Text>
-                        <Text>{profile.conditions}</Text>
+                        <Text>{passProfile.conditions}</Text>
                       </Box>
                     )}
 
-                    {profile.bloodGroup && (
+                    {passProfile.bloodGroup && (
                       <Box>
                         <Text fontWeight="700">{text.bloodGroup}</Text>
-                        <Text>{profile.bloodGroup}</Text>
+                        <Text>{passProfile.bloodGroup}</Text>
                       </Box>
                     )}
 
-                    {profile.specialNotes && (
+                    {passProfile.specialNotes && (
                       <Box>
                         <Text fontWeight="700">{text.specialNotes}</Text>
-                        <Text>{profile.specialNotes}</Text>
+                        <Text>{passProfile.specialNotes}</Text>
                       </Box>
                     )}
                   </SimpleGrid>

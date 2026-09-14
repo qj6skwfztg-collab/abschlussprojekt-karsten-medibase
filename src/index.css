@@ -326,6 +326,188 @@ header .accessibility-buttons button {
   scroll-margin-top: 24px;
 }
 
+.health-report-options {
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #f7fbff 0%, #f0fdfa 100%);
+  border: 1px solid #b7ded9;
+  border-radius: 18px;
+}
+
+.health-report-options-title {
+  color: #173f42;
+  font-weight: 800;
+}
+
+.health-report-option,
+.emergency-pass-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: #234e52;
+  font-weight: 700;
+  border: 1px solid #9ed4d0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+}
+
+.health-report-option input,
+.emergency-pass-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: #0f766e;
+}
+
+.health-timeline {
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(145deg, #ffffff 0%, #f7fbff 100%);
+  border: 2px solid #b7ded9;
+  border-radius: 24px;
+  box-shadow: 0 10px 26px rgba(49, 151, 149, 0.08);
+}
+
+.health-timeline-count {
+  padding: 7px 12px;
+  color: #285e61;
+  background: #e6fffa;
+  border: 1px solid #9ed4d0;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.health-timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 16px;
+  min-height: 96px;
+}
+
+.health-timeline-item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 42px;
+  bottom: 0;
+  left: 21px;
+  width: 2px;
+  background: #cde7e4;
+}
+
+.health-timeline-marker {
+  z-index: 1;
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 2px solid;
+  border-radius: 16px;
+  box-shadow: 0 5px 14px rgba(45, 55, 72, 0.08);
+  font-size: 1.15rem;
+}
+
+.health-timeline-content {
+  padding-bottom: 22px;
+}
+
+.health-timeline-kind {
+  color: #718096;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.health-timeline-date {
+  color: #718096;
+  font-size: 0.82rem;
+}
+
+.health-timeline-title {
+  margin-top: 4px;
+  color: #173f42;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.health-timeline-value {
+  margin-top: 2px;
+  color: #285e61;
+  font-weight: 700;
+}
+
+.health-timeline-context {
+  margin-top: 3px;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.emergency-pass-status-row {
+  align-items: stretch;
+}
+
+.emergency-pass-status-card {
+  min-width: 190px;
+  padding: 13px 16px;
+  background: #f7fbff;
+  border: 1px solid #b7ded9;
+  border-radius: 16px;
+}
+
+.emergency-pass-status-label {
+  color: #718096;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.emergency-pass-status-value {
+  margin-top: 4px;
+  color: #173f42;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.emergency-pass-status-date {
+  font-size: 0.9rem;
+}
+
+.emergency-pass-offline-banner,
+.emergency-pass-share-panel,
+.emergency-pass-offline-settings {
+  padding: 16px 18px;
+  border-radius: 18px;
+}
+
+.emergency-pass-offline-banner {
+  margin-bottom: 16px;
+  background: #fffaf0;
+  border: 1px solid #f6ad55;
+  color: #7b341e;
+}
+
+.emergency-pass-offline-settings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: #f7fbff;
+  border: 1px solid #b7ded9;
+}
+
+.emergency-pass-share-panel {
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #f0fdfa 0%, #ebf8ff 100%);
+  border: 1px solid #9ed4d0;
+}
+
 @media (max-width: 767px) {
   main#main-content {
     padding-bottom: 92px;
@@ -1137,6 +1319,31 @@ header .accessibility-buttons button {
   .quick-search-modal {
     padding: 22px;
     border-radius: 26px;
+  }
+
+  .health-timeline {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .health-timeline-item {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .health-timeline-marker {
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+  }
+
+  .health-timeline-item:not(:last-child)::before {
+    left: 18px;
+  }
+
+  .emergency-pass-status-card {
+    min-width: 0;
+    flex: 1 1 140px;
   }
 }
 

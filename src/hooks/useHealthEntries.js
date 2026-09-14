@@ -88,6 +88,7 @@ function useHealthEntries() {
       unit: entry.unit,
       context: entry.context,
       notes: entry.notes.trim(),
+      medicationId: entry.medicationId || "",
       measuredAt: Timestamp.fromDate(entry.measuredAt),
       createdAt: serverTimestamp(),
     });
@@ -121,6 +122,7 @@ function useHealthEntries() {
         unit: entry.unit,
         context: entry.context,
         notes: entry.notes.trim(),
+        medicationId: entry.medicationId || "",
         measuredAt: Timestamp.fromDate(entry.measuredAt),
       }
     );

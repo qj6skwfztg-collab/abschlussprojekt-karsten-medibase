@@ -12,7 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import useHealthEntries from "../hooks/useHealthEntries";
+import useUserMedications from "../hooks/useUserMedications";
+import useEmergencyProfile from "../hooks/useEmergencyProfile";
 import useLanguage from "../hooks/useLanguage";
+import HealthTimeline from "../components/HealthTimeline";
 
 const entryTypes = {
   bloodPressure: {
@@ -66,6 +69,7 @@ const emptyForm = {
   unit: "mmHg",
   context: "",
   notes: "",
+  medicationId: "",
   measuredAt: getLocalDateTimeValue(),
 };
 
@@ -294,6 +298,8 @@ function HealthDiaryPage() {
     updateHealthEntry,
     deleteHealthEntry,
   } = useHealthEntries();
+  const { userMedications } = useUserMedications();
+  const { profile } = useEmergencyProfile();
   const [formData, setFormData] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [trendType, setTrendType] = useState("bloodPressure");
@@ -305,6 +311,11 @@ function HealthDiaryPage() {
   const healthFormRef = useRef(null);
   const reportFileInputRef = useRef(null);
   const [reportFiles, setReportFiles] = useState([]);
+  const [reportOptions, setReportOptions] = useState({
+    health: true,
+    medications: true,
+    emergencyProfile: false,
+  });
   const [doctorEmail, setDoctorEmail] = useState(
     () => localStorage.getItem(DOCTOR_EMAIL_STORAGE_KEY) || ""
   );
@@ -362,6 +373,19 @@ function HealthDiaryPage() {
         exportPdf: "Download PDF",
         email: "Prepare email to doctor's practice",
         shareContacts: "Share with contacts / Mail",
+        reportContents: "Contents of the doctor package",
+        reportHealth: "Health diary entries and trend",
+        reportMedications: "My current medication plan",
+        reportEmergencyProfile: "Emergency pass details",
+        reportNoSelection: "Select at least one section for the doctor package.",
+        timelineTitle: "Your health timeline",
+        timelineHint: "Measurements and medication starts together in chronological order.",
+        timelineCount: "{count} timeline entries",
+        timelineMeasurement: "Measurement",
+        timelineMedication: "Medication plan",
+        timelineLinkedMedication: "Linked medication: {name}",
+        linkedMedication: "Related medication (optional)",
+        noMedicationLink: "No medication selected",
         doctorEmail: "Email address of doctor's practice (optional)",
         doctorEmailPlaceholder: "practice@example.com",
         doctorEmailHint:
@@ -451,6 +475,19 @@ function HealthDiaryPage() {
         exportPdf: "PDF herunterladen",
         email: "E-Mail an Arztpraxis vorbereiten",
         shareContacts: "An Kontakte / Mail teilen",
+        reportContents: "Inhalte des Arztpakets",
+        reportHealth: "Gesundheitstagebuch und Verlauf",
+        reportMedications: "Mein aktueller Medikamentenplan",
+        reportEmergencyProfile: "Angaben aus dem Notfallpass",
+        reportNoSelection: "Wähle mindestens einen Bereich für das Arztpaket aus.",
+        timelineTitle: "Deine Gesundheits-Zeitleiste",
+        timelineHint: "Messwerte und Medikamentenstarts gemeinsam chronologisch geordnet.",
+        timelineCount: "{count} Zeitleisten-Einträge",
+        timelineMeasurement: "Messwert",
+        timelineMedication: "Medikamentenplan",
+        timelineLinkedMedication: "Verknüpftes Medikament: {name}",
+        linkedMedication: "Zugehöriges Medikament (optional)",
+        noMedicationLink: "Kein Medikament ausgewählt",
         doctorEmail: "E-Mail-Adresse der Arztpraxis (optional)",
         doctorEmailPlaceholder: "praxis@beispiel.de",
         doctorEmailHint:
@@ -496,6 +533,15 @@ function HealthDiaryPage() {
   const selectedTrendType = availableTrendTypes.includes(trendType)
     ? trendType
     : availableTrendTypes[0];
+  const hasEmergencyProfileData = Object.entries(profile).some(
+    ([key, value]) => key !== "updatedAt" && typeof value === "string" && value.trim()
+  );
+  const hasReportSelection =
+    reportOptions.health || reportOptions.medications || reportOptions.emergencyProfile;
+  const hasReportData =
+    (reportOptions.health && healthEntries.length > 0) ||
+    (reportOptions.medications && userMedications.length > 0) ||
+    (reportOptions.emergencyProfile && hasEmergencyProfileData);
 
   function getOverviewValue(type) {
     const latestEntry = healthEntries.find((entry) => entry.type === type);
@@ -525,6 +571,14 @@ function HealthDiaryPage() {
 
   function handleReportFilesChange(event) {
     setReportFiles(Array.from(event.target.files || []));
+  }
+
+  function handleReportOptionChange(event) {
+    const { name, checked } = event.target;
+    setReportOptions((previousOptions) => ({
+      ...previousOptions,
+      [name]: checked,
+    }));
   }
 
   function handleChange(event) {
@@ -622,6 +676,7 @@ function HealthDiaryPage() {
       unit: entry.unit || entryTypes[entry.type].unit,
       context: entry.context || "",
       notes: entry.notes || "",
+      medicationId: entry.medicationId || "",
       measuredAt: getLocalDateTimeFromTimestamp(entry.measuredAt),
     });
     showMessage(text.editing, "info");
@@ -639,13 +694,53 @@ function HealthDiaryPage() {
   }
 
   function getReportLines() {
-    return healthEntries.map((entry) => {
-      const context = entry.type === "bloodSugar" && entry.context
-        ? ` (${getDisplayContext(entry)})`
-        : "";
+    const lines = [];
 
-      return `${getDisplayName(entry)}: ${getDisplayValue(entry)}${context} – ${formatEntryDate(entry.measuredAt, isEnglish)}${entry.notes ? ` – ${entry.notes}` : ""}`;
-    });
+    if (reportOptions.medications) {
+      lines.push(isEnglish ? "CURRENT MEDICATION PLAN" : "AKTUELLER MEDIKAMENTENPLAN");
+      if (userMedications.length === 0) {
+        lines.push(isEnglish ? "No personal medications saved." : "Keine persönlichen Medikamente gespeichert.");
+      } else {
+        userMedications.forEach((medication) => {
+          const intakeTimes = Array.isArray(medication.intakeTimes)
+            ? medication.intakeTimes.join(", ")
+            : medication.intakeTime || "";
+          lines.push(`${medication.name}: ${medication.dosage}${intakeTimes ? ` – ${intakeTimes}` : ""}${medication.notes ? ` – ${medication.notes}` : ""}`);
+        });
+      }
+    }
+
+    if (reportOptions.emergencyProfile) {
+      lines.push(isEnglish ? "EMERGENCY PASS DETAILS" : "ANGABEN AUS DEM NOTFALLPASS");
+      const profileLines = [
+        [isEnglish ? "Allergies" : "Allergien", profile.allergies],
+        [isEnglish ? "Important conditions" : "Wichtige Erkrankungen", profile.conditions],
+        [isEnglish ? "Blood group" : "Blutgruppe", profile.bloodGroup],
+        [isEnglish ? "Special notes" : "Besondere Hinweise", profile.specialNotes],
+      ].filter(([, value]) => value?.trim());
+
+      if (profileLines.length === 0) {
+        lines.push(isEnglish ? "No additional emergency details saved." : "Keine zusätzlichen Notfallangaben gespeichert.");
+      } else {
+        profileLines.forEach(([label, value]) => lines.push(`${label}: ${value}`));
+      }
+    }
+
+    if (reportOptions.health) {
+      lines.push(isEnglish ? "HEALTH DIARY ENTRIES" : "GESUNDHEITSTAGEBUCH-EINTRÄGE");
+      healthEntries.forEach((entry) => {
+        const context = entry.type === "bloodSugar" && entry.context
+          ? ` (${getDisplayContext(entry)})`
+          : "";
+        const linkedMedication = userMedications.find(
+          (medication) => medication.id === entry.medicationId
+        );
+
+        lines.push(`${getDisplayName(entry)}: ${getDisplayValue(entry)}${context} – ${formatEntryDate(entry.measuredAt, isEnglish)}${linkedMedication ? ` – ${isEnglish ? "Medication" : "Medikament"}: ${linkedMedication.name}` : ""}${entry.notes ? ` – ${entry.notes}` : ""}`);
+      });
+    }
+
+    return lines;
   }
 
   function getReportFileName() {
@@ -676,10 +771,12 @@ function HealthDiaryPage() {
     yPosition += 10;
 
     const reportTrendType = selectedTrendType || availableTrendTypes[0];
-    const reportTrendEntries = healthEntries
-      .filter((entry) => entry.type === reportTrendType)
-      .slice(0, 8)
-      .reverse();
+    const reportTrendEntries = reportOptions.health && reportTrendType
+      ? healthEntries
+          .filter((entry) => entry.type === reportTrendType)
+          .slice(0, 8)
+          .reverse()
+      : [];
 
     if (reportTrendEntries.length >= 2) {
       const chartX = margin;
@@ -786,7 +883,12 @@ function HealthDiaryPage() {
   }
 
   async function handlePrint() {
-    if (healthEntries.length === 0) {
+    if (!hasReportSelection) {
+      showMessage(text.reportNoSelection, "error");
+      return;
+    }
+
+    if (!hasReportData) {
       showMessage(text.reportEmpty, "error");
       return;
     }
@@ -805,7 +907,12 @@ function HealthDiaryPage() {
   }
 
   async function handleSharePdf() {
-    if (healthEntries.length === 0) {
+    if (!hasReportSelection) {
+      showMessage(text.reportNoSelection, "error");
+      return;
+    }
+
+    if (!hasReportData) {
       showMessage(text.reportEmpty, "error");
       return;
     }
@@ -847,7 +954,12 @@ function HealthDiaryPage() {
   }
 
   function handleEmail() {
-    if (healthEntries.length === 0) {
+    if (!hasReportSelection) {
+      showMessage(text.reportNoSelection, "error");
+      return;
+    }
+
+    if (!hasReportData) {
       showMessage(text.reportEmpty, "error");
       return;
     }
@@ -911,6 +1023,7 @@ function HealthDiaryPage() {
             ? formData.context.trim() || text.noSymptom
             : formData.context,
         notes: formData.notes,
+        medicationId: formData.medicationId,
         measuredAt,
     };
 
@@ -1032,6 +1145,26 @@ function HealthDiaryPage() {
               : "Die PDF-Vorschau zeigt nur das Dokument. Mit den Buttons unten kannst du sie speichern, mit Kontakten teilen oder eine Mail an deine hinterlegte Arztpraxis vorbereiten."}
           </Text>
         </Box>
+        <Box className="health-report-options" mb="5">
+          <Text className="health-report-options-title">{text.reportContents}</Text>
+          <Flex gap="3" wrap="wrap" mt="3">
+            {[
+              ["health", text.reportHealth],
+              ["medications", text.reportMedications],
+              ["emergencyProfile", text.reportEmergencyProfile],
+            ].map(([name, label]) => (
+              <label key={name} className="health-report-option">
+                <input
+                  type="checkbox"
+                  name={name}
+                  checked={reportOptions[name]}
+                  onChange={handleReportOptionChange}
+                />
+                <span>{label}</span>
+              </label>
+            ))}
+          </Flex>
+        </Box>
         <Flex className="health-report-visual" align="center" gap="4" mb="5">
           <Box className="health-report-visual-icon" aria-hidden="true">PDF</Box>
           <Box>
@@ -1095,7 +1228,7 @@ function HealthDiaryPage() {
             size="lg"
             borderRadius="xl"
             onClick={handlePrint}
-            disabled={healthEntries.length === 0}
+            disabled={!hasReportData}
           >
             🖨️ {text.exportPdf}
           </Button>
@@ -1106,7 +1239,7 @@ function HealthDiaryPage() {
             size="lg"
             borderRadius="xl"
             onClick={handleEmail}
-            disabled={healthEntries.length === 0 || !doctorEmail.trim()}
+            disabled={!hasReportData || !doctorEmail.trim()}
           >
             🩺 {doctorEmail.trim() ? text.email : (isEnglish ? "Enter practice email" : "Arztpraxis-E-Mail eintragen")}
           </Button>
@@ -1117,7 +1250,7 @@ function HealthDiaryPage() {
             size="lg"
             borderRadius="xl"
             onClick={handleSharePdf}
-            disabled={healthEntries.length === 0}
+            disabled={!hasReportData}
           >
             📤 {text.shareContacts}
           </Button>
@@ -1183,6 +1316,26 @@ function HealthDiaryPage() {
                 <option value="oxygen">{text.oxygen}</option>
                 <option value="temperature">{text.temperature}</option>
                 <option value="symptom">{text.symptom}</option>
+              </select>
+            </Box>
+
+            <Box>
+              <Text as="label" htmlFor="health-medication" display="block" mb="2" fontWeight="600">
+                {text.linkedMedication}
+              </Text>
+              <select
+                id="health-medication"
+                name="medicationId"
+                value={formData.medicationId}
+                onChange={handleChange}
+                style={{ width: "100%", minHeight: "44px", padding: "8px", borderRadius: "6px" }}
+              >
+                <option value="">{text.noMedicationLink}</option>
+                {userMedications.map((medication) => (
+                  <option key={medication.id} value={medication.id}>
+                    {medication.name} · {medication.dosage}
+                  </option>
+                ))}
               </select>
             </Box>
 
@@ -1364,6 +1517,13 @@ function HealthDiaryPage() {
         <Text fontWeight="700">{text.notMedicalAdvice}</Text>
       </Box>
 
+      <HealthTimeline
+        entries={healthEntries}
+        medications={userMedications}
+        isEnglish={isEnglish}
+        text={text}
+      />
+
       <Box>
         {availableTrendTypes.length > 0 && (
           <Box className="health-diary-overview" mb="8">
@@ -1471,6 +1631,16 @@ function HealthDiaryPage() {
                     </Text>
                     {entry.type === "bloodSugar" && entry.context && (
                       <Text mt="2">{getDisplayContext(entry)}</Text>
+                    )}
+                    {entry.medicationId && (
+                      <Text mt="2" color="teal.700" fontWeight="600">
+                        {text.timelineLinkedMedication.replace(
+                          "{name}",
+                          userMedications.find(
+                            (medication) => medication.id === entry.medicationId
+                          )?.name || text.noMedicationLink
+                        )}
+                      </Text>
                     )}
                     <Text mt="2">{entry.notes || text.noNote}</Text>
                   </Box>

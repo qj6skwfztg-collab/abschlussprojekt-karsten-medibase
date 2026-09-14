@@ -130,6 +130,7 @@ service cloud.firestore {
           'unit',
           'context',
           'notes',
+          'medicationId',
           'measuredAt',
           'createdAt'
         ])
@@ -140,6 +141,7 @@ service cloud.firestore {
           'unit',
           'context',
           'notes',
+          'medicationId',
           'measuredAt',
           'createdAt'
         ])
@@ -164,6 +166,9 @@ service cloud.firestore {
         && request.resource.data.context.size() <= 100
         && request.resource.data.notes is string
         && request.resource.data.notes.size() <= 500
+        && (!request.resource.data.keys().hasAny(['medicationId'])
+          || (request.resource.data.medicationId is string
+            && request.resource.data.medicationId.size() <= 120))
         && request.resource.data.measuredAt is timestamp
         && request.resource.data.createdAt is timestamp
         && (request.resource.data.type != 'bloodPressure'

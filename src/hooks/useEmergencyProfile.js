@@ -13,6 +13,7 @@ export const emptyEmergencyProfile = {
   conditions: "",
   bloodGroup: "",
   specialNotes: "",
+  updatedAt: null,
 };
 
 function useEmergencyProfile() {

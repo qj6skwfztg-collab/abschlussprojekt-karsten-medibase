@@ -144,6 +144,28 @@ header #main-navigation .header-emergency-contacts-link[aria-current="page"] {
   box-shadow: 0 0 0 2px rgba(246, 173, 85, 0.42);
 }
 
+header .accessibility-buttons button {
+  border-width: 2px;
+  border-radius: 12px;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  header .accessibility-buttons button:hover:not(:disabled) {
+    background: rgba(129, 230, 217, 0.24) !important;
+    border-color: #b2f5ea !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.16);
+  }
+
+  header .accessibility-buttons button:last-child:hover:not(:disabled) {
+    background: linear-gradient(135deg, #e6fffa 0%, #fffaf0 100%) !important;
+    border-color: #f6ad55 !important;
+    color: #234e52 !important;
+  }
+}
+
 .nav-group {
   display: flex;
   align-items: center;
@@ -792,6 +814,11 @@ header #main-navigation .header-emergency-contacts-link[aria-current="page"] {
 .home-action-panel,
 .home-action-button {
   border-radius: 24px !important;
+}
+
+.home-action-panel {
+  border: 2px solid #b2f5ea !important;
+  box-shadow: 0 12px 28px rgba(15, 118, 110, 0.1) !important;
 }
 
 .home-safety-visual {

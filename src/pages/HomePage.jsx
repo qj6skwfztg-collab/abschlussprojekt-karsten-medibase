@@ -87,11 +87,8 @@ function SafetyVisual({ isEnglish }) {
         </Text>
 
         <Flex className="home-safety-links" gap="3" marginTop="5" wrap="wrap">
-          <Link className="home-safety-chip" to="/notfall#notfallpass">
-            🪪 {isEnglish ? "Emergency pass" : "Notfallpass"}
-          </Link>
-          <Link className="home-safety-chip" to="/notfall#emergency-contacts">
-            👥 {isEnglish ? "Trusted contacts" : "Notfallkontakte"}
+          <Link className="home-safety-primary-link" to="/notfall">
+            🛡️ {isEnglish ? "Open safety centre" : "Sicherheitsbereich öffnen"}
           </Link>
         </Flex>
 
@@ -388,6 +385,7 @@ function HomePage() {
         >
           <Box
             as="div"
+            className="home-feature-card"
             role="button"
             tabIndex="0"
             background="white"
@@ -432,6 +430,7 @@ function HomePage() {
 
           <Box
             asChild
+            className="home-feature-card"
             background="white"
             padding={{ base: "5", md: "6" }}
             borderRadius="xl"
@@ -466,6 +465,7 @@ function HomePage() {
 
           <Box
             asChild
+            className="home-feature-card"
             background="white"
             padding={{ base: "5", md: "6" }}
             borderRadius="xl"

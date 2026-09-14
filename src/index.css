@@ -907,24 +907,36 @@ header #main-navigation .header-emergency-contacts-link[aria-current="page"] {
   z-index: 2;
 }
 
-.home-safety-chip {
+.home-safety-primary-link {
   display: inline-flex;
-  min-height: 48px;
+  min-height: 52px;
   align-items: center;
-  padding: 10px 16px;
-  color: #234e52;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid #81e6d9;
-  border-radius: 16px;
-  box-shadow: 0 6px 14px rgba(15, 118, 110, 0.08);
+  padding: 12px 22px;
+  color: #0f766e;
+  background: linear-gradient(135deg, #e6fffa 0%, #fffaf0 100%);
+  border: 2px solid #81e6d9;
+  border-radius: 18px;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.12);
   font-weight: 800;
   transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
-.home-safety-chip:hover {
-  background: #ffffff;
+.home-safety-primary-link:hover {
+  background: linear-gradient(135deg, #d9f7f1 0%, #fff5d9 100%);
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(15, 118, 110, 0.15);
+  box-shadow: 0 12px 24px rgba(15, 118, 110, 0.18);
+}
+
+.home-feature-card {
+  border: 2px solid #edc781 !important;
+  border-radius: 24px !important;
+  background: linear-gradient(145deg, #fffdf8 0%, #ffffff 72%) !important;
+  box-shadow: 0 10px 24px rgba(180, 130, 45, 0.1) !important;
+}
+
+.home-feature-card:hover {
+  border-color: #e5ae50 !important;
+  box-shadow: 0 14px 30px rgba(180, 130, 45, 0.16) !important;
 }
 
 .home-safety-status-dot {
@@ -1045,6 +1057,10 @@ header #main-navigation .header-emergency-contacts-link[aria-current="page"] {
   .home-safety-links,
   .home-safety-status {
     justify-content: center;
+  }
+
+  .home-feature-card {
+    border-radius: 20px !important;
   }
 
   .medication-reminders-panel,

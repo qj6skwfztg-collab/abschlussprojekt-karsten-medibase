@@ -98,8 +98,10 @@ function EmergencyPass({ selectedCountry }) {
         noMedications: "No personal medications saved.",
         health: "Recent health measurements",
         noHealth: "No health measurements saved.",
+        openHealth: "Open health diary and add measurements",
         contacts: "Emergency contacts",
         noContacts: "No emergency contacts saved.",
+        openContacts: "Open and edit emergency contacts",
         contactMessage: "Prepare message",
         messageConfirm:
           "Open your messaging app with an emergency message prepared for your contacts? You must tap Send yourself.",
@@ -109,6 +111,8 @@ function EmergencyPass({ selectedCountry }) {
         profile: "Important health details",
         noProfile: "No additional emergency details saved.",
         openAccount: "Add details in my account",
+        editPass: "Edit emergency pass details",
+        backToEmergencyHelp: "Back to emergency help",
         sharePass: "Share selected pass information",
         sharePassHint: "Choose exactly which information you want to share. Contacts are not included by default.",
         shareMedications: "My medications",
@@ -149,8 +153,10 @@ function EmergencyPass({ selectedCountry }) {
         noMedications: "Keine persönlichen Medikamente gespeichert.",
         health: "Letzte Gesundheitsmesswerte",
         noHealth: "Keine Gesundheitsmesswerte gespeichert.",
+        openHealth: "Gesundheitstagebuch öffnen und Messwert hinzufügen",
         contacts: "Notfallkontakte",
         noContacts: "Keine Notfallkontakte gespeichert.",
+        openContacts: "Notfallkontakte öffnen und bearbeiten",
         contactMessage: "Nachricht vorbereiten",
         messageConfirm:
           "Soll die Nachrichten-App mit einer Notfallnachricht an deine Kontakte geöffnet werden? Du musst selbst auf Senden tippen.",
@@ -160,6 +166,8 @@ function EmergencyPass({ selectedCountry }) {
         profile: "Wichtige Gesundheitsangaben",
         noProfile: "Keine zusätzlichen Notfallangaben gespeichert.",
         openAccount: "Angaben im Konto ergänzen",
+        editPass: "Notfallpass bearbeiten",
+        backToEmergencyHelp: "Zurück zur Notfallhilfe",
         sharePass: "Ausgewählte Passdaten teilen",
         sharePassHint: "Wähle genau aus, welche Informationen du teilen möchtest. Kontakte werden standardmäßig nicht mitgeteilt.",
         shareMedications: "Meine Medikamente",
@@ -524,6 +532,47 @@ const emergencyText = isEnglish
             {isPassVisible ? text.hide : text.show}
           </Button>
 
+          {isPassVisible && (
+            <Flex
+              gap="3"
+              wrap="wrap"
+              marginTop="3"
+              justify="center"
+              className="emergency-pass-navigation"
+            >
+              <Button
+                as={Link}
+                to="/konto#emergency-profile"
+                variant="outline"
+                colorPalette="teal"
+                flex="1"
+                minWidth={{ base: "100%", sm: "240px" }}
+                whiteSpace="normal"
+                height="auto"
+                minHeight="52px"
+                paddingY="3"
+                fontWeight="800"
+              >
+                ✏️ {text.editPass}
+              </Button>
+              <Button
+                as={Link}
+                to="/notfall"
+                variant="outline"
+                colorPalette="gray"
+                flex="1"
+                minWidth={{ base: "100%", sm: "240px" }}
+                whiteSpace="normal"
+                height="auto"
+                minHeight="52px"
+                paddingY="3"
+                fontWeight="800"
+              >
+                ↩️ {text.backToEmergencyHelp}
+              </Button>
+            </Flex>
+          )}
+
           <Box className="emergency-pass-offline-settings" marginTop="4">
             <label className="emergency-pass-checkbox">
               <input
@@ -622,33 +671,7 @@ const emergencyText = isEnglish
                   </Heading>
 
                   {passHealthEntries.length === 0 ? (
-                    <>
-                      <Text>{text.noHealth}</Text>
-
-                      <Button
-                        as={Link}
-                        to="/gesundheitstagebuch"
-                        variant="outline"
-                        colorPalette="teal"
-                        width="100%"
-                        marginTop="4"
-                        whiteSpace="normal"
-                        height="auto"
-                        minHeight="58px"
-                        paddingY="3"
-                        fontWeight="800"
-                        flexDirection="column"
-                        lineHeight="1.25"
-                        textAlign="center"
-                      >
-                        <span aria-hidden="true">📈</span>
-                        <span style={{ overflowWrap: "anywhere" }}>
-                          {isEnglish
-                            ? "Open health diary"
-                            : "Gesundheitstagebuch öffnen"}
-                        </span>
-                      </Button>
-                    </>
+                    <Text>{text.noHealth}</Text>
                   ) : (
                     <Stack gap="3">
                       {passHealthEntries.map((entry) => (
@@ -669,6 +692,26 @@ const emergencyText = isEnglish
                       ))}
                     </Stack>
                   )}
+
+                  <Button
+                    as={Link}
+                    to="/gesundheitstagebuch"
+                    variant="outline"
+                    colorPalette="teal"
+                    width="100%"
+                    marginTop="4"
+                    whiteSpace="normal"
+                    height="auto"
+                    minHeight="58px"
+                    paddingY="3"
+                    fontWeight="800"
+                    flexDirection="column"
+                    lineHeight="1.25"
+                    textAlign="center"
+                  >
+                    <span aria-hidden="true">📈</span>
+                    <span style={{ overflowWrap: "anywhere" }}>{text.openHealth}</span>
+                  </Button>
                 </Box>
 
                 <Box borderWidth="1px" borderRadius="lg" padding="5">
@@ -710,6 +753,22 @@ const emergencyText = isEnglish
                       </Button>
                     </Stack>
                   )}
+
+                  <Button
+                    as={Link}
+                    to="/konto#emergency-contacts"
+                    variant="outline"
+                    colorPalette="teal"
+                    width="100%"
+                    marginTop="4"
+                    whiteSpace="normal"
+                    height="auto"
+                    minHeight="58px"
+                    paddingY="3"
+                    fontWeight="800"
+                  >
+                    👥 {text.openContacts}
+                  </Button>
                 </Box>
               </SimpleGrid>
 
@@ -729,7 +788,7 @@ const emergencyText = isEnglish
 
                     <Button
                       as={Link}
-                      to="/konto"
+                      to="/konto#emergency-profile"
                       variant="outline"
                       colorPalette="teal"
                       marginTop="4"
@@ -773,6 +832,21 @@ const emergencyText = isEnglish
                     )}
                   </SimpleGrid>
                 )}
+
+                <Button
+                  as={Link}
+                  to="/konto#emergency-profile"
+                  variant="outline"
+                  colorPalette="teal"
+                  marginTop="4"
+                  whiteSpace="normal"
+                  height="auto"
+                  minHeight="52px"
+                  paddingY="3"
+                  fontWeight="800"
+                >
+                  ✏️ {text.editPass}
+                </Button>
               </Box>
 
               {message && (

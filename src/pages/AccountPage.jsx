@@ -39,12 +39,18 @@ function AccountPage() {
   const profileForm = profileDraft || profile;
 
   useEffect(() => {
-    if (location.hash !== "#emergency-contacts") {
+    const targetId = ["#emergency-contacts", "#emergency-profile"].includes(
+      location.hash
+    )
+      ? location.hash.slice(1)
+      : null;
+
+    if (!targetId) {
       return undefined;
     }
 
     const frameId = window.requestAnimationFrame(() => {
-      document.getElementById("emergency-contacts")?.scrollIntoView({
+      document.getElementById(targetId)?.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
@@ -80,6 +86,7 @@ function AccountPage() {
         emergencyProfileError:
           "The emergency pass details could not be saved.",
         emergencyProfileLoading: "Loading emergency pass details …",
+        backToEmergencyPass: "Back to emergency pass",
         dangerTitle: "Danger zone",
         dangerSummary: "Delete account and personal data",
         dataTitle: "Data that will be deleted",
@@ -131,6 +138,7 @@ function AccountPage() {
         emergencyProfileError:
           "Die Angaben für den Notfallpass konnten nicht gespeichert werden.",
         emergencyProfileLoading: "Angaben für den Notfallpass werden geladen …",
+        backToEmergencyPass: "Zum Notfallpass zurück",
         dangerTitle: "Gefahrenbereich",
         dangerSummary: "Konto und persönliche Daten löschen",
         dataTitle: "Daten, die gelöscht werden",
@@ -252,6 +260,7 @@ function AccountPage() {
       <EmergencyContacts allowDirectNotify />
 
       <Box
+        id="emergency-profile"
         borderWidth="1px"
         borderColor="teal.200"
         borderRadius="lg"
@@ -330,6 +339,16 @@ function AccountPage() {
             {isProfileLoading && <Text color="gray.600">{text.emergencyProfileLoading}</Text>}
             {profileError && <Text color="red.700">{profileError}</Text>}
             {profileMessage && <Text color="teal.700" fontWeight="600">{profileMessage}</Text>}
+
+            <Button
+              as={Link}
+              to="/notfall#notfallpass"
+              variant="outline"
+              colorPalette="teal"
+              size="lg"
+            >
+              ↩️ {text.backToEmergencyPass}
+            </Button>
           </Stack>
         </form>
       </Box>

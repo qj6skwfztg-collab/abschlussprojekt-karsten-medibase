@@ -4,7 +4,11 @@ import {
   ReCaptchaEnterpriseProvider,
 } from "firebase/app-check";
 import { Capacitor } from "@capacitor/core";
-import { getAuth } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  getAuth,
+  initializeAuth,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -38,4 +42,8 @@ if (
 }
 
 export const db = getFirestore(app);
-export const auth = getAuth(app);
+export const auth = isNativeIOS
+  ? initializeAuth(app, {
+      persistence: browserLocalPersistence,
+    })
+  : getAuth(app);

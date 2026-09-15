@@ -360,6 +360,7 @@ function HealthDiaryPage() {
         updated: "Health entry was updated.",
         saveError: "The health entry could not be saved.",
         invalid: "Please check the values and date.",
+        invalidBloodPressure: "Please enter a valid blood pressure. The upper value must be greater than the lower value.",
         entriesTitle: "My entries",
         trendTitle: "Progress by area",
         trendArea: "Area to display",
@@ -462,6 +463,7 @@ function HealthDiaryPage() {
         updated: "Gesundheitseintrag wurde geändert.",
         saveError: "Der Gesundheitseintrag konnte nicht gespeichert werden.",
         invalid: "Bitte überprüfe die Werte und das Datum.",
+        invalidBloodPressure: "Bitte gib einen gültigen Blutdruck ein. Der obere Wert muss größer sein als der untere Wert.",
         entriesTitle: "Meine Einträge",
         trendTitle: "Verlauf nach Bereich",
         trendArea: "Bereich anzeigen",
@@ -1000,6 +1002,20 @@ function HealthDiaryPage() {
     const secondaryValue = Number(formData.secondaryValue || 0);
 
     if (
+      formData.type === "bloodPressure" &&
+      (!Number.isFinite(value) ||
+        value < 50 ||
+        value > 300 ||
+        !Number.isFinite(secondaryValue) ||
+        secondaryValue < 30 ||
+        secondaryValue > 200 ||
+        secondaryValue >= value)
+    ) {
+      showMessage(text.invalidBloodPressure, "error");
+      return;
+    }
+
+    if (
       !Number.isFinite(value) ||
       value < 0 ||
       !formData.measuredAt ||
@@ -1038,8 +1054,26 @@ function HealthDiaryPage() {
 
       setFormData({ ...emptyForm, measuredAt: getLocalDateTimeValue() });
       setEditingId(null);
-    } catch {
-      showMessage(text.saveError, "error");
+    } catch (saveError) {
+      console.error("Curaelis health entry save failed", saveError);
+      const errorCode = saveError?.code?.replace("firestore/", "");
+
+      if (errorCode === "permission-denied") {
+        showMessage(
+          `${text.saveError} ${isEnglish ? "Firebase denied access to this entry." : "Firebase hat den Zugriff auf diesen Eintrag abgelehnt."}`,
+          "error"
+        );
+      } else if (errorCode === "unavailable") {
+        showMessage(
+          `${text.saveError} ${isEnglish ? "The database is currently unavailable." : "Die Datenbank ist momentan nicht erreichbar."}`,
+          "error"
+        );
+      } else {
+        showMessage(
+          errorCode ? `${text.saveError} (Firebase: ${errorCode})` : text.saveError,
+          "error"
+        );
+      }
     } finally {
       setIsSaving(false);
     }

@@ -23,6 +23,7 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(event) {
@@ -30,11 +31,16 @@ function LoginPage() {
     setMessage("");
 
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      setIsLoading(true);
+      const userCredential = await Promise.race([
+        signInWithEmailAndPassword(auth, email.trim(), password),
+        new Promise((_, reject) => {
+          window.setTimeout(
+            () => reject({ code: "auth/timeout" }),
+            15000
+          );
+        }),
+      ]);
 
       if (!userCredential.user.emailVerified) {
         await signOut(auth);
@@ -43,8 +49,38 @@ function LoginPage() {
       }
 
       navigate("/meine-medikamente");
-    } catch {
-      setMessage(isEnglish ? "The email address or password is incorrect." : "E-Mail-Adresse oder Passwort ist falsch.");
+    } catch (firebaseError) {
+      if (firebaseError?.code === "auth/timeout") {
+        setMessage(
+          isEnglish
+            ? "The login service did not respond. Please check the simulator's internet connection."
+            : "Der Anmeldedienst antwortet nicht. Bitte prüfe die Internetverbindung des Simulators."
+        );
+      } else if (firebaseError?.code === "auth/network-request-failed") {
+        setMessage(
+          isEnglish
+            ? "No connection to the login service. Please check your internet connection and try again."
+            : "Der Anmeldedienst ist nicht erreichbar. Bitte prüfe die Internetverbindung und versuche es erneut."
+        );
+      } else if (
+        ["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found"].includes(
+          firebaseError?.code
+        )
+      ) {
+        setMessage(
+          isEnglish
+            ? "The email address or password is incorrect."
+            : "E-Mail-Adresse oder Passwort ist falsch."
+        );
+      } else {
+        setMessage(
+          isEnglish
+            ? `Sign-in failed (${firebaseError?.code || "unknown error"}).`
+            : `Anmeldung fehlgeschlagen (${firebaseError?.code || "unbekannter Fehler"}).`
+        );
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -59,7 +95,7 @@ function LoginPage() {
     }
 
     try {
-      await sendPasswordResetEmail(auth, email);
+      await sendPasswordResetEmail(auth, email.trim());
 
       setMessage(
         isEnglish ? "A password reset email has been sent." : "Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet."
@@ -97,7 +133,7 @@ function LoginPage() {
             required
           />
 
-          <Button type="submit" colorPalette="teal">
+          <Button type="submit" colorPalette="teal" disabled={isLoading}>
             {isEnglish ? "Sign in" : "Anmelden"}
           </Button>
 

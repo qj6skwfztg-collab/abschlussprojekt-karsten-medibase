@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Box, Button, Flex, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import { onAuthStateChanged } from "firebase/auth";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
+import { getMedicationNotificationPermission } from "../native/medicationNotifications";
 
 export const ONBOARDING_PENDING_KEY_PREFIX = "curaelis-onboarding-pending:";
 const ONBOARDING_STATE_KEY_PREFIX = "curaelis-onboarding-state:";
+const DOCTOR_EMAIL_STORAGE_KEY = "curaelis-doctor-email";
 
 const defaultSelection = {
   medication: true,
@@ -28,6 +31,7 @@ function OnboardingWizard() {
   const [isDismissed, setIsDismissed] = useState(false);
   const [selection, setSelection] = useState(defaultSelection);
   const [completed, setCompleted] = useState([]);
+  const [detected, setDetected] = useState({});
   const [isStarted, setIsStarted] = useState(false);
   const [selectionError, setSelectionError] = useState("");
 
@@ -80,6 +84,56 @@ function OnboardingWizard() {
     });
   }, []);
 
+  useEffect(() => {
+    if (!user) {
+      return undefined;
+    }
+
+    let isMounted = true;
+
+    async function detectExistingSetup() {
+      try {
+        const userReference = (subcollection) =>
+          collection(db, "users", user.uid, subcollection);
+        const [medications, healthEntries, emergencyContacts, profile, notificationPermission] = await Promise.all([
+          getDocs(userReference("medications")),
+          getDocs(userReference("healthEntries")),
+          getDocs(userReference("emergencyContacts")),
+          getDoc(doc(db, "users", user.uid, "emergencyProfile", "main")),
+          getMedicationNotificationPermission().catch(() => null),
+        ]);
+
+        if (!isMounted) return;
+
+        const profileData = profile.exists() ? profile.data() : {};
+        const hasProfileData = [
+          profileData.allergies,
+          profileData.conditions,
+          profileData.bloodGroup,
+          profileData.specialNotes,
+        ].some((value) => String(value || "").trim());
+
+        setDetected({
+          medication: medications.size > 0,
+          reminders: notificationPermission?.display === "granted",
+          health: healthEntries.size > 0,
+          emergencyProfile: hasProfileData,
+          contacts: emergencyContacts.size > 0,
+          doctorEmail: Boolean(localStorage.getItem(DOCTOR_EMAIL_STORAGE_KEY)?.trim()),
+        });
+      } catch {
+        // The wizard still works with its manually confirmed progress if a
+        // temporary network check is unavailable.
+      }
+    }
+
+    detectExistingSetup();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
+
   const isPending = Boolean(
     user &&
       !isDismissed &&
@@ -91,8 +145,10 @@ function OnboardingWizard() {
   }
 
   const selectedItems = items.filter((item) => selection[item.id]);
-  const nextItem = selectedItems.find((item) => !completed.includes(item.id));
-  const completedCount = selectedItems.filter((item) => completed.includes(item.id)).length;
+  const isItemComplete = (item) =>
+    completed.includes(item.id) || Boolean(detected[item.id]);
+  const nextItem = selectedItems.find((item) => !isItemComplete(item));
+  const completedCount = selectedItems.filter(isItemComplete).length;
 
   function saveState(nextSelection, nextCompleted, started = true) {
     localStorage.setItem(
@@ -206,7 +262,8 @@ function OnboardingWizard() {
               </Text>
               <SimpleGrid columns={{ base: 1, sm: 2 }} gap="2">
                 {selectedItems.map((item) => {
-                  const isComplete = completed.includes(item.id);
+                  const isDetected = Boolean(detected[item.id]);
+                  const isComplete = isItemComplete(item);
                   const isCurrent = nextItem?.id === item.id;
 
                   return (
@@ -227,7 +284,9 @@ function OnboardingWizard() {
                         </Text>
                         <Text fontSize="xs" color="gray.600">
                           {isComplete
-                            ? (isEnglish ? "Completed" : "Erledigt")
+                            ? (isDetected
+                              ? (isEnglish ? "Already present" : "Bereits vorhanden")
+                              : (isEnglish ? "Completed" : "Erledigt"))
                             : isCurrent
                               ? (isEnglish ? "Current step" : "Aktueller Schritt")
                               : (isEnglish ? "Still open" : "Noch offen")}

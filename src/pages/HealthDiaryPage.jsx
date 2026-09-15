@@ -308,6 +308,7 @@ function HealthDiaryPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [printMessage, setPrintMessage] = useState("");
   const [pdfDownloadInfo, setPdfDownloadInfo] = useState(false);
+  const [emailFallbackUrl, setEmailFallbackUrl] = useState("");
   const healthFormRef = useRef(null);
   const reportFileInputRef = useRef(null);
   const [reportFiles, setReportFiles] = useState([]);
@@ -410,6 +411,10 @@ function HealthDiaryPage() {
         sharePdf: "Share PDF / send by email",
         emailOpening: "Opening your email app …",
         emailOpened: "The email app should now be open. Attach the saved PDF before sending.",
+        emailFallback: "If nothing opens, no email app is available on this device. This can happen in the iPhone Simulator.",
+        emailRetry: "Open email app again",
+        emailCopy: "Copy practice address",
+        emailCopied: "Practice address copied.",
         shareCancelled: "Sharing was cancelled. Your PDF is still available to save or share.",
         shareUnsupported:
           "No sharing app is available here. Download the PDF and attach it manually in your email app.",
@@ -516,6 +521,10 @@ function HealthDiaryPage() {
         sharePdf: "PDF teilen / per E-Mail senden",
         emailOpening: "Die Mail-App wird geöffnet …",
         emailOpened: "Die Mail-App sollte jetzt geöffnet sein. Füge die gespeicherte PDF vor dem Senden als Anhang hinzu.",
+        emailFallback: "Wenn sich nichts öffnet, ist auf diesem Gerät keine Mail-App verfügbar. Das kann im iPhone-Simulator vorkommen.",
+        emailRetry: "Mail-App erneut öffnen",
+        emailCopy: "Praxisadresse kopieren",
+        emailCopied: "Praxisadresse wurde kopiert.",
         shareCancelled: "Das Teilen wurde abgebrochen. Deine PDF kann weiterhin gespeichert oder geteilt werden.",
         shareUnsupported:
           "Hier ist keine Teilen-App verfügbar. Lade die PDF herunter und füge sie anschließend manuell in deiner Mail-App an.",
@@ -891,13 +900,7 @@ function HealthDiaryPage() {
   }
 
   function openMailComposer(mailtoUrl) {
-    const link = document.createElement("a");
-    link.href = mailtoUrl;
-    link.target = "_blank";
-    link.rel = "noopener";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    window.location.assign(mailtoUrl);
   }
 
   async function handlePrint() {
@@ -1005,9 +1008,11 @@ function HealthDiaryPage() {
     const body = encodeURIComponent(
       `${intro}${getReportLines().join("\n")}\n\n${text.emailAttachmentNote}`
     );
+    const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
 
+    setEmailFallbackUrl(mailtoUrl);
     setPrintMessage(text.emailOpening);
-    openMailComposer(`mailto:${recipient}?subject=${subject}&body=${body}`);
+    openMailComposer(mailtoUrl);
     window.setTimeout(() => setPrintMessage(text.emailOpened), 700);
   }
 
@@ -1263,51 +1268,104 @@ function HealthDiaryPage() {
             <Text mt="2" fontSize="sm" color="gray.600">{text.shareFilesHint}</Text>
           </Box>
         )}
-        <Flex className="health-report-buttons" direction={{ base: "column", md: "row" }} gap="3" align="stretch">
-          <Button
-            type="button"
-            className="health-report-attach"
-            colorPalette="teal"
-            size="lg"
-            borderRadius="xl"
-            onClick={() => reportFileInputRef.current?.click()}
-          >
-            📎 {text.attachFiles}
-          </Button>
-          <Button
-            type="button"
-            className="health-report-pdf-button"
-            colorPalette="teal"
-            size="lg"
-            borderRadius="xl"
-            onClick={handlePrint}
-            disabled={!hasReportData}
-          >
-            🖨️ {text.exportPdf}
-          </Button>
-          <Button
-            type="button"
-            className="health-report-doctor-button"
-            colorPalette="teal"
-            size="lg"
-            borderRadius="xl"
-            onClick={handleEmail}
-            disabled={!hasReportData}
-          >
-            🩺 {text.email}
-          </Button>
-          <Button
-            type="button"
-            className="health-report-share-button"
-            colorPalette="teal"
-            size="lg"
-            borderRadius="xl"
-            onClick={handleSharePdf}
-            disabled={!hasReportData}
-          >
-            📤 {text.sharePdf}
-          </Button>
-        </Flex>
+        <Box className="health-report-action-group" mb="4">
+          <Text className="health-report-action-title">
+            {isEnglish ? "1. Prepare the PDF and files" : "1. PDF und Dateien vorbereiten"}
+          </Text>
+          <Flex className="health-report-buttons" direction={{ base: "column", md: "row" }} gap="3" align="stretch" mt="3">
+            <Button
+              type="button"
+              className="health-report-attach"
+              colorPalette="teal"
+              size="lg"
+              borderRadius="xl"
+              onClick={() => reportFileInputRef.current?.click()}
+            >
+              📎 {text.attachFiles}
+            </Button>
+            <Button
+              type="button"
+              className="health-report-pdf-button"
+              colorPalette="teal"
+              size="lg"
+              borderRadius="xl"
+              onClick={handlePrint}
+              disabled={!hasReportData}
+            >
+              🖨️ {text.exportPdf}
+            </Button>
+          </Flex>
+          <Text className="health-report-action-hint" mt="2">
+            {isEnglish
+              ? "Save the PDF first. On iPhone, choose Share → Save to Files and remember the shown file name."
+              : "Speichere die PDF zuerst. Auf dem iPhone wählst du Teilen → In Dateien sichern und merkst dir den angezeigten Dateinamen."}
+          </Text>
+        </Box>
+
+        <Box className="health-report-action-group">
+          <Text className="health-report-action-title">
+            {isEnglish ? "2. Choose how to send it" : "2. Versand auswählen"}
+          </Text>
+          <Flex className="health-report-buttons" direction={{ base: "column", md: "row" }} gap="3" align="stretch" mt="3">
+            <Button
+              type="button"
+              className="health-report-doctor-button"
+              colorPalette="teal"
+              size="lg"
+              borderRadius="xl"
+              onClick={handleEmail}
+              disabled={!hasReportData}
+            >
+              🩺 {text.email}
+            </Button>
+            <Button
+              type="button"
+              className="health-report-share-button"
+              colorPalette="teal"
+              size="lg"
+              borderRadius="xl"
+              onClick={handleSharePdf}
+              disabled={!hasReportData}
+            >
+              📤 {text.sharePdf}
+            </Button>
+          </Flex>
+          <Text className="health-report-action-hint" mt="2">
+            {isEnglish
+              ? "Email opens the practice address without attaching automatically. Share PDF opens Apple's menu and can include the PDF and selected files together."
+              : "Mail öffnet die hinterlegte Praxisadresse; die PDF wird dort nicht automatisch angehängt. PDF teilen öffnet Apples Menü und kann PDF und ausgewählte Dateien gemeinsam übergeben."}
+          </Text>
+        </Box>
+        {emailFallbackUrl && (
+          <Box className="health-report-email-fallback" mt="4" role="status" aria-live="polite">
+            <Text fontWeight="800" color="teal.900">{text.emailFallback}</Text>
+            <Flex gap="3" wrap="wrap" mt="3">
+              <Button
+                as="a"
+                href={emailFallbackUrl}
+                variant="outline"
+                colorPalette="teal"
+              >
+                ✉️ {text.emailRetry}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                colorPalette="gray"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(doctorEmail.trim());
+                    setPrintMessage(text.emailCopied);
+                  } catch {
+                    setPrintMessage(text.emailFallback);
+                  }
+                }}
+              >
+                📋 {text.emailCopy}
+              </Button>
+            </Flex>
+          </Box>
+        )}
         {printMessage && (
           <Box
             mt="4"
@@ -1326,7 +1384,7 @@ function HealthDiaryPage() {
         {pdfDownloadInfo && (
           <Box className="health-report-download-info" mt="3" role="status" aria-live="polite">
             <Text fontWeight="800" color="teal.900">
-              {isEnglish ? "Where is my PDF?" : "Wo ist meine PDF?"}
+              {isEnglish ? "PDF saved" : "PDF gespeichert"}
             </Text>
             <Text mt="1" fontSize="sm" color="gray.700">
               {text.pdfLocation.replace("{fileName}", getReportFileName())}

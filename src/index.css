@@ -1085,6 +1085,11 @@ header .accessibility-buttons button {
   color: #276749;
 }
 
+.curaelis-onboarding-progress-item.is-confirmed-without-data {
+  background: #f0fff4;
+  color: #975a16;
+}
+
 .curaelis-onboarding-progress-item.is-skipped {
   background: #fffaf0;
   color: #975a16;

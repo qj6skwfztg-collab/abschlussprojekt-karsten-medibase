@@ -287,13 +287,15 @@ function OnboardingWizard() {
                 {selectedItems.map((item) => {
                   const isComplete = isItemComplete(item);
                   const isDetected = Boolean(detected[item.id]);
+                  const isConfirmedWithoutData =
+                    completed.includes(item.id) && !isDetected;
                   const isSkipped = skipped.includes(item.id) && !isComplete;
                   const isCurrent = nextItem?.id === item.id;
 
                   return (
                     <Flex
                       key={item.id}
-                      className={`curaelis-onboarding-progress-item${isComplete ? " is-complete" : ""}${isSkipped ? " is-skipped" : ""}${isCurrent ? " is-current" : ""}`}
+                      className={`curaelis-onboarding-progress-item${isComplete ? " is-complete" : ""}${isConfirmedWithoutData ? " is-confirmed-without-data" : ""}${isSkipped ? " is-skipped" : ""}${isCurrent ? " is-current" : ""}`}
                       align="center"
                       gap="2"
                       padding="2"
@@ -310,7 +312,7 @@ function OnboardingWizard() {
                           {isComplete
                             ? (isDetected
                               ? (isEnglish ? "Already present" : "Bereits vorhanden")
-                              : (isEnglish ? "Completed" : "Erledigt"))
+                              : (isEnglish ? "Nothing saved yet" : "Noch nichts hinterlegt"))
                             : isSkipped
                               ? (isEnglish ? "Skipped" : "Übersprungen")
                             : isCurrent
@@ -323,9 +325,14 @@ function OnboardingWizard() {
                 })}
               </SimpleGrid>
             </Box>
-            <Box className="curaelis-onboarding-current" borderWidth="1px" borderColor="teal.200" borderRadius="xl" padding="6" background="teal.50">
+              <Box className="curaelis-onboarding-current" borderWidth="1px" borderColor="teal.200" borderRadius="xl" padding="6" background="teal.50">
               <Heading size="md" color="teal.900">{nextItem.title}</Heading>
               <Text mt="3">{nextItem.description}</Text>
+              <Text mt="3" color="teal.800" fontWeight="700">
+                {isEnglish
+                  ? "Open this area and save your details there."
+                  : "Öffne diesen Bereich und speichere deine Angaben dort."}
+              </Text>
             </Box>
             <Flex className="curaelis-onboarding-actions" gap="3" wrap="wrap" align="stretch">
               <Button
@@ -348,7 +355,7 @@ function OnboardingWizard() {
                 {isEnglish ? "Skip" : "Überspringen"}
               </Button>
               <Button as={Link} to={nextItem.path} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
-                {isEnglish ? "Set up now" : "Jetzt einrichten"}
+                {isEnglish ? "Enter data" : "Daten eintragen"}
               </Button>
               <Button variant="outline" size="lg" onClick={markDone} flex="1 1 220px" minW="220px">
                 {isEnglish ? "Already done / continue" : "Erledigt / weiter"}

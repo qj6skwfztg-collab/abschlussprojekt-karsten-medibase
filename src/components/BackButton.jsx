@@ -6,12 +6,18 @@ function BackButton() {
   const { isEnglish } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
+  const isFromOnboarding = Boolean(location.state?.fromOnboarding);
 
   if (location.pathname === "/") {
     return null;
   }
 
   function handleBack() {
+    if (isFromOnboarding) {
+      navigate("/einrichtung");
+      return;
+    }
+
     if (window.history.length > 1) {
       navigate(-1);
       return;
@@ -29,9 +35,15 @@ function BackButton() {
         size="lg"
         minHeight="52px"
         onClick={handleBack}
-        aria-label={isEnglish ? "Go back" : "Zurückgehen"}
+        aria-label={
+          isFromOnboarding
+            ? (isEnglish ? "Return to setup" : "Zur Einrichtung zurück")
+            : (isEnglish ? "Go back" : "Zurückgehen")
+        }
       >
-        ← {isEnglish ? "Back" : "Zurück"}
+        ← {isFromOnboarding
+          ? (isEnglish ? "Back to setup" : "Zur Einrichtung")
+          : (isEnglish ? "Back" : "Zurück")}
       </Button>
     </Box>
   );

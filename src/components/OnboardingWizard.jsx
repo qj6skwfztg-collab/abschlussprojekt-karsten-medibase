@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import { onAuthStateChanged } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
@@ -128,6 +128,28 @@ function OnboardingWizard() {
     saveState(selection, nextCompleted);
   }
 
+  function skipCurrent() {
+    markDone();
+  }
+
+  function goBack() {
+    if (completed.length === 0) {
+      setIsStarted(false);
+      saveState(selection, [], false);
+      return;
+    }
+
+    const lastCompletedId = [...selectedItems]
+      .reverse()
+      .find((item) => completed.includes(item.id))?.id;
+
+    if (!lastCompletedId) return;
+
+    const previousCompleted = completed.filter((id) => id !== lastCompletedId);
+    setCompleted(previousCompleted);
+    saveState(selection, previousCompleted);
+  }
+
   function finishSetup() {
     localStorage.removeItem(getStorageKey(ONBOARDING_PENDING_KEY_PREFIX, user.uid));
     localStorage.removeItem(getStorageKey(ONBOARDING_STATE_KEY_PREFIX, user.uid));
@@ -178,15 +200,72 @@ function OnboardingWizard() {
             <Text color="gray.600" fontWeight="700">
               {isEnglish ? `${completedCount} of ${selectedItems.length} areas completed` : `${completedCount} von ${selectedItems.length} Bereichen erledigt`}
             </Text>
+            <Box className="curaelis-onboarding-progress" borderWidth="1px" borderColor="teal.100" borderRadius="xl" padding="4" background="white">
+              <Text color="teal.900" fontWeight="800" mb="3">
+                {isEnglish ? "Your setup overview" : "Deine Einrichtungsübersicht"}
+              </Text>
+              <SimpleGrid columns={{ base: 1, sm: 2 }} gap="2">
+                {selectedItems.map((item) => {
+                  const isComplete = completed.includes(item.id);
+                  const isCurrent = nextItem?.id === item.id;
+
+                  return (
+                    <Flex
+                      key={item.id}
+                      className={`curaelis-onboarding-progress-item${isComplete ? " is-complete" : ""}${isCurrent ? " is-current" : ""}`}
+                      align="center"
+                      gap="2"
+                      padding="2"
+                      borderRadius="lg"
+                    >
+                      <Text className="curaelis-onboarding-progress-icon" aria-hidden="true">
+                        {isComplete ? "✓" : isCurrent ? "→" : "○"}
+                      </Text>
+                      <Box minWidth="0">
+                        <Text fontSize="sm" fontWeight="700" lineHeight="1.2">
+                          {item.title}
+                        </Text>
+                        <Text fontSize="xs" color="gray.600">
+                          {isComplete
+                            ? (isEnglish ? "Completed" : "Erledigt")
+                            : isCurrent
+                              ? (isEnglish ? "Current step" : "Aktueller Schritt")
+                              : (isEnglish ? "Still open" : "Noch offen")}
+                        </Text>
+                      </Box>
+                    </Flex>
+                  );
+                })}
+              </SimpleGrid>
+            </Box>
             <Box className="curaelis-onboarding-current" borderWidth="1px" borderColor="teal.200" borderRadius="xl" padding="6" background="teal.50">
               <Heading size="md" color="teal.900">{nextItem.title}</Heading>
               <Text mt="3">{nextItem.description}</Text>
             </Box>
-            <Flex gap="3" wrap="wrap">
-              <Button as={Link} to={nextItem.path} colorPalette="teal" size="lg" flex="1" minW="220px">
+            <Flex className="curaelis-onboarding-actions" gap="3" wrap="wrap" align="stretch">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={goBack}
+                flex="1 1 180px"
+                minW="180px"
+              >
+                {isEnglish ? "Back" : "Zurück"}
+              </Button>
+              <Button
+                variant="outline"
+                colorPalette="orange"
+                size="lg"
+                onClick={skipCurrent}
+                flex="1 1 180px"
+                minW="180px"
+              >
+                {isEnglish ? "Skip" : "Überspringen"}
+              </Button>
+              <Button as={Link} to={nextItem.path} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
                 {isEnglish ? "Set up now" : "Jetzt einrichten"}
               </Button>
-              <Button variant="outline" size="lg" onClick={markDone} flex="1" minW="220px">
+              <Button variant="outline" size="lg" onClick={markDone} flex="1 1 220px" minW="220px">
                 {isEnglish ? "Already done / continue" : "Erledigt / weiter"}
               </Button>
             </Flex>

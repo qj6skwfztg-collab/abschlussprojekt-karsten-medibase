@@ -1063,6 +1063,57 @@ header .accessibility-buttons button {
   background: linear-gradient(145deg, #f0fdfa, #fffaf0) !important;
 }
 
+.curaelis-onboarding-progress-item {
+  background: #f7fafc;
+  color: #4a5568;
+}
+
+.curaelis-onboarding-progress-item.is-current {
+  background: #fffaf0;
+  color: #7b341e;
+}
+
+.curaelis-onboarding-progress-item.is-complete {
+  background: #f0fff4;
+  color: #276749;
+}
+
+.curaelis-onboarding-progress-icon {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #718096;
+  font-weight: 900;
+}
+
+.curaelis-onboarding-progress-item.is-current .curaelis-onboarding-progress-icon {
+  background: #fbd38d;
+  color: #7b341e;
+}
+
+.curaelis-onboarding-progress-item.is-complete .curaelis-onboarding-progress-icon {
+  background: #68d391;
+  color: #22543d;
+}
+
+.curaelis-onboarding-actions > button {
+  min-height: 58px;
+  border-width: 2px;
+  border-radius: 18px;
+  font-weight: 800;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.curaelis-onboarding-actions > button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(45, 55, 72, 0.13);
+  filter: brightness(1.03);
+}
+
 .founder-callout {
   letter-spacing: 0.005em;
   text-rendering: optimizeLegibility;

@@ -31,6 +31,7 @@ function OnboardingWizard() {
   const [isDismissed, setIsDismissed] = useState(false);
   const [selection, setSelection] = useState(defaultSelection);
   const [completed, setCompleted] = useState([]);
+  const [skipped, setSkipped] = useState([]);
   const [detected, setDetected] = useState({});
   const [isStarted, setIsStarted] = useState(false);
   const [selectionError, setSelectionError] = useState("");
@@ -75,10 +76,12 @@ function OnboardingWizard() {
 
         if (savedState?.selection) setSelection({ ...defaultSelection, ...savedState.selection });
         if (Array.isArray(savedState?.completed)) setCompleted(savedState.completed);
+        if (Array.isArray(savedState?.skipped)) setSkipped(savedState.skipped);
         setIsStarted(Boolean(savedState?.started));
       } catch {
         setSelection(defaultSelection);
         setCompleted([]);
+        setSkipped([]);
         setIsStarted(false);
       }
     });
@@ -147,13 +150,23 @@ function OnboardingWizard() {
   const selectedItems = items.filter((item) => selection[item.id]);
   const isItemComplete = (item) =>
     completed.includes(item.id) || Boolean(detected[item.id]);
-  const nextItem = selectedItems.find((item) => !isItemComplete(item));
+  const nextItem = selectedItems.find(
+    (item) => !isItemComplete(item) && !skipped.includes(item.id)
+  );
   const completedCount = selectedItems.filter(isItemComplete).length;
+  const skippedItems = selectedItems.filter(
+    (item) => skipped.includes(item.id) && !isItemComplete(item)
+  );
 
-  function saveState(nextSelection, nextCompleted, started = true) {
+  function saveState(nextSelection, nextCompleted, nextSkipped = skipped, started = true) {
     localStorage.setItem(
       getStorageKey(ONBOARDING_STATE_KEY_PREFIX, user.uid),
-      JSON.stringify({ selection: nextSelection, completed: nextCompleted, started })
+      JSON.stringify({
+        selection: nextSelection,
+        completed: nextCompleted,
+        skipped: nextSkipped,
+        started,
+      })
     );
   }
 
@@ -172,8 +185,9 @@ function OnboardingWizard() {
     }
 
     setCompleted([]);
+    setSkipped([]);
     setIsStarted(true);
-    saveState(selection, []);
+    saveState(selection, [], []);
   }
 
   function markDone() {
@@ -181,29 +195,35 @@ function OnboardingWizard() {
 
     const nextCompleted = [...completed, nextItem.id];
     setCompleted(nextCompleted);
-    saveState(selection, nextCompleted);
+    const nextSkipped = skipped.filter((id) => id !== nextItem.id);
+    setSkipped(nextSkipped);
+    saveState(selection, nextCompleted, nextSkipped);
   }
 
   function skipCurrent() {
-    markDone();
+    if (!nextItem) return;
+
+    const nextSkipped = [...new Set([...skipped, nextItem.id])];
+    setSkipped(nextSkipped);
+    saveState(selection, completed, nextSkipped);
   }
 
   function goBack() {
-    if (completed.length === 0) {
+    const lastActionId = [...selectedItems]
+      .reverse()
+      .find((item) => completed.includes(item.id) || skipped.includes(item.id))?.id;
+
+    if (!lastActionId) {
       setIsStarted(false);
-      saveState(selection, [], false);
+      saveState(selection, completed, skipped, false);
       return;
     }
 
-    const lastCompletedId = [...selectedItems]
-      .reverse()
-      .find((item) => completed.includes(item.id))?.id;
-
-    if (!lastCompletedId) return;
-
-    const previousCompleted = completed.filter((id) => id !== lastCompletedId);
+    const previousCompleted = completed.filter((id) => id !== lastActionId);
+    const previousSkipped = skipped.filter((id) => id !== lastActionId);
     setCompleted(previousCompleted);
-    saveState(selection, previousCompleted);
+    setSkipped(previousSkipped);
+    saveState(selection, previousCompleted, previousSkipped);
   }
 
   function finishSetup() {
@@ -262,21 +282,22 @@ function OnboardingWizard() {
               </Text>
               <SimpleGrid columns={{ base: 1, sm: 2 }} gap="2">
                 {selectedItems.map((item) => {
-                  const isDetected = Boolean(detected[item.id]);
                   const isComplete = isItemComplete(item);
+                  const isDetected = Boolean(detected[item.id]);
+                  const isSkipped = skipped.includes(item.id) && !isComplete;
                   const isCurrent = nextItem?.id === item.id;
 
                   return (
                     <Flex
                       key={item.id}
-                      className={`curaelis-onboarding-progress-item${isComplete ? " is-complete" : ""}${isCurrent ? " is-current" : ""}`}
+                      className={`curaelis-onboarding-progress-item${isComplete ? " is-complete" : ""}${isSkipped ? " is-skipped" : ""}${isCurrent ? " is-current" : ""}`}
                       align="center"
                       gap="2"
                       padding="2"
                       borderRadius="lg"
                     >
                       <Text className="curaelis-onboarding-progress-icon" aria-hidden="true">
-                        {isComplete ? "✓" : isCurrent ? "→" : "○"}
+                        {isComplete ? "✓" : isSkipped ? "↷" : isCurrent ? "→" : "○"}
                       </Text>
                       <Box minWidth="0">
                         <Text fontSize="sm" fontWeight="700" lineHeight="1.2">
@@ -287,6 +308,8 @@ function OnboardingWizard() {
                             ? (isDetected
                               ? (isEnglish ? "Already present" : "Bereits vorhanden")
                               : (isEnglish ? "Completed" : "Erledigt"))
+                            : isSkipped
+                              ? (isEnglish ? "Skipped" : "Übersprungen")
                             : isCurrent
                               ? (isEnglish ? "Current step" : "Aktueller Schritt")
                               : (isEnglish ? "Still open" : "Noch offen")}
@@ -339,10 +362,31 @@ function OnboardingWizard() {
           </Stack>
         ) : (
           <Stack gap="5" mt="7">
-            <Box background="green.50" borderWidth="1px" borderColor="green.200" borderRadius="xl" padding="6">
-              <Heading size="md" color="green.800">{isEnglish ? "Curaelis is ready" : "Curaelis ist eingerichtet"}</Heading>
-              <Text mt="3">{isEnglish ? "You can edit your medications, health entries and emergency information at any time." : "Du kannst Medikamente, Gesundheitseinträge und Notfallangaben jederzeit bearbeiten."}</Text>
+            <Box background={skippedItems.length > 0 ? "orange.50" : "green.50"} borderWidth="1px" borderColor={skippedItems.length > 0 ? "orange.200" : "green.200"} borderRadius="xl" padding="6">
+              <Heading size="md" color={skippedItems.length > 0 ? "orange.800" : "green.800"}>
+                {skippedItems.length > 0
+                  ? (isEnglish ? "Setup paused" : "Einrichtung teilweise abgeschlossen")
+                  : (isEnglish ? "Curaelis is ready" : "Curaelis ist eingerichtet")}
+              </Heading>
+              <Text mt="3">
+                {skippedItems.length > 0
+                  ? (isEnglish ? "You can complete the skipped areas later in your account." : "Die übersprungenen Bereiche kannst du später in deinem Konto nachholen.")
+                  : (isEnglish ? "You can edit your medications, health entries and emergency information at any time." : "Du kannst Medikamente, Gesundheitseinträge und Notfallangaben jederzeit bearbeiten.")}
+              </Text>
             </Box>
+            {skippedItems.length > 0 && (
+              <Button
+                variant="outline"
+                colorPalette="orange"
+                size="lg"
+                onClick={() => {
+                  setSkipped([]);
+                  saveState(selection, completed, []);
+                }}
+              >
+                {isEnglish ? "Complete skipped areas" : "Übersprungene Bereiche nachholen"}
+              </Button>
+            )}
             <Button colorPalette="teal" size="lg" onClick={finishSetup}>
               {isEnglish ? "Go to my medications" : "Zu meinen Medikamenten"}
             </Button>

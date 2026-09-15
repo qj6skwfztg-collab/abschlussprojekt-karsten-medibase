@@ -1078,6 +1078,11 @@ header .accessibility-buttons button {
   color: #276749;
 }
 
+.curaelis-onboarding-progress-item.is-skipped {
+  background: #fffaf0;
+  color: #975a16;
+}
+
 .curaelis-onboarding-progress-icon {
   display: grid;
   width: 24px;
@@ -1098,6 +1103,11 @@ header .accessibility-buttons button {
 .curaelis-onboarding-progress-item.is-complete .curaelis-onboarding-progress-icon {
   background: #68d391;
   color: #22543d;
+}
+
+.curaelis-onboarding-progress-item.is-skipped .curaelis-onboarding-progress-icon {
+  background: #fbd38d;
+  color: #7b341e;
 }
 
 .curaelis-onboarding-actions > button {

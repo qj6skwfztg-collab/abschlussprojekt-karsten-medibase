@@ -6,7 +6,9 @@ function BackButton() {
   const { isEnglish } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
-  const isFromOnboarding = Boolean(location.state?.fromOnboarding);
+  const isFromOnboarding =
+    Boolean(location.state?.fromOnboarding) ||
+    new URLSearchParams(location.search).get("from") === "einrichtung";
   const isAfterOnboarding = Boolean(location.state?.onboardingFinished);
 
   if (location.pathname === "/") {
@@ -21,6 +23,11 @@ function BackButton() {
 
     if (isAfterOnboarding) {
       navigate("/", { replace: true });
+      return;
+    }
+
+    if (location.pathname === "/einrichtung") {
+      navigate("/");
       return;
     }
 

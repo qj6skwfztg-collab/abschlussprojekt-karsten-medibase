@@ -24,6 +24,13 @@ function getStorageKey(prefix, uid) {
   return `${prefix}${uid}`;
 }
 
+function getOnboardingPath(path) {
+  const [pathWithoutHash, hash] = path.split("#");
+  const separator = pathWithoutHash.includes("?") ? "&" : "?";
+
+  return `${pathWithoutHash}${separator}from=einrichtung${hash ? `#${hash}` : ""}`;
+}
+
 function OnboardingWizard() {
   const { isEnglish } = useLanguage();
   const navigate = useNavigate();
@@ -157,6 +164,9 @@ function OnboardingWizard() {
   const skippedItems = selectedItems.filter(
     (item) => skipped.includes(item.id) && !isItemComplete(item)
   );
+  const lastActionId = [...selectedItems]
+    .reverse()
+    .find((item) => completed.includes(item.id) || skipped.includes(item.id))?.id;
 
   function saveState(nextSelection, nextCompleted, nextSkipped = skipped, started = true) {
     localStorage.setItem(
@@ -209,13 +219,7 @@ function OnboardingWizard() {
   }
 
   function goBack() {
-    const lastActionId = [...selectedItems]
-      .reverse()
-      .find((item) => completed.includes(item.id) || skipped.includes(item.id))?.id;
-
     if (!lastActionId) {
-      setIsStarted(false);
-      saveState(selection, completed, skipped, false);
       return;
     }
 
@@ -295,6 +299,10 @@ function OnboardingWizard() {
                   return (
                     <Flex
                       key={item.id}
+                      as={Link}
+                      to={getOnboardingPath(item.path)}
+                      state={{ fromOnboarding: true }}
+                      aria-label={isEnglish ? `Open ${item.title}` : `${item.title} öffnen`}
                       className={`curaelis-onboarding-progress-item${isComplete ? " is-complete" : ""}${isConfirmedWithoutData ? " is-confirmed-without-data" : ""}${isSkipped ? " is-skipped" : ""}${isCurrent ? " is-current" : ""}`}
                       align="center"
                       gap="2"
@@ -339,6 +347,7 @@ function OnboardingWizard() {
                 variant="outline"
                 size="lg"
                 onClick={goBack}
+                disabled={!lastActionId}
                 flex="1 1 180px"
                 minW="180px"
               >
@@ -354,7 +363,7 @@ function OnboardingWizard() {
               >
                 {isEnglish ? "Skip" : "Überspringen"}
               </Button>
-              <Button as={Link} to={nextItem.path} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
+              <Button as={Link} to={getOnboardingPath(nextItem.path)} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
                 {isEnglish ? "Enter data" : "Daten eintragen"}
               </Button>
               <Button variant="outline" size="lg" onClick={markDone} flex="1 1 220px" minW="220px">

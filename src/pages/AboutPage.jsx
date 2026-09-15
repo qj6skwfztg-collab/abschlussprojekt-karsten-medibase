@@ -59,33 +59,57 @@ function AboutPage() {
         {isEnglish ? "Application features" : "Funktionen der Anwendung"}
       </Heading>
 
-      <List.Root marginTop="4" paddingLeft="6">
-        <List.Item>
+      <List.Root marginTop="4" className="about-feature-list">
+        <List.Item className="about-feature-item">
           {isEnglish ? "Search medications and filter by category" : "Medikamente suchen und nach Kategorien filtern"}
         </List.Item>
 
-        <List.Item>
+        <List.Item className="about-feature-item">
           {isEnglish ? "View detailed information and sources" : "Detailinformationen und Quellen aufrufen"}
         </List.Item>
 
-        <List.Item>
-          {isEnglish ? "Create personal medication entries" : "Eigene Medikamenteneinträge erstellen"}
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Create personal medication plans with dosage, intake times and notes" : "Persönliche Medikamentenpläne mit Dosierung, Einnahmezeiten und Notizen anlegen"}
         </List.Item>
 
-        <List.Item>
-          {isEnglish ? "Save personal entries securely in the user account" : "Eigene Einträge sicher im Benutzerkonto speichern"}
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Set up intake reminders and test notifications" : "Einnahmeerinnerungen einrichten und Testbenachrichtigungen senden"}
         </List.Item>
 
-        <List.Item>
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Save personal data securely in your user account" : "Persönliche Daten sicher im Benutzerkonto speichern"}
+        </List.Item>
+
+        <List.Item className="about-feature-item">
           {isEnglish ? "Record weight, blood pressure, pulse and other health values" : "Gewicht, Blutdruck, Puls und weitere Gesundheitswerte dokumentieren"}
         </List.Item>
 
-        <List.Item>
-          {isEnglish ? "View saved measurements in a clear visual trend" : "Gespeicherte Messwerte in einem klaren grafischen Verlauf ansehen"}
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Edit or delete health entries and view measurements in clear visual trends" : "Gesundheitseinträge bearbeiten oder löschen und Messwerte in klaren grafischen Verläufen ansehen"}
         </List.Item>
 
-        <List.Item>
-          {isEnglish ? "Prepare a printable health overview for a medical appointment" : "Eine druckbare Gesundheitsübersicht für den Arzttermin erstellen"}
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Manage a private emergency pass with selected medications, health values and emergency details" : "Einen privaten Notfallpass mit ausgewählten Medikamenten, Gesundheitswerten und Notfallangaben verwalten"}
+        </List.Item>
+
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Save up to three emergency contacts and prepare a help message" : "Bis zu drei Notfallkontakte speichern und eine Hilfenachricht vorbereiten"}
+        </List.Item>
+
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Prepare a printable doctor overview, attach files or photos and share it by email" : "Eine druckbare Arztübersicht erstellen, Dateien oder Bilder anfügen und per E-Mail teilen"}
+        </List.Item>
+
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Save a doctor's practice email address for faster report sharing" : "Die E-Mail-Adresse der Arztpraxis für einen schnelleren Versand speichern"}
+        </List.Item>
+
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Use the first-time setup assistant and reopen it later from your account" : "Den Einrichtungsassistenten beim ersten Start nutzen und später im Konto erneut öffnen"}
+        </List.Item>
+
+        <List.Item className="about-feature-item">
+          {isEnglish ? "Adjust font size, contrast, read-aloud support and language" : "Schriftgröße, Kontrast, Vorlesefunktion und Sprache anpassen"}
         </List.Item>
       </List.Root>
 

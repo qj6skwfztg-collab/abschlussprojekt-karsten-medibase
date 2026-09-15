@@ -26,6 +26,8 @@ function RegisterPage() {
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [verificationNotice, setVerificationNotice] = useState("");
   const [registrationComplete, setRegistrationComplete] =
     useState(false);
 
@@ -86,14 +88,21 @@ function RegisterPage() {
           password
         );
 
-      await sendEmailVerification(userCredential.user);
-
       localStorage.setItem(
         `${ONBOARDING_PENDING_KEY_PREFIX}${userCredential.user.uid}`,
         "true"
       );
 
-      await signOut(auth);
+      try {
+        await sendEmailVerification(userCredential.user);
+        setVerificationNotice(
+          "Die Bestätigungs-E-Mail wurde verschickt. Bitte prüfe auch den Spam- oder Junk-Ordner."
+        );
+      } catch {
+        setVerificationNotice(
+          "Das Konto wurde erstellt, aber die Bestätigungs-E-Mail konnte gerade nicht verschickt werden. Bitte versuche es gleich erneut."
+        );
+      }
 
       setRegistrationComplete(true);
     } catch (firebaseError) {
@@ -112,6 +121,27 @@ function RegisterPage() {
       }
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function handleResendVerification() {
+    if (!auth.currentUser) {
+      setVerificationNotice("Bitte gehe zurück zur Anmeldung und melde dich erneut an.");
+      return;
+    }
+
+    try {
+      setIsResending(true);
+      await sendEmailVerification(auth.currentUser);
+      setVerificationNotice(
+        "Die Bestätigungs-E-Mail wurde erneut verschickt. Bitte prüfe auch den Spam- oder Junk-Ordner."
+      );
+    } catch {
+      setVerificationNotice(
+        "Die E-Mail konnte gerade nicht erneut verschickt werden. Bitte warte kurz und versuche es noch einmal."
+      );
+    } finally {
+      setIsResending(false);
     }
   }
 
@@ -137,11 +167,34 @@ function RegisterPage() {
             {isEnglish ? "We sent you a verification email. Open it and select the link it contains." : "Wir haben dir eine Bestätigungs-E-Mail geschickt. Öffne die E-Mail und klicke auf den enthaltenen Link."}
           </Text>
 
+          <Text marginBottom="4" color="gray.700">
+            {isEnglish
+              ? "If it does not arrive within a few minutes, check your spam folder or send it again."
+              : "Wenn sie nach einigen Minuten nicht ankommt, prüfe bitte den Spam- oder Junk-Ordner oder sende sie erneut."}
+          </Text>
+
+          {verificationNotice && (
+            <Text marginBottom="4" color="teal.800" fontWeight="700">
+              {verificationNotice}
+            </Text>
+          )}
+
+          <Button
+            type="button"
+            variant="outline"
+            colorPalette="teal"
+            marginBottom="4"
+            onClick={handleResendVerification}
+            loading={isResending}
+          >
+            {isEnglish ? "Resend verification email" : "Bestätigungs-E-Mail erneut senden"}
+          </Button>
+
           <Text marginBottom="4">
             {isEnglish ? "You can then sign in to Curaelis." : "Danach kannst du dich bei Curaelis anmelden."}
           </Text>
 
-          <Link to="/login">
+          <Link to="/login" onClick={() => signOut(auth)}>
             {isEnglish ? "Go to sign in" : "Zur Anmeldung"}
           </Link>
         </Box>

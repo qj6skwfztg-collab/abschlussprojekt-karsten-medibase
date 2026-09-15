@@ -6,7 +6,6 @@ import { ADMIN_UID, auth } from "../firebase";
 import AccessibilityControls from "./AccessibilityControls";
 import MobileBottomNavigation from "./MobileBottomNavigation";
 import useLanguage from "../hooks/useLanguage";
-import { PUBLIC_REGISTRATION_ENABLED } from "../config/features";
 
 function Header({ onMenuStateChange }) {
   const { isEnglish } = useLanguage();
@@ -261,11 +260,9 @@ function Header({ onMenuStateChange }) {
                     {isEnglish ? "Sign in" : "Anmelden"}
                   </Link>
 
-                  {PUBLIC_REGISTRATION_ENABLED && (
-                    <Link className="header-link" to="/registrieren" onClick={closeMenu} {...getNavigationLinkProps("/registrieren")}>
-                      {isEnglish ? "Create account" : "Konto erstellen"}
-                    </Link>
-                  )}
+                  <Link className="header-link" to="/registrieren" onClick={closeMenu} {...getNavigationLinkProps("/registrieren")}>
+                    {isEnglish ? "Create account" : "Konto erstellen"}
+                  </Link>
                 </>
               )}
             </Flex>

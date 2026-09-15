@@ -17,7 +17,6 @@ import { auth } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import PasswordField from "../components/PasswordField";
 import { ONBOARDING_PENDING_KEY_PREFIX } from "../components/OnboardingWizard";
-import { PUBLIC_REGISTRATION_ENABLED } from "../config/features";
 
 function LoginPage() {
   const { isEnglish } = useLanguage();
@@ -150,14 +149,12 @@ function LoginPage() {
             {isEnglish ? "Forgot password" : "Passwort vergessen"}
           </Button>
 
-          {PUBLIC_REGISTRATION_ENABLED && (
-            <Text>
-              {isEnglish ? "No account yet? " : "Noch kein Konto? "}
-              <Link to="/registrieren">
-                {isEnglish ? "Create account" : "Konto erstellen"}
-              </Link>
-            </Text>
-          )}
+          <Text>
+            {isEnglish ? "No account yet? " : "Noch kein Konto? "}
+            <Link to="/registrieren">
+              {isEnglish ? "Create account" : "Konto erstellen"}
+            </Link>
+          </Text>
 
           {message && <Text>{message}</Text>}
         </Stack>

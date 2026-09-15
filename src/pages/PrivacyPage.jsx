@@ -1,4 +1,5 @@
 import { Box, Heading, Link, List, Text } from "@chakra-ui/react";
+import { PUBLIC_CONTACT_INFO_ENABLED } from "../config/features";
 
 function PrivacyPage() {
   return (
@@ -24,12 +25,17 @@ function PrivacyPage() {
         <br />
         49186 Bad Iburg
         <br />
-        E-Mail: {" "}
-        <a href="mailto:karsten.ketme@outlook.com">
-          karsten.ketme@outlook.com
-        </a>
-        <br />
-        Telefon: 0171 2986859
+        {PUBLIC_CONTACT_INFO_ENABLED && (
+          <>
+            <br />
+            E-Mail: {" "}
+            <a href="mailto:karsten.ketme@outlook.com">
+              karsten.ketme@outlook.com
+            </a>
+            <br />
+            Telefon: 0171 2986859
+          </>
+        )}
       </Text>
 
       <Heading size="md" mt="8" mb="3">
@@ -113,7 +119,7 @@ function PrivacyPage() {
         dein Benutzerkonto sowie deine persönlichen Medikamente und
         Notfallkontakte jederzeit über den Bereich „Mein Konto“ dauerhaft
         löschen. Eine Löschung oder Auskunft kann zusätzlich über die oben
-        genannte Kontaktadresse angefragt werden.
+        genannte Kontaktmöglichkeit angefragt werden.
       </Text>
 
       <Heading size="md" mt="8" mb="3">

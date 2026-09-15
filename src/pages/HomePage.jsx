@@ -14,6 +14,7 @@ import vitruvianImage from "../assets/medibase-vitruvian.png";
 import founderCharacter from "../assets/curaelis-karsten-anime.png";
 import SafetyNotice from "../components/SafetyNotice";
 import useLanguage from "../hooks/useLanguage";
+import { PREVIEW_NOTICE_ENABLED } from "../config/features";
 
 function ActionIcon({ symbol }) {
   return (
@@ -287,6 +288,19 @@ function HomePage() {
             borderRadius="2xl"
             boxShadow="sm"
           >
+            {PREVIEW_NOTICE_ENABLED && (
+              <Box className="home-preview-notice" role="status">
+                <Text className="home-preview-notice-title">
+                  {isEnglish ? "Preview version" : "Aktuelle Vorschau"}
+                </Text>
+                <Text className="home-preview-notice-copy">
+                  {isEnglish
+                    ? "Curaelis is currently shown for demonstration. The full experience will be activated with the official app release."
+                    : "Curaelis ist aktuell nur zur Veranschaulichung online. Mit der Veröffentlichung der App wird die Website vollständig aktiviert."}
+                </Text>
+              </Box>
+            )}
+
             <Heading size="md" color="teal.900">
               {isEnglish ? "What would you like to do?" : "Was möchtest du tun?"}
             </Heading>

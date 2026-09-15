@@ -391,7 +391,7 @@ function HealthDiaryPage() {
         doctorEmail: "Email address of doctor's practice (optional)",
         doctorEmailPlaceholder: "practice@example.com",
         doctorEmailHint:
-          "Saved only on this device. Check the address before sending.",
+          "Saved only on this device. Enter it once on each device and check the address before sending.",
         emailMissing: "Please enter the doctor's practice email address first.",
         emailInvalid: "Please check the email address.",
         emailAttachmentNote:
@@ -411,7 +411,7 @@ function HealthDiaryPage() {
         sharePdf: "Share PDF + files",
         emailOpening: "Opening your email app …",
         emailOpened: "The email app should now be open. Attach the saved PDF before sending.",
-        emailFallback: "If nothing opens, no email app is available on this device. This can happen in the iPhone Simulator.",
+        emailFallback: "If your email app does not open, please check that an email app is installed and set up on this device.",
         emailRetry: "Open email app again",
         emailCopy: "Copy practice address",
         emailCopied: "Practice address copied.",
@@ -501,7 +501,7 @@ function HealthDiaryPage() {
         doctorEmail: "E-Mail-Adresse der Arztpraxis (optional)",
         doctorEmailPlaceholder: "praxis@beispiel.de",
         doctorEmailHint:
-          "Wird nur auf diesem Gerät gespeichert. Prüfe die Adresse vor dem Versand.",
+          "Wird nur auf diesem Gerät gespeichert. Auf jedem Gerät einmal eintragen und vor dem Versand prüfen.",
         emailMissing: "Gib zuerst die E-Mail-Adresse der Arztpraxis ein.",
         emailInvalid: "Bitte überprüfe die E-Mail-Adresse.",
         emailAttachmentNote:
@@ -521,7 +521,7 @@ function HealthDiaryPage() {
         sharePdf: "PDF + Dateien teilen",
         emailOpening: "Die Mail-App wird geöffnet …",
         emailOpened: "Die Mail-App sollte jetzt geöffnet sein. Füge die gespeicherte PDF vor dem Senden als Anhang hinzu.",
-        emailFallback: "Wenn sich nichts öffnet, ist auf diesem Gerät keine Mail-App verfügbar. Das kann im iPhone-Simulator vorkommen.",
+        emailFallback: "Wenn sich die Mail-App nicht öffnet, prüfe bitte, ob eine Mail-App auf diesem Gerät installiert und eingerichtet ist.",
         emailRetry: "Mail-App erneut öffnen",
         emailCopy: "Praxisadresse kopieren",
         emailCopied: "Praxisadresse wurde kopiert.",
@@ -584,6 +584,13 @@ function HealthDiaryPage() {
 
     setDoctorEmail(value);
     localStorage.setItem(DOCTOR_EMAIL_STORAGE_KEY, value);
+  }
+
+  function focusDoctorEmailField() {
+    const field = document.getElementById("doctor-email");
+
+    field?.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.setTimeout(() => field?.focus(), 350);
   }
 
   function handleReportFilesChange(event) {
@@ -1005,11 +1012,13 @@ function HealthDiaryPage() {
 
     if (!recipient) {
       setPrintMessage(text.emailMissing);
+      focusDoctorEmailField();
       return;
     }
 
     if (!emailPattern.test(recipient)) {
       setPrintMessage(text.emailInvalid);
+      focusDoctorEmailField();
       return;
     }
 
@@ -1170,6 +1179,7 @@ function HealthDiaryPage() {
         </Flex>
         {printMessage && (
           <Box
+            className="health-report-print-message"
             mt="4"
             padding="3"
             borderRadius="md"
@@ -1402,6 +1412,7 @@ function HealthDiaryPage() {
         )}
         {printMessage && (
           <Box
+            className="health-report-print-message"
             mt="4"
             padding="3"
             borderRadius="md"

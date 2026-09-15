@@ -1011,6 +1011,58 @@ header .accessibility-buttons button {
   border-radius: 18px;
 }
 
+.health-report-print-message {
+  padding: 16px 18px !important;
+  background: #fffaf0 !important;
+  color: #7b341e !important;
+  border: 2px solid #ed8936 !important;
+  border-radius: 18px !important;
+  font-size: 1.08rem;
+  font-weight: 800;
+  box-shadow: 0 8px 18px rgba(221, 107, 32, 0.16);
+  animation: health-report-message-pulse 1.8s ease-in-out 2;
+}
+
+@keyframes health-report-message-pulse {
+  0%, 100% { box-shadow: 0 8px 18px rgba(221, 107, 32, 0.16); }
+  50% { box-shadow: 0 8px 24px rgba(221, 107, 32, 0.38); }
+}
+
+.curaelis-onboarding-card {
+  background: linear-gradient(145deg, #ffffff 0%, #fffaf2 100%) !important;
+}
+
+.curaelis-onboarding-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  border: 2px solid #f6ad55;
+  border-radius: 18px;
+  background: #fffaf0;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.curaelis-onboarding-option:hover,
+.curaelis-onboarding-option:focus-within {
+  border-color: #dd6b20;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(221, 107, 32, 0.14);
+}
+
+.curaelis-onboarding-option input {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  margin-top: 2px;
+  accent-color: #0f766e;
+}
+
+.curaelis-onboarding-current {
+  background: linear-gradient(145deg, #f0fdfa, #fffaf0) !important;
+}
+
 .founder-callout {
   letter-spacing: 0.005em;
   text-rendering: optimizeLegibility;

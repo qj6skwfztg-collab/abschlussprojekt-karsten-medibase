@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { auth } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import PasswordField from "../components/PasswordField";
+import { ONBOARDING_PENDING_KEY_PREFIX } from "../components/OnboardingWizard";
 import { PUBLIC_REGISTRATION_ENABLED } from "../config/features";
 
 function RegisterPage() {
@@ -86,6 +87,11 @@ function RegisterPage() {
         );
 
       await sendEmailVerification(userCredential.user);
+
+      localStorage.setItem(
+        `${ONBOARDING_PENDING_KEY_PREFIX}${userCredential.user.uid}`,
+        "true"
+      );
 
       await signOut(auth);
 

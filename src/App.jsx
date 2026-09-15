@@ -21,6 +21,7 @@ import AccountPage from "./pages/AccountPage";
 import InstallPage from "./pages/InstallPage";
 import HealthDiaryPage from "./pages/HealthDiaryPage";
 import PersonalMedicationReminder from "./components/PersonalMedicationReminder";
+import OnboardingWizard from "./components/OnboardingWizard";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -57,6 +58,15 @@ function App() {
         <Route
           path="/registrieren"
           element={<RegisterPage />}
+        />
+
+        <Route
+          path="/einrichtung"
+          element={
+            <ProtectedRoute>
+              <OnboardingWizard />
+            </ProtectedRoute>
+          }
         />
 
         <Route

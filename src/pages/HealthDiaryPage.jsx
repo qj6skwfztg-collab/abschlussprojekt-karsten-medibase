@@ -398,7 +398,7 @@ function HealthDiaryPage() {
         reportEmpty: "Add at least one entry before creating a report.",
         reportTitle: "Doctor report",
         reportHint:
-          "Create a clear PDF for a medical appointment or share it together with additional files and images.",
+          "Create a clear PDF for a medical appointment. Then choose whether to open an email to the practice or share the PDF and additional files.",
         attachFiles: "Attach files",
         filesSelected: "Selected files",
         fileHint: "Choose photos or documents from your phone. They stay on this device until you share them.",
@@ -408,8 +408,11 @@ function HealthDiaryPage() {
         pdfLocation: "File: {fileName}. On a computer it is usually in Downloads. On iPhone, tap Share → Save to Files and choose Downloads or another folder.",
         pdfError: "The PDF could not be created. Please try again.",
         sharePdf: "Share PDF / send by email",
+        emailOpening: "Opening your email app …",
+        emailOpened: "The email app should now be open. Attach the saved PDF before sending.",
+        shareCancelled: "Sharing was cancelled. Your PDF is still available to save or share.",
         shareUnsupported:
-          "Sharing a PDF is not supported on this device. Download the PDF and attach it manually.",
+          "No sharing app is available here. Download the PDF and attach it manually in your email app.",
         shareReady:
           "The share menu was opened. Choose your email app and check the data before sending.",
         loading: "Loading entries …",
@@ -501,7 +504,7 @@ function HealthDiaryPage() {
         reportEmpty: "Füge zuerst mindestens einen Eintrag hinzu.",
         reportTitle: "Arztübersicht",
         reportHint:
-          "Erstelle eine übersichtliche PDF für den Arzttermin oder teile sie zusammen mit zusätzlichen Dateien und Bildern.",
+          "Erstelle eine übersichtliche PDF für den Arzttermin. Danach kannst du eine Mail an die Praxis öffnen oder die PDF zusammen mit zusätzlichen Dateien teilen.",
         attachFiles: "Dateien anfügen",
         filesSelected: "Ausgewählte Dateien",
         fileHint: "Wähle Bilder oder Dokumente vom Handy aus. Sie bleiben auf diesem Gerät, bis du sie teilst.",
@@ -511,8 +514,11 @@ function HealthDiaryPage() {
         pdfLocation: "Datei: {fileName}. Am PC liegt sie normalerweise im Ordner Downloads. Auf dem iPhone tippe auf Teilen → In Dateien sichern und wähle Downloads oder einen anderen Ordner.",
         pdfError: "Die PDF konnte nicht erstellt werden. Bitte versuche es erneut.",
         sharePdf: "PDF teilen / per E-Mail senden",
+        emailOpening: "Die Mail-App wird geöffnet …",
+        emailOpened: "Die Mail-App sollte jetzt geöffnet sein. Füge die gespeicherte PDF vor dem Senden als Anhang hinzu.",
+        shareCancelled: "Das Teilen wurde abgebrochen. Deine PDF kann weiterhin gespeichert oder geteilt werden.",
         shareUnsupported:
-          "Das Teilen einer PDF wird auf diesem Gerät nicht unterstützt. Lade die PDF herunter und hänge sie manuell an.",
+          "Hier ist keine Teilen-App verfügbar. Lade die PDF herunter und füge sie anschließend manuell in deiner Mail-App an.",
         shareReady:
           "Das Teilen-Menü wurde geöffnet. Wähle deine Mail-App und prüfe die Daten vor dem Senden.",
         loading: "Einträge werden geladen …",
@@ -884,6 +890,16 @@ function HealthDiaryPage() {
     });
   }
 
+  function openMailComposer(mailtoUrl) {
+    const link = document.createElement("a");
+    link.href = mailtoUrl;
+    link.target = "_blank";
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
   async function handlePrint() {
     if (!hasReportSelection) {
       showMessage(text.reportNoSelection, "error");
@@ -919,11 +935,6 @@ function HealthDiaryPage() {
       return;
     }
 
-    if (!navigator.share || !navigator.canShare) {
-      setPrintMessage(text.shareUnsupported);
-      return;
-    }
-
     setPrintMessage(text.pdfCreating);
     setPdfDownloadInfo(false);
 
@@ -933,7 +944,13 @@ function HealthDiaryPage() {
 
       const shareFiles = [file, ...reportFiles];
 
-      if (!navigator.canShare({ files: shareFiles })) {
+      if (
+        !navigator.share ||
+        !navigator.canShare ||
+        !navigator.canShare({ files: shareFiles })
+      ) {
+        triggerPdfDownload(pdf, getReportFileName());
+        setPdfDownloadInfo(true);
         setPrintMessage(text.shareUnsupported);
         return;
       }
@@ -949,9 +966,9 @@ function HealthDiaryPage() {
       });
       setPrintMessage(text.shareReady);
     } catch (error) {
-      if (error?.name !== "AbortError") {
-        setPrintMessage(text.pdfError);
-      }
+      setPrintMessage(
+        error?.name === "AbortError" ? text.shareCancelled : text.pdfError
+      );
     }
   }
 
@@ -989,7 +1006,9 @@ function HealthDiaryPage() {
       `${intro}${getReportLines().join("\n")}\n\n${text.emailAttachmentNote}`
     );
 
-    window.location.assign(`mailto:${recipient}?subject=${subject}&body=${body}`);
+    setPrintMessage(text.emailOpening);
+    openMailComposer(`mailto:${recipient}?subject=${subject}&body=${body}`);
+    window.setTimeout(() => setPrintMessage(text.emailOpened), 700);
   }
 
   async function handleSubmit(event) {
@@ -1175,8 +1194,8 @@ function HealthDiaryPage() {
           </Text>
           <Text mt="1" fontSize="sm" color="gray.700">
             {isEnglish
-              ? "The PDF preview only shows the document. Use the buttons below to save it, share it with contacts or prepare an email to your saved doctor's practice."
-              : "Die PDF-Vorschau zeigt nur das Dokument. Mit den Buttons unten kannst du sie speichern, mit Kontakten teilen oder eine Mail an deine hinterlegte Arztpraxis vorbereiten."}
+              ? "Email to practice opens your email app with the address prepared; attach the saved PDF before sending. Share PDF opens Apple's share menu for Mail, Messages or saving to Files."
+              : "Die Mail an die Praxis öffnet deine Mail-App mit vorbereiteter Adresse; füge die gespeicherte PDF vor dem Senden als Anhang hinzu. „PDF teilen“ öffnet das Apple-Teilen-Menü für Mail, Nachrichten oder das Sichern in Dateien."}
           </Text>
         </Box>
         <Box className="health-report-options" mb="5">
@@ -1273,9 +1292,9 @@ function HealthDiaryPage() {
             size="lg"
             borderRadius="xl"
             onClick={handleEmail}
-            disabled={!hasReportData || !doctorEmail.trim()}
+            disabled={!hasReportData}
           >
-            🩺 {doctorEmail.trim() ? text.email : (isEnglish ? "Enter practice email" : "Arztpraxis-E-Mail eintragen")}
+            🩺 {text.email}
           </Button>
           <Button
             type="button"
@@ -1286,7 +1305,7 @@ function HealthDiaryPage() {
             onClick={handleSharePdf}
             disabled={!hasReportData}
           >
-            📤 {text.shareContacts}
+            📤 {text.sharePdf}
           </Button>
         </Flex>
         {printMessage && (

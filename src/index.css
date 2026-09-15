@@ -976,6 +976,34 @@ header .accessibility-buttons button {
   border-radius: 18px;
 }
 
+.health-report-attachment-basket {
+  padding: 16px;
+  background: #fffaf0;
+  border: 1px solid #f6ad55;
+  border-radius: 18px;
+}
+
+.health-report-share-callout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #975a16;
+  font-weight: 800;
+}
+
+.health-report-share-arrow {
+  display: inline-block;
+  color: #dd6b20;
+  font-size: 1.8rem;
+  line-height: 1;
+  animation: health-report-share-arrow-pulse 1.15s ease-in-out infinite;
+}
+
+@keyframes health-report-share-arrow-pulse {
+  0%, 100% { opacity: 0.45; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(8px); }
+}
+
 .health-report-download-info {
   padding: 14px 16px;
   background: #fffaf0;

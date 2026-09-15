@@ -230,7 +230,10 @@ function OnboardingWizard() {
     localStorage.removeItem(getStorageKey(ONBOARDING_PENDING_KEY_PREFIX, user.uid));
     localStorage.removeItem(getStorageKey(ONBOARDING_STATE_KEY_PREFIX, user.uid));
     setIsDismissed(true);
-    navigate("/meine-medikamente", { replace: true });
+    navigate("/meine-medikamente", {
+      replace: true,
+      state: { onboardingFinished: true },
+    });
   }
 
   return (

@@ -16,6 +16,7 @@ import deleteAccount from "../hooks/useDeleteAccount";
 import useEmergencyProfile from "../hooks/useEmergencyProfile";
 import PasswordField from "../components/PasswordField";
 import EmergencyContacts from "../components/EmergencyContacts";
+import { ONBOARDING_PENDING_KEY_PREFIX } from "../components/OnboardingWizard";
 
 function AccountPage() {
   const { isEnglish } = useLanguage();
@@ -37,6 +38,18 @@ function AccountPage() {
   const [profileMessage, setProfileMessage] = useState("");
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const profileForm = profileDraft || profile;
+
+  function reopenOnboarding() {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) return;
+
+    localStorage.setItem(
+      `${ONBOARDING_PENDING_KEY_PREFIX}${currentUser.uid}`,
+      "true"
+    );
+    navigate("/einrichtung");
+  }
 
   useEffect(() => {
     const targetId = ["#emergency-contacts", "#emergency-profile"].includes(
@@ -255,6 +268,20 @@ function AccountPage() {
             {text.contacts}
           </Button>
         </Stack>
+
+        <Box className="account-onboarding-reopen" marginTop="6">
+          <Heading size="sm" marginBottom="2">
+            {isEnglish ? "Curaelis setup" : "Curaelis Einrichtung"}
+          </Heading>
+          <Text marginBottom="3">
+            {isEnglish
+              ? "Open the setup assistant again. Existing data stays safe and will be recognized automatically."
+              : "Öffne den Einrichtungsassistenten erneut. Vorhandene Daten bleiben erhalten und werden automatisch erkannt."}
+          </Text>
+          <Button variant="outline" colorPalette="orange" onClick={reopenOnboarding}>
+            {isEnglish ? "Open setup again" : "Einrichtung erneut öffnen"}
+          </Button>
+        </Box>
       </Box>
 
       <EmergencyContacts allowDirectNotify />

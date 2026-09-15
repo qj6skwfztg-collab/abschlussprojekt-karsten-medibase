@@ -52,7 +52,10 @@ function LoginPage() {
         `${ONBOARDING_PENDING_KEY_PREFIX}${userCredential.user.uid}`
       ) === "true";
 
-      navigate(hasPendingOnboarding ? "/einrichtung" : "/meine-medikamente");
+      navigate(
+        hasPendingOnboarding ? "/einrichtung" : "/meine-medikamente",
+        { replace: true }
+      );
     } catch (firebaseError) {
       if (firebaseError?.code === "auth/timeout") {
         setMessage(

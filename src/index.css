@@ -326,6 +326,13 @@ header .accessibility-buttons button {
   scroll-margin-top: 24px;
 }
 
+.account-onboarding-reopen {
+  padding: 16px;
+  background: linear-gradient(135deg, #fffaf0 0%, #ffffff 100%);
+  border: 1px solid #f6ad55;
+  border-radius: 18px;
+}
+
 .health-report-options {
   padding: 16px 18px;
   background: linear-gradient(135deg, #f7fbff 0%, #f0fdfa 100%);

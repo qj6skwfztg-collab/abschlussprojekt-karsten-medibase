@@ -7,6 +7,7 @@ function BackButton() {
   const location = useLocation();
   const navigate = useNavigate();
   const isFromOnboarding = Boolean(location.state?.fromOnboarding);
+  const isAfterOnboarding = Boolean(location.state?.onboardingFinished);
 
   if (location.pathname === "/") {
     return null;
@@ -15,6 +16,11 @@ function BackButton() {
   function handleBack() {
     if (isFromOnboarding) {
       navigate("/einrichtung");
+      return;
+    }
+
+    if (isAfterOnboarding) {
+      navigate("/", { replace: true });
       return;
     }
 
@@ -38,12 +44,16 @@ function BackButton() {
         aria-label={
           isFromOnboarding
             ? (isEnglish ? "Return to setup" : "Zur Einrichtung zurück")
-            : (isEnglish ? "Go back" : "Zurückgehen")
+            : isAfterOnboarding
+              ? (isEnglish ? "Return to home page" : "Zur Startseite zurück")
+              : (isEnglish ? "Go back" : "Zurückgehen")
         }
       >
         ← {isFromOnboarding
           ? (isEnglish ? "Back to setup" : "Zur Einrichtung")
-          : (isEnglish ? "Back" : "Zurück")}
+          : isAfterOnboarding
+            ? (isEnglish ? "Home" : "Startseite")
+            : (isEnglish ? "Back" : "Zurück")}
       </Button>
     </Box>
   );

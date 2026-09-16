@@ -813,6 +813,9 @@ header .accessibility-buttons button {
 
   header #main-navigation .nav-group-medications {
     order: -1;
+    margin-left: 8px;
+    padding-left: 12px;
+    border-left: 1px solid rgba(255, 255, 255, 0.24);
   }
 
   header #main-navigation .nav-group-account {
@@ -838,9 +841,25 @@ header .accessibility-buttons button {
   header #main-navigation .header-link,
   header #main-navigation .nav-group-help a,
   header #main-navigation .nav-group-account button {
-    padding: 9px 10px !important;
-    font-size: 0.93rem !important;
+    min-height: 42px;
+    padding: 8px 10px !important;
+    font-size: 0.9rem !important;
     line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  header #main-navigation .nav-group-personal .header-link,
+  header #main-navigation .nav-group-medications .header-search-medications-link {
+    border-radius: 10px !important;
+    box-shadow: none;
+  }
+
+  header #main-navigation .header-emergency-contacts-link {
+    background: rgba(246, 173, 85, 0.14) !important;
+  }
+
+  header #main-navigation .header-search-medications-link {
+    padding-inline: 14px !important;
   }
 }
 

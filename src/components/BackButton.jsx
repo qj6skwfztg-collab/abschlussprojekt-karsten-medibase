@@ -10,6 +10,17 @@ function BackButton() {
     Boolean(location.state?.fromOnboarding) ||
     new URLSearchParams(location.search).get("from") === "einrichtung";
   const isAfterOnboarding = Boolean(location.state?.onboardingFinished);
+  const stableBackTargets = {
+    "/meine-medikamente": "/konto",
+    "/gesundheitstagebuch": "/konto",
+    "/konto": "/",
+    "/medikamente": "/",
+    "/notfall": "/",
+    "/ueber": "/",
+    "/installieren": "/",
+    "/impressum": "/",
+    "/datenschutz": "/",
+  };
 
   if (location.pathname === "/") {
     return null;
@@ -28,6 +39,11 @@ function BackButton() {
 
     if (location.pathname === "/einrichtung") {
       navigate("/");
+      return;
+    }
+
+    if (stableBackTargets[location.pathname]) {
+      navigate(stableBackTargets[location.pathname]);
       return;
     }
 

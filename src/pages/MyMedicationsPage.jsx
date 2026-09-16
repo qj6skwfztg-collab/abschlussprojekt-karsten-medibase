@@ -188,6 +188,7 @@ function MyMedicationsPage() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [showOnboardingContinue, setShowOnboardingContinue] = useState(false);
+  const isReminderSetupStep = isOnboarding && onboardingFocus === "reminders";
 
   useEffect(() => {
     const targetId = onboardingFocus === "reminders"
@@ -337,25 +338,16 @@ function MyMedicationsPage() {
     }
   }
 
-  return (
-    <Box className="my-medications-page" maxW="1200px" mx="auto" p={{ base: "5", md: "8" }}>
+  function renderReminderPanel({ isSetupStep = false } = {}) {
+    return (
       <Box
-        className="my-medications-header"
-        borderBottomWidth="1px"
-        borderColor="teal.100"
-        paddingBottom="5"
-        marginBottom="8"
+        id={isSetupStep ? "onboarding-reminders" : "medication-reminders"}
+        className="my-medications-reminders"
+        mb={isSetupStep ? "8" : "0"}
+        mt={isSetupStep ? "0" : "8"}
       >
-        <Heading color="teal.900">{text.title}</Heading>
-
-        <Text marginTop="3" maxW="700px" fontSize={{ base: "md", md: "lg" }}>
-          {text.description}
-        </Text>
-      </Box>
-
-      <Box id="onboarding-reminders" className="my-medications-reminders" mb="8">
         <MedicationReminderPermission medications={userMedications} />
-        {isOnboarding && onboardingFocus === "reminders" && (
+        {isSetupStep && (
           <>
             <Box
               className="onboarding-focus-banner"
@@ -389,6 +381,26 @@ function MyMedicationsPage() {
           </>
         )}
       </Box>
+    );
+  }
+
+  return (
+    <Box className="my-medications-page" maxW="1200px" mx="auto" p={{ base: "5", md: "8" }}>
+      <Box
+        className="my-medications-header"
+        borderBottomWidth="1px"
+        borderColor="teal.100"
+        paddingBottom="5"
+        marginBottom="8"
+      >
+        <Heading color="teal.900">{text.title}</Heading>
+
+        <Text marginTop="3" maxW="700px" fontSize={{ base: "md", md: "lg" }}>
+          {text.description}
+        </Text>
+      </Box>
+
+      {isReminderSetupStep && renderReminderPanel({ isSetupStep: true })}
 
       <Box
         id="personal-medication-form"
@@ -649,6 +661,8 @@ function MyMedicationsPage() {
           ))}
         </SimpleGrid>
       </Box>
+
+      {!isReminderSetupStep && renderReminderPanel()}
     </Box>
   );
 }

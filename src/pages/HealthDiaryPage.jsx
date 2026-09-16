@@ -358,7 +358,6 @@ function HealthDiaryPage() {
           "Record important measurements, symptoms and medication-related observations in one place.",
         privacy:
           "These entries are private and can only be seen in your own account.",
-        myMedications: "Open my medications",
         addTitle: "Add health entry",
         type: "What would you like to record?",
         bloodPressure: "Blood pressure",
@@ -468,7 +467,6 @@ function HealthDiaryPage() {
           "Dokumentiere wichtige Messwerte, Beschwerden und Beobachtungen zu deinen Medikamenten an einem Ort.",
         privacy:
           "Diese Einträge sind privat und nur in deinem eigenen Konto sichtbar.",
-        myMedications: "Meine Medikamente öffnen",
         addTitle: "Gesundheitseintrag hinzufügen",
         type: "Was möchtest du eintragen?",
         bloodPressure: "Blutdruck",
@@ -1178,40 +1176,6 @@ function HealthDiaryPage() {
         <Text mt="3" color="teal.800" fontWeight="600">
           🔒 {text.privacy}
         </Text>
-
-        {!isOnboarding && (
-          <Flex className="health-diary-shortcuts" gap="3" marginTop="5" flexWrap="wrap">
-          <Button
-            className="health-diary-medications-link"
-            as={Link}
-            to="/meine-medikamente"
-            variant="outline"
-            colorPalette="teal"
-            size="lg"
-          >
-            💊 {text.myMedications}
-          </Button>
-          <Button
-            className="health-diary-emergency-link"
-            as={Link}
-            to="/notfall#notfallpass"
-            variant="outline"
-            colorPalette="teal"
-            size="lg"
-          >
-            🪪 {isEnglish ? "Open emergency pass" : "Notfallpass öffnen"}
-          </Button>
-          <Button
-            className="health-diary-contacts-link"
-            as={Link}
-            to="/konto#emergency-contacts"
-            variant="outline"
-            size="lg"
-          >
-            👥 {isEnglish ? "Open emergency contacts" : "Notfallkontakte öffnen"}
-          </Button>
-          </Flex>
-        )}
         {printMessage && (
           <Box
             className="health-report-print-message"

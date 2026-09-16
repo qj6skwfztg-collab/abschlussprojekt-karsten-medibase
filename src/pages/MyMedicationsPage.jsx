@@ -186,6 +186,7 @@ function MyMedicationsPage() {
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+  const [showOnboardingContinue, setShowOnboardingContinue] = useState(false);
 
   useEffect(() => {
     const targetId = onboardingFocus === "reminders"
@@ -286,6 +287,9 @@ function MyMedicationsPage() {
         showMessage(text.saved, "success");
       }
 
+      if (isOnboarding && onboardingFocus === "medication") {
+        setShowOnboardingContinue(true);
+      }
       resetForm();
     } catch {
       showMessage(text.saveError, "error");
@@ -573,6 +577,17 @@ function MyMedicationsPage() {
                   {message}
                 </Text>
               </Box>
+            )}
+
+            {isOnboarding && onboardingFocus === "medication" && showOnboardingContinue && (
+              <Button
+                as={Link}
+                to="/gesundheitstagebuch?from=einrichtung&focus=health"
+                colorPalette="orange"
+                size="lg"
+              >
+                📊 Weiter zum Gesundheitstagebuch
+              </Button>
             )}
           </Stack>
         </form>

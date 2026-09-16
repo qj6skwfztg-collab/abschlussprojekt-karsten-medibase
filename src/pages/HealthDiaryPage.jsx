@@ -309,6 +309,7 @@ function HealthDiaryPage() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [showOnboardingContinue, setShowOnboardingContinue] = useState(false);
   const [printMessage, setPrintMessage] = useState("");
   const [pdfDownloadInfo, setPdfDownloadInfo] = useState(false);
   const [emailFallbackUrl, setEmailFallbackUrl] = useState("");
@@ -1115,6 +1116,9 @@ function HealthDiaryPage() {
         showMessage(text.saved, "success");
       }
 
+      if (isOnboarding && onboardingFocus === "health") {
+        setShowOnboardingContinue(true);
+      }
       setFormData({ ...emptyForm, measuredAt: getLocalDateTimeValue() });
       setEditingId(null);
     } catch (saveError) {
@@ -1395,8 +1399,8 @@ function HealthDiaryPage() {
             <Text as="span" className="health-report-share-arrow" aria-hidden="true">➜</Text>
             <Text as="span">
               {isEnglish
-                ? "For the PDF and attachments together, tap this button:"
-                : "Für PDF und Anhänge gemeinsam tippen:"}
+                ? "To send the PDF and selected files together, tap this button:"
+                : "PDF und ausgewählte Dateien gemeinsam versenden:"}
             </Text>
           </Box>
           <Flex className="health-report-buttons" direction={{ base: "column", md: "row" }} gap="3" align="stretch" mt="3">
@@ -1711,6 +1715,18 @@ function HealthDiaryPage() {
           >
             {message}
           </Box>
+        )}
+        {isOnboarding && onboardingFocus === "health" && showOnboardingContinue && (
+          <Button
+            as={Link}
+            to="/konto?from=einrichtung&focus=emergency-contacts#emergency-contacts"
+            colorPalette="orange"
+            size="lg"
+            mt="5"
+            width="100%"
+          >
+            👥 Weiter zu den Notfallkontakten
+          </Button>
         )}
       </Box>
 

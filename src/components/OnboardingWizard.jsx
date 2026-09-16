@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import { getMedicationNotificationPermission } from "../native/medicationNotifications";
+import MedicationReminderPermission from "./MedicationReminderPermission";
 
 export const ONBOARDING_PENDING_KEY_PREFIX = "curaelis-onboarding-pending:";
 const ONBOARDING_STATE_KEY_PREFIX = "curaelis-onboarding-state:";
@@ -170,6 +171,23 @@ function OnboardingWizard() {
   const lastActionId = [...selectedItems]
     .reverse()
     .find((item) => completed.includes(item.id) || skipped.includes(item.id))?.id;
+  const nextSelectedItem = selectedItems.find(
+    (item) => item.id !== nextItem?.id && !isItemComplete(item) && !skipped.includes(item.id)
+  );
+
+  function getNextButtonText(item) {
+    if (item?.id === "reminders") {
+      return isEnglish ? "Continue to health diary" : "Weiter zum Gesundheitstagebuch";
+    }
+
+    if (nextSelectedItem) {
+      return isEnglish
+        ? `Continue to ${nextSelectedItem.title}`
+        : `Weiter zu ${nextSelectedItem.title}`;
+    }
+
+    return isEnglish ? "Finish this step" : "Diesen Schritt abschließen";
+  }
 
   function saveState(nextSelection, nextCompleted, nextSkipped = skipped, started = true) {
     localStorage.setItem(
@@ -336,14 +354,20 @@ function OnboardingWizard() {
                 })}
               </SimpleGrid>
             </Box>
-              <Box className="curaelis-onboarding-current" borderWidth="1px" borderColor="teal.200" borderRadius="xl" padding="6" background="teal.50">
+            <Box className="curaelis-onboarding-current" borderWidth="1px" borderColor="teal.200" borderRadius="xl" padding="6" background="teal.50">
               <Heading size="md" color="teal.900">{nextItem.title}</Heading>
               <Text mt="3">{nextItem.description}</Text>
-              <Text mt="3" color="teal.800" fontWeight="700">
-                {isEnglish
-                  ? "Open this area and save your details there."
-                  : "Öffne diesen Bereich und speichere deine Angaben dort."}
-              </Text>
+              {nextItem.id === "reminders" ? (
+                <Box mt="5">
+                  <MedicationReminderPermission />
+                </Box>
+              ) : (
+                <Text mt="3" color="teal.800" fontWeight="700">
+                  {isEnglish
+                    ? "Open the matching form with the button below. After saving, Curaelis shows the next step directly there."
+                    : "Öffne mit dem Button unten das passende Formular. Nach dem Speichern zeigt Curaelis dort direkt den nächsten Schritt an."}
+                </Text>
+              )}
             </Box>
             <Flex className="curaelis-onboarding-actions" gap="3" wrap="wrap" align="stretch">
               <Button
@@ -366,17 +390,26 @@ function OnboardingWizard() {
               >
                 {isEnglish ? "Skip" : "Überspringen"}
               </Button>
-              <Button as={Link} to={getOnboardingPath(nextItem.path, nextItem.focus)} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
-                {isEnglish ? "Enter data" : "Daten eintragen"}
-              </Button>
-              <Button variant="outline" size="lg" onClick={markDone} flex="1 1 220px" minW="220px">
-                {isEnglish ? "Already done / continue" : "Erledigt / weiter"}
+              {nextItem.id !== "reminders" && (
+                <Button as={Link} to={getOnboardingPath(nextItem.path, nextItem.focus)} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
+                  {isEnglish ? "Open and enter data" : "Öffnen und Daten eintragen"}
+                </Button>
+              )}
+              <Button
+                colorPalette={nextItem.id === "reminders" ? "teal" : "orange"}
+                variant={nextItem.id === "reminders" ? "solid" : "outline"}
+                size="lg"
+                onClick={markDone}
+                flex="1 1 220px"
+                minW="220px"
+              >
+                {getNextButtonText(nextItem)}
               </Button>
             </Flex>
             <Text fontSize="sm" color="gray.600">
               {isEnglish
-                ? "After saving, use the back button to return here and continue."
-                : "Nach dem Speichern kannst du mit dem Zurück-Button hierher zurückkehren und fortfahren."}
+                ? "Finished steps stay marked in the overview. You can open them again later from your account."
+                : "Erledigte Schritte bleiben oben markiert. Du kannst sie später jederzeit im Konto wieder öffnen."}
             </Text>
             <Button variant="ghost" onClick={finishSetup}>
               {isEnglish ? "Finish later" : "Später beenden"}

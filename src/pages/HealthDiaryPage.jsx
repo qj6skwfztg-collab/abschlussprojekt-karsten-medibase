@@ -1415,7 +1415,7 @@ function HealthDiaryPage() {
             <Text as="span">
               {isEnglish
                 ? "To send the PDF and selected files together, tap this button:"
-                : "PDF und ausgewählte Dateien gemeinsam versenden:"}
+                : "Für Mail mit PDF und ausgewählten Dateien diesen Button nutzen:"}
             </Text>
           </Box>
           <Flex className="health-report-buttons" direction={{ base: "column", md: "row" }} gap="3" align="stretch" mt="3">
@@ -1447,7 +1447,7 @@ function HealthDiaryPage() {
           <Text className="health-report-action-hint" mt="2">
             {isEnglish
               ? "Email opens the practice address without attaching automatically. Share PDF opens Apple's menu and can include the PDF and selected files together."
-              : "Mail öffnet die hinterlegte Praxisadresse; die PDF wird dort nicht automatisch angehängt. PDF teilen öffnet Apples Menü und kann PDF und ausgewählte Dateien gemeinsam übergeben."}
+              : "Die Praxis-Mail öffnet nur die Adresse. Mit PDF + Dateien teilen kannst du die PDF und weitere Dateien zusammen über Mail oder Dateien weitergeben."}
           </Text>
         </Box>
         {emailFallbackUrl && (

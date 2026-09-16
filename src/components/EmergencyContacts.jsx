@@ -26,6 +26,7 @@ function EmergencyContacts({
   emergencyCallStarted,
   hideNotifyAction = false,
   allowDirectNotify = false,
+  setupHint = null,
   setupContinue = null,
 }) {
   const { isEnglish } = useLanguage();
@@ -273,6 +274,8 @@ function EmergencyContacts({
           </Button>
         </Stack>
       </form>
+
+      {setupHint}
 
       {message && (
         <Text

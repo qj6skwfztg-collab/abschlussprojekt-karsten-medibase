@@ -1212,29 +1212,6 @@ function HealthDiaryPage() {
           </Button>
           </Flex>
         )}
-        {isOnboarding && (
-          <Box
-            className="onboarding-focus-banner"
-            background="orange.50"
-            borderWidth="1px"
-            borderColor="orange.200"
-            borderRadius="xl"
-            padding="4"
-            marginTop="5"
-            role="status"
-          >
-            <Text fontWeight="800" color="orange.900">
-              {onboardingFocus === "doctor-email"
-                ? (isEnglish ? "Setup: save the doctor's practice email" : "Einrichtung: E-Mail der Arztpraxis speichern")
-                : (isEnglish ? "Setup: add your first health value" : "Einrichtung: ersten Gesundheitswert eintragen")}
-            </Text>
-            <Text mt="1" color="orange.900">
-              {isEnglish
-                ? "Complete this step here. Then continue directly with the button below."
-                : "Erledige diesen Schritt direkt hier. Danach geht es direkt mit dem Button unten weiter."}
-            </Text>
-          </Box>
-        )}
         {printMessage && (
           <Box
             className="health-report-print-message"
@@ -1317,6 +1294,27 @@ function HealthDiaryPage() {
           <Text mt="2" fontSize="sm" color="gray.600">
             {text.doctorEmailHint}
           </Text>
+          {isOnboarding && onboardingFocus === "doctor-email" && (
+            <Box
+              className="onboarding-focus-banner"
+              background="orange.50"
+              borderWidth="1px"
+              borderColor="orange.200"
+              borderRadius="xl"
+              padding="4"
+              mt="4"
+              role="status"
+            >
+              <Text fontWeight="800" color="orange.900">
+                {isEnglish ? "Setup: save the doctor's practice email" : "Einrichtung: E-Mail der Arztpraxis speichern"}
+              </Text>
+              <Text mt="1" color="orange.900">
+                {isEnglish
+                  ? "Enter the practice email here. Then return to the setup overview with the button below."
+                  : "Trage die Praxis-E-Mail hier ein. Danach kommst du mit dem Button unten zurück zur Einrichtungsübersicht."}
+              </Text>
+            </Box>
+          )}
           {isOnboarding && onboardingFocus === "doctor-email" && doctorEmail.trim() && (
             <Button
               as={Link}
@@ -1714,6 +1712,26 @@ function HealthDiaryPage() {
                 </Button>
               )}
             </Flex>
+            {isOnboarding && onboardingFocus === "health" && (
+              <Box
+                className="onboarding-focus-banner"
+                background="orange.50"
+                borderWidth="1px"
+                borderColor="orange.200"
+                borderRadius="xl"
+                padding="4"
+                role="status"
+              >
+                <Text fontWeight="800" color="orange.900">
+                  {isEnglish ? "Setup: add your first health value" : "Einrichtung: ersten Gesundheitswert eintragen"}
+                </Text>
+                <Text mt="1" color="orange.900">
+                  {isEnglish
+                    ? "Save your health value here. Then continue directly with the button below."
+                    : "Speichere deinen Gesundheitswert hier. Danach geht es direkt mit dem Button unten weiter."}
+                </Text>
+              </Box>
+            )}
           </Stack>
         </form>
 

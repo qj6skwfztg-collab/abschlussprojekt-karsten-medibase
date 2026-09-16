@@ -369,47 +369,40 @@ function MyMedicationsPage() {
         )}
       </Box>
 
-      {isOnboarding && (
-        <Box
-          className="onboarding-focus-banner"
-          background="orange.50"
-          borderWidth="1px"
-          borderColor="orange.200"
-          borderRadius="xl"
-          padding="4"
-          mb="5"
-          role="status"
-        >
-          <Text fontWeight="800" color="orange.900">
-            {onboardingFocus === "reminders"
-              ? (isEnglish ? "Setup: allow notifications once" : "Einrichtung: Benachrichtigungen einmalig erlauben")
-              : (isEnglish ? "Setup: add your medication" : "Einrichtung: Medikament eintragen")}
-          </Text>
-          <Text mt="1" color="orange.900">
-            {onboardingFocus === "reminders"
-              ? (isEnglish
-                ? "Allow notifications once. Then continue directly with the button below."
-                : "Erlaube Benachrichtigungen einmalig. Danach geht es direkt mit dem Button unten weiter.")
-              : (isEnglish
-                ? "Save your medication here. Then continue directly with the button below."
-                : "Trage dein Medikament direkt hier ein. Danach geht es direkt mit dem Button unten weiter.")}
-          </Text>
-        </Box>
-      )}
-
       <Box id="onboarding-reminders" className="my-medications-reminders" mb="8">
         <MedicationReminderPermission medications={userMedications} />
         {isOnboarding && onboardingFocus === "reminders" && (
-          <Button
-            as={Link}
-            to="/gesundheitstagebuch?from=einrichtung&focus=health"
-            colorPalette="orange"
-            size="lg"
-            mt="5"
-            width="100%"
-          >
-            {isEnglish ? "Continue to health diary" : "Weiter zum Gesundheitstagebuch"}
-          </Button>
+          <>
+            <Box
+              className="onboarding-focus-banner"
+              background="orange.50"
+              borderWidth="1px"
+              borderColor="orange.200"
+              borderRadius="xl"
+              padding="4"
+              mt="5"
+              role="status"
+            >
+              <Text fontWeight="800" color="orange.900">
+                {isEnglish ? "Setup: allow notifications once" : "Einrichtung: Benachrichtigungen einmalig erlauben"}
+              </Text>
+              <Text mt="1" color="orange.900">
+                {isEnglish
+                  ? "Allow notifications once. Then continue directly with the button below."
+                  : "Erlaube Benachrichtigungen einmalig. Danach geht es direkt mit dem Button unten weiter."}
+              </Text>
+            </Box>
+            <Button
+              as={Link}
+              to="/gesundheitstagebuch?from=einrichtung&focus=health"
+              colorPalette="orange"
+              size="lg"
+              mt="5"
+              width="100%"
+            >
+              {isEnglish ? "Continue to health diary" : "Weiter zum Gesundheitstagebuch"}
+            </Button>
+          </>
         )}
       </Box>
 
@@ -564,6 +557,27 @@ function MyMedicationsPage() {
                 ? text.saveChanges
                 : text.save}
             </Button>
+
+            {isOnboarding && onboardingFocus === "medication" && (
+              <Box
+                className="onboarding-focus-banner"
+                background="orange.50"
+                borderWidth="1px"
+                borderColor="orange.200"
+                borderRadius="xl"
+                padding="4"
+                role="status"
+              >
+                <Text fontWeight="800" color="orange.900">
+                  {isEnglish ? "Setup: add your medication" : "Einrichtung: Medikament eintragen"}
+                </Text>
+                <Text mt="1" color="orange.900">
+                  {isEnglish
+                    ? "Save your medication here. Then continue directly with the button below."
+                    : "Trage dein Medikament direkt hier ein. Danach geht es direkt mit dem Button unten weiter."}
+                </Text>
+              </Box>
+            )}
 
             {editingId && (
               <Button

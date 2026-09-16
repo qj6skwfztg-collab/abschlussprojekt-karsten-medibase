@@ -289,29 +289,31 @@ function AccountPage() {
         </Box>
       </Box>
 
-      {isOnboarding && onboardingFocus === "emergency-contacts" && (
-        <Box
-          className="onboarding-focus-banner"
-          background="orange.50"
-          borderWidth="1px"
-          borderColor="orange.200"
-          borderRadius="xl"
-          padding="4"
-          mb="5"
-          role="status"
-        >
-          <Text fontWeight="800" color="orange.900">
-            {isEnglish ? "Setup: add emergency contacts" : "Einrichtung: Notfallkontakte eintragen"}
-          </Text>
-          <Text mt="1" color="orange.900">
-            {isEnglish
-              ? "Save your contact here. Then continue directly with the button below."
-              : "Speichere den Kontakt direkt hier. Danach geht es direkt mit dem Button unten weiter."}
-          </Text>
-        </Box>
-      )}
       <EmergencyContacts
         allowDirectNotify
+        setupHint={
+          isOnboarding && onboardingFocus === "emergency-contacts" ? (
+            <Box
+              className="onboarding-focus-banner"
+              background="orange.50"
+              borderWidth="1px"
+              borderColor="orange.200"
+              borderRadius="xl"
+              padding="4"
+              mt="5"
+              role="status"
+            >
+              <Text fontWeight="800" color="orange.900">
+                {isEnglish ? "Setup: add emergency contacts" : "Einrichtung: Notfallkontakte eintragen"}
+              </Text>
+              <Text mt="1" color="orange.900">
+                {isEnglish
+                  ? "Save your contact here. Then continue directly with the button below."
+                  : "Speichere den Kontakt direkt hier. Danach geht es direkt mit dem Button unten weiter."}
+              </Text>
+            </Box>
+          ) : null
+        }
         setupContinue={
           isOnboarding && onboardingFocus === "emergency-contacts" ? (
             <Button
@@ -337,27 +339,6 @@ function AccountPage() {
         padding="6"
         mb="8"
       >
-        {isOnboarding && onboardingFocus === "emergency-profile" && (
-          <Box
-            className="onboarding-focus-banner"
-            background="orange.50"
-            borderWidth="1px"
-            borderColor="orange.200"
-            borderRadius="xl"
-            padding="4"
-            mb="5"
-            role="status"
-          >
-            <Text fontWeight="800" color="orange.900">
-              {isEnglish ? "Setup: add emergency pass details" : "Einrichtung: Angaben für den Notfallpass eintragen"}
-            </Text>
-            <Text mt="1" color="orange.900">
-              {isEnglish
-                ? "Save your details here. Then continue directly with the button below."
-                : "Speichere deine Angaben direkt hier. Danach geht es direkt mit dem Button unten weiter."}
-            </Text>
-          </Box>
-        )}
         <Heading size="md" mb="2" color="teal.900">
           {text.emergencyProfileTitle}
         </Heading>
@@ -425,6 +406,27 @@ function AccountPage() {
             <Button type="submit" colorPalette="teal" size="lg" disabled={isSavingProfile}>
               {isSavingProfile ? text.savingEmergencyProfile : text.saveEmergencyProfile}
             </Button>
+
+            {isOnboarding && onboardingFocus === "emergency-profile" && (
+              <Box
+                className="onboarding-focus-banner"
+                background="orange.50"
+                borderWidth="1px"
+                borderColor="orange.200"
+                borderRadius="xl"
+                padding="4"
+                role="status"
+              >
+                <Text fontWeight="800" color="orange.900">
+                  {isEnglish ? "Setup: add emergency pass details" : "Einrichtung: Angaben für den Notfallpass eintragen"}
+                </Text>
+                <Text mt="1" color="orange.900">
+                  {isEnglish
+                    ? "Save your details here. Then continue directly with the button below."
+                    : "Speichere deine Angaben direkt hier. Danach geht es direkt mit dem Button unten weiter."}
+                </Text>
+              </Box>
+            )}
 
             {isProfileLoading && <Text color="gray.600">{text.emergencyProfileLoading}</Text>}
             {profileError && <Text color="red.700">{profileError}</Text>}

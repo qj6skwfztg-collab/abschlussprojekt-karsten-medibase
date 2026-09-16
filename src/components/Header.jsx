@@ -144,7 +144,7 @@ function Header({ onMenuStateChange }) {
           marginX="auto"
         >
           {!isHomePage && (
-            <Link className="header-link" to="/" onClick={closeMenu} {...getNavigationLinkProps("/")}>
+            <Link className="header-link header-home-link" to="/" onClick={closeMenu} {...getNavigationLinkProps("/")}>
               {isEnglish ? "Home" : "Startseite"}
             </Link>
           )}
@@ -254,11 +254,11 @@ function Header({ onMenuStateChange }) {
                 </Button>
               ) : (
                 <>
-                  <Link className="header-link" to="/login" onClick={closeMenu} {...getNavigationLinkProps("/login")}>
+                  <Link className="header-link header-auth-link" to="/login" onClick={closeMenu} {...getNavigationLinkProps("/login")}>
                     {isEnglish ? "Sign in" : "Anmelden"}
                   </Link>
 
-                  <Link className="header-link" to="/registrieren" onClick={closeMenu} {...getNavigationLinkProps("/registrieren")}>
+                  <Link className="header-link header-auth-link" to="/registrieren" onClick={closeMenu} {...getNavigationLinkProps("/registrieren")}>
                     {isEnglish ? "Create account" : "Konto erstellen"}
                   </Link>
                 </>

@@ -189,6 +189,7 @@ function MedicationReminderPermission({ medications = [] }) {
       </Text>
 
       <Stack
+        className="medication-reminders-actions"
         marginTop="4"
         direction={{ base: "column", md: "row" }}
         gap="3"

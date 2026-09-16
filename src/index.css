@@ -108,9 +108,18 @@ header #main-navigation .header-emergency-link:focus-visible {
 header #main-navigation .header-account-link,
 header #main-navigation .header-diary-link,
 header #main-navigation .header-my-medications-link,
-header #main-navigation .header-search-medications-link {
+header #main-navigation .header-search-medications-link,
+header #main-navigation .header-home-link,
+header #main-navigation .header-auth-link {
   border: 1px solid transparent;
   font-weight: 700;
+}
+
+header #main-navigation .header-home-link,
+header #main-navigation .header-auth-link {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.42);
+  border-radius: 10px;
 }
 
 header #main-navigation .header-account-link {
@@ -166,6 +175,13 @@ header #main-navigation .header-search-medications-link[aria-current="page"] {
   background: #fbd38d !important;
   color: #7b341e;
   box-shadow: 0 0 0 2px rgba(246, 173, 85, 0.42);
+}
+
+header #main-navigation .header-home-link[aria-current="page"],
+header #main-navigation .header-auth-link[aria-current="page"] {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.26);
 }
 
 header .accessibility-buttons button {
@@ -272,6 +288,18 @@ header .accessibility-buttons button {
 
 .medication-reminders-secondary {
   border-width: 2px !important;
+}
+
+.medication-reminders-actions {
+  flex-wrap: wrap;
+}
+
+.medication-reminders-actions .medication-reminders-primary,
+.medication-reminders-actions .medication-reminders-secondary {
+  flex: 1 1 260px;
+  min-width: 0;
+  white-space: normal;
+  text-align: center;
 }
 
 .my-medications-diary-link {
@@ -814,8 +842,20 @@ header .accessibility-buttons button {
   header #main-navigation .nav-group-medications {
     order: -1;
     margin-left: 8px;
-    padding-left: 12px;
-    border-left: 1px solid rgba(255, 255, 255, 0.24);
+    padding-left: 16px;
+    position: relative;
+    border-left: 0;
+  }
+
+  header #main-navigation .nav-group-medications::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.28);
   }
 
   header #main-navigation .nav-group-account {
@@ -849,7 +889,9 @@ header .accessibility-buttons button {
   }
 
   header #main-navigation .nav-group-personal .header-link,
-  header #main-navigation .nav-group-medications .header-search-medications-link {
+  header #main-navigation .nav-group-medications .header-search-medications-link,
+  header #main-navigation .header-home-link,
+  header #main-navigation .header-auth-link {
     border-radius: 10px !important;
     box-shadow: none;
   }

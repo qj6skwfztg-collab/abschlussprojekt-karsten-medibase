@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useUserMedications from "../hooks/useUserMedications";
 import useLanguage from "../hooks/useLanguage";
 import MedicationReminderPermission from "../components/MedicationReminderPermission";
@@ -82,6 +82,9 @@ function getMedicationTimes(medication) {
 
 function MyMedicationsPage() {
   const { isEnglish } = useLanguage();
+  const location = useLocation();
+  const onboardingFocus = new URLSearchParams(location.search).get("focus");
+  const isOnboarding = new URLSearchParams(location.search).get("from") === "einrichtung";
   const {
     userMedications,
     isLoading,
@@ -183,6 +186,27 @@ function MyMedicationsPage() {
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+
+  useEffect(() => {
+    const targetId = onboardingFocus === "reminders"
+      ? "onboarding-reminders"
+      : onboardingFocus === "medication"
+        ? "personal-medication-form"
+        : null;
+
+    if (!targetId) {
+      return undefined;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      document.getElementById(targetId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [onboardingFocus]);
 
   function showMessage(value, type) {
     setMessage(value);
@@ -323,24 +347,55 @@ function MyMedicationsPage() {
           {text.description}
         </Text>
 
-        <Button
-          className="my-medications-diary-link"
-          as={Link}
-          to="/gesundheitstagebuch"
-          marginTop="5"
-          variant="outline"
-          colorPalette="teal"
-          size="lg"
-        >
-          📊 {text.healthDiary}
-        </Button>
+        {!isOnboarding && (
+          <Button
+            className="my-medications-diary-link"
+            as={Link}
+            to="/gesundheitstagebuch"
+            marginTop="5"
+            variant="outline"
+            colorPalette="teal"
+            size="lg"
+          >
+            📊 {text.healthDiary}
+          </Button>
+        )}
       </Box>
 
-      <Box className="my-medications-reminders" mb="8">
+      {isOnboarding && (
+        <Box
+          className="onboarding-focus-banner"
+          background="orange.50"
+          borderWidth="1px"
+          borderColor="orange.200"
+          borderRadius="xl"
+          padding="4"
+          mb="5"
+          role="status"
+        >
+          <Text fontWeight="800" color="orange.900">
+            {onboardingFocus === "reminders"
+              ? (isEnglish ? "Setup: allow notifications once" : "Einrichtung: Benachrichtigungen einmalig erlauben")
+              : (isEnglish ? "Setup: add your medication" : "Einrichtung: Medikament eintragen")}
+          </Text>
+          <Text mt="1" color="orange.900">
+            {onboardingFocus === "reminders"
+              ? (isEnglish
+                ? "Complete this step here. Then use the Back to setup button at the top to continue."
+                : "Erledige diesen Schritt direkt hier. Tippe danach oben auf „Zur Einrichtung“, um weiterzumachen.")
+              : (isEnglish
+                ? "Complete this step here. Then use the Back to setup button at the top to continue."
+                : "Trage dein Medikament direkt hier ein. Tippe danach oben auf „Zur Einrichtung“, um weiterzumachen.")}
+          </Text>
+        </Box>
+      )}
+
+      <Box id="onboarding-reminders" className="my-medications-reminders" mb="8">
         <MedicationReminderPermission medications={userMedications} />
       </Box>
 
       <Box
+        id="personal-medication-form"
         className="personal-medication-form"
         borderWidth="1px"
         borderRadius="lg"

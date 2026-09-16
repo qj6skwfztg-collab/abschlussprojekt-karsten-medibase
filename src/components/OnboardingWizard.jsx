@@ -24,11 +24,14 @@ function getStorageKey(prefix, uid) {
   return `${prefix}${uid}`;
 }
 
-function getOnboardingPath(path) {
+function getOnboardingPath(path, focus) {
   const [pathWithoutHash, hash] = path.split("#");
+  const query = ["from=einrichtung", focus ? `focus=${encodeURIComponent(focus)}` : ""]
+    .filter(Boolean)
+    .join("&");
   const separator = pathWithoutHash.includes("?") ? "&" : "?";
 
-  return `${pathWithoutHash}${separator}from=einrichtung${hash ? `#${hash}` : ""}`;
+  return `${pathWithoutHash}${separator}${query}${hash ? `#${hash}` : ""}`;
 }
 
 function OnboardingWizard() {
@@ -47,20 +50,20 @@ function OnboardingWizard() {
     () =>
       isEnglish
         ? [
-            { id: "medication", title: "Medication plan", description: "Add your medication, dosage and intake times.", path: "/meine-medikamente" },
-            { id: "reminders", title: "Intake reminders", description: "Allow notifications and check that your medication reminders are active.", path: "/meine-medikamente" },
-            { id: "health", title: "Health diary", description: "Record your first blood pressure, weight or other health value.", path: "/gesundheitstagebuch" },
-            { id: "emergencyProfile", title: "Emergency pass", description: "Add important information for helpers, such as allergies or conditions.", path: "/konto#emergency-profile" },
-            { id: "contacts", title: "Emergency contacts", description: "Save people who should be reached if you need help.", path: "/konto#emergency-contacts" },
-            { id: "doctorEmail", title: "Doctor's practice email", description: "Save the practice address for your doctor report.", path: "/gesundheitstagebuch#doctor-email" },
+            { id: "medication", title: "Medication plan", description: "Add your medication, dosage and intake times.", path: "/meine-medikamente", focus: "medication" },
+            { id: "reminders", title: "Intake reminders", description: "Allow notifications once and check that your medication reminders are active.", path: "/meine-medikamente", focus: "reminders" },
+            { id: "health", title: "Health diary", description: "Record your first blood pressure, weight or other health value.", path: "/gesundheitstagebuch", focus: "health" },
+            { id: "emergencyProfile", title: "Emergency pass", description: "Add important information for helpers, such as allergies or conditions.", path: "/konto#emergency-profile", focus: "emergency-profile" },
+            { id: "contacts", title: "Emergency contacts", description: "Save people who should be reached if you need help.", path: "/konto#emergency-contacts", focus: "emergency-contacts" },
+            { id: "doctorEmail", title: "Doctor's practice email", description: "Save the practice address for your doctor report.", path: "/gesundheitstagebuch#doctor-email", focus: "doctor-email" },
           ]
         : [
-            { id: "medication", title: "Medikamentenplan", description: "Medikament, Dosierung und Einnahmezeiten anlegen.", path: "/meine-medikamente" },
-            { id: "reminders", title: "Einnahmeerinnerungen", description: "Benachrichtigungen erlauben und prüfen, ob deine Einnahmeerinnerungen aktiv sind.", path: "/meine-medikamente" },
-            { id: "health", title: "Gesundheitstagebuch", description: "Den ersten Blutdruck, das Gewicht oder einen anderen Gesundheitswert eintragen.", path: "/gesundheitstagebuch" },
-            { id: "emergencyProfile", title: "Notfallpass", description: "Wichtige Angaben für Ersthelfende eintragen, zum Beispiel Allergien oder Erkrankungen.", path: "/konto#emergency-profile" },
-            { id: "contacts", title: "Notfallkontakte", description: "Menschen speichern, die im Notfall erreicht werden sollen.", path: "/konto#emergency-contacts" },
-            { id: "doctorEmail", title: "E-Mail der Arztpraxis", description: "Die Praxisadresse für deine Arztübersicht speichern.", path: "/gesundheitstagebuch#doctor-email" },
+            { id: "medication", title: "Medikamentenplan", description: "Medikament, Dosierung und Einnahmezeiten anlegen.", path: "/meine-medikamente", focus: "medication" },
+            { id: "reminders", title: "Einnahmeerinnerungen", description: "Benachrichtigungen einmalig erlauben und die Einnahmeerinnerungen prüfen.", path: "/meine-medikamente", focus: "reminders" },
+            { id: "health", title: "Gesundheitstagebuch", description: "Den ersten Blutdruck, das Gewicht oder einen anderen Gesundheitswert eintragen.", path: "/gesundheitstagebuch", focus: "health" },
+            { id: "emergencyProfile", title: "Notfallpass", description: "Wichtige Angaben für Ersthelfende eintragen, zum Beispiel Allergien oder Erkrankungen.", path: "/konto#emergency-profile", focus: "emergency-profile" },
+            { id: "contacts", title: "Notfallkontakte", description: "Menschen speichern, die im Notfall erreicht werden sollen.", path: "/konto#emergency-contacts", focus: "emergency-contacts" },
+            { id: "doctorEmail", title: "E-Mail der Arztpraxis", description: "Die Praxisadresse für deine Arztübersicht speichern.", path: "/gesundheitstagebuch#doctor-email", focus: "doctor-email" },
           ],
     [isEnglish]
   );
@@ -300,7 +303,7 @@ function OnboardingWizard() {
                     <Flex
                       key={item.id}
                       as={Link}
-                      to={getOnboardingPath(item.path)}
+                      to={getOnboardingPath(item.path, item.focus)}
                       state={{ fromOnboarding: true }}
                       aria-label={isEnglish ? `Open ${item.title}` : `${item.title} öffnen`}
                       className={`curaelis-onboarding-progress-item${isComplete ? " is-complete" : ""}${isConfirmedWithoutData ? " is-confirmed-without-data" : ""}${isSkipped ? " is-skipped" : ""}${isCurrent ? " is-current" : ""}`}
@@ -363,7 +366,7 @@ function OnboardingWizard() {
               >
                 {isEnglish ? "Skip" : "Überspringen"}
               </Button>
-              <Button as={Link} to={getOnboardingPath(nextItem.path)} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
+              <Button as={Link} to={getOnboardingPath(nextItem.path, nextItem.focus)} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
                 {isEnglish ? "Enter data" : "Daten eintragen"}
               </Button>
               <Button variant="outline" size="lg" onClick={markDone} flex="1 1 220px" minW="220px">

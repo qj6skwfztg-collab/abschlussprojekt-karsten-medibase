@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useHealthEntries from "../hooks/useHealthEntries";
 import useUserMedications from "../hooks/useUserMedications";
 import useEmergencyProfile from "../hooks/useEmergencyProfile";
@@ -290,6 +290,9 @@ function HealthTrendChart({ entries, type, isEnglish, text }) {
 
 function HealthDiaryPage() {
   const { isEnglish } = useLanguage();
+  const location = useLocation();
+  const onboardingFocus = new URLSearchParams(location.search).get("focus");
+  const isOnboarding = new URLSearchParams(location.search).get("from") === "einrichtung";
   const {
     healthEntries,
     isLoading,
@@ -320,6 +323,29 @@ function HealthDiaryPage() {
   const [doctorEmail, setDoctorEmail] = useState(
     () => localStorage.getItem(DOCTOR_EMAIL_STORAGE_KEY) || ""
   );
+
+  useEffect(() => {
+    const targetId = onboardingFocus === "health" || onboardingFocus === "doctor-email"
+      ? onboardingFocus === "health" ? "health-entry-form" : "doctor-email"
+      : location.hash === "#doctor-email" ? "doctor-email" : null;
+
+    if (!targetId) {
+      return undefined;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      const target = document.getElementById(targetId);
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      if (targetId === "doctor-email") {
+        window.setTimeout(() => target?.focus(), 350);
+      }
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [location.hash, onboardingFocus]);
 
   const text = isEnglish
     ? {
@@ -1146,7 +1172,8 @@ function HealthDiaryPage() {
           🔒 {text.privacy}
         </Text>
 
-        <Flex className="health-diary-shortcuts" gap="3" marginTop="5" flexWrap="wrap">
+        {!isOnboarding && (
+          <Flex className="health-diary-shortcuts" gap="3" marginTop="5" flexWrap="wrap">
           <Button
             className="health-diary-medications-link"
             as={Link}
@@ -1176,7 +1203,31 @@ function HealthDiaryPage() {
           >
             👥 {isEnglish ? "Open emergency contacts" : "Notfallkontakte öffnen"}
           </Button>
-        </Flex>
+          </Flex>
+        )}
+        {isOnboarding && (
+          <Box
+            className="onboarding-focus-banner"
+            background="orange.50"
+            borderWidth="1px"
+            borderColor="orange.200"
+            borderRadius="xl"
+            padding="4"
+            marginTop="5"
+            role="status"
+          >
+            <Text fontWeight="800" color="orange.900">
+              {onboardingFocus === "doctor-email"
+                ? (isEnglish ? "Setup: save the doctor's practice email" : "Einrichtung: E-Mail der Arztpraxis speichern")
+                : (isEnglish ? "Setup: add your first health value" : "Einrichtung: ersten Gesundheitswert eintragen")}
+            </Text>
+            <Text mt="1" color="orange.900">
+              {isEnglish
+                ? "Complete this step here. Then use the Back to setup button at the top to continue."
+                : "Erledige diesen Schritt direkt hier. Tippe danach oben auf „Zur Einrichtung“, um weiterzumachen."}
+            </Text>
+          </Box>
+        )}
         {printMessage && (
           <Box
             className="health-report-print-message"
@@ -1440,6 +1491,7 @@ function HealthDiaryPage() {
 
       <Box
         ref={healthFormRef}
+        id="health-entry-form"
         className="health-diary-form"
         borderWidth="1px"
         borderRadius="lg"

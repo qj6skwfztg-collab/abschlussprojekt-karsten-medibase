@@ -26,6 +26,7 @@ function EmergencyContacts({
   emergencyCallStarted,
   hideNotifyAction = false,
   allowDirectNotify = false,
+  setupContinue = null,
 }) {
   const { isEnglish } = useLanguage();
   const [name, setName] = useState("");
@@ -284,6 +285,8 @@ function EmergencyContacts({
           {message}
         </Text>
       )}
+
+      {messageType === "success" && setupContinue}
 
       <SimpleGrid
         columns={{ base: 1, md: 2 }}

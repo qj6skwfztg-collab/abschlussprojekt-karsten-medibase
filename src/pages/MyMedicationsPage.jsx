@@ -83,8 +83,11 @@ function getMedicationTimes(medication) {
 function MyMedicationsPage() {
   const { isEnglish } = useLanguage();
   const location = useLocation();
-  const onboardingFocus = new URLSearchParams(location.search).get("focus");
-  const isOnboarding = new URLSearchParams(location.search).get("from") === "einrichtung";
+  const searchParams = new URLSearchParams(location.search);
+  const onboardingFocus = searchParams.get("focus");
+  const isOnboarding =
+    searchParams.get("from") === "einrichtung" ||
+    Boolean(location.state?.fromOnboarding);
   const {
     userMedications,
     isLoading,
@@ -385,17 +388,29 @@ function MyMedicationsPage() {
           <Text mt="1" color="orange.900">
             {onboardingFocus === "reminders"
               ? (isEnglish
-                ? "Complete this step here. Then use the Back to setup button at the top to continue."
-                : "Erledige diesen Schritt direkt hier. Tippe danach oben auf „Zur Einrichtung“, um weiterzumachen.")
+                ? "Allow notifications once. Then continue directly with the button below."
+                : "Erlaube Benachrichtigungen einmalig. Danach geht es direkt mit dem Button unten weiter.")
               : (isEnglish
-                ? "Complete this step here. Then use the Back to setup button at the top to continue."
-                : "Trage dein Medikament direkt hier ein. Tippe danach oben auf „Zur Einrichtung“, um weiterzumachen.")}
+                ? "Save your medication here. Then continue directly with the button below."
+                : "Trage dein Medikament direkt hier ein. Danach geht es direkt mit dem Button unten weiter.")}
           </Text>
         </Box>
       )}
 
       <Box id="onboarding-reminders" className="my-medications-reminders" mb="8">
         <MedicationReminderPermission medications={userMedications} />
+        {isOnboarding && onboardingFocus === "reminders" && (
+          <Button
+            as={Link}
+            to="/gesundheitstagebuch?from=einrichtung&focus=health"
+            colorPalette="orange"
+            size="lg"
+            mt="5"
+            width="100%"
+          >
+            {isEnglish ? "Continue to health diary" : "Weiter zum Gesundheitstagebuch"}
+          </Button>
+        )}
       </Box>
 
       <Box
@@ -585,8 +600,9 @@ function MyMedicationsPage() {
                 to="/gesundheitstagebuch?from=einrichtung&focus=health"
                 colorPalette="orange"
                 size="lg"
+                width="100%"
               >
-                📊 Weiter zum Gesundheitstagebuch
+                {isEnglish ? "Continue to health diary" : "Weiter zum Gesundheitstagebuch"}
               </Button>
             )}
           </Stack>

@@ -291,8 +291,11 @@ function HealthTrendChart({ entries, type, isEnglish, text }) {
 function HealthDiaryPage() {
   const { isEnglish } = useLanguage();
   const location = useLocation();
-  const onboardingFocus = new URLSearchParams(location.search).get("focus");
-  const isOnboarding = new URLSearchParams(location.search).get("from") === "einrichtung";
+  const searchParams = new URLSearchParams(location.search);
+  const onboardingFocus = searchParams.get("focus");
+  const isOnboarding =
+    searchParams.get("from") === "einrichtung" ||
+    Boolean(location.state?.fromOnboarding);
   const {
     healthEntries,
     isLoading,
@@ -1227,8 +1230,8 @@ function HealthDiaryPage() {
             </Text>
             <Text mt="1" color="orange.900">
               {isEnglish
-                ? "Complete this step here. Then use the Back to setup button at the top to continue."
-                : "Erledige diesen Schritt direkt hier. Tippe danach oben auf „Zur Einrichtung“, um weiterzumachen."}
+                ? "Complete this step here. Then continue directly with the button below."
+                : "Erledige diesen Schritt direkt hier. Danach geht es direkt mit dem Button unten weiter."}
             </Text>
           </Box>
         )}
@@ -1314,6 +1317,18 @@ function HealthDiaryPage() {
           <Text mt="2" fontSize="sm" color="gray.600">
             {text.doctorEmailHint}
           </Text>
+          {isOnboarding && onboardingFocus === "doctor-email" && doctorEmail.trim() && (
+            <Button
+              as={Link}
+              to="/einrichtung"
+              colorPalette="orange"
+              size="lg"
+              mt="4"
+              width="100%"
+            >
+              {isEnglish ? "Back to setup overview" : "Zurück zur Einrichtungsübersicht"}
+            </Button>
+          )}
         </Box>
         <input
           ref={reportFileInputRef}
@@ -1725,7 +1740,7 @@ function HealthDiaryPage() {
             mt="5"
             width="100%"
           >
-            👥 Weiter zu den Notfallkontakten
+            {isEnglish ? "Continue to emergency contacts" : "Weiter zu den Notfallkontakten"}
           </Button>
         )}
       </Box>

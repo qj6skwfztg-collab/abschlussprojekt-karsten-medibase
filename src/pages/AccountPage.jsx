@@ -23,8 +23,11 @@ function AccountPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const userEmail = auth.currentUser?.email || "";
-  const onboardingFocus = new URLSearchParams(location.search).get("focus");
-  const isOnboarding = new URLSearchParams(location.search).get("from") === "einrichtung";
+  const searchParams = new URLSearchParams(location.search);
+  const onboardingFocus = searchParams.get("focus");
+  const isOnboarding =
+    searchParams.get("from") === "einrichtung" ||
+    Boolean(location.state?.fromOnboarding);
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [isDeletionConfirmed, setIsDeletionConfirmed] = useState(false);
@@ -302,12 +305,28 @@ function AccountPage() {
           </Text>
           <Text mt="1" color="orange.900">
             {isEnglish
-              ? "Save the contacts here. Then use the Back to setup button at the top to continue."
-              : "Speichere die Kontakte direkt hier. Tippe danach oben auf „Zur Einrichtung“, um weiterzumachen."}
+              ? "Save your contact here. Then continue directly with the button below."
+              : "Speichere den Kontakt direkt hier. Danach geht es direkt mit dem Button unten weiter."}
           </Text>
         </Box>
       )}
-      <EmergencyContacts allowDirectNotify />
+      <EmergencyContacts
+        allowDirectNotify
+        setupContinue={
+          isOnboarding && onboardingFocus === "emergency-contacts" ? (
+            <Button
+              as={Link}
+              to="/gesundheitstagebuch?from=einrichtung&focus=doctor-email#doctor-email"
+              colorPalette="orange"
+              size="lg"
+              mt="5"
+              width="100%"
+            >
+              {isEnglish ? "Continue to doctor's practice email" : "Weiter zur Arztpraxis-E-Mail"}
+            </Button>
+          ) : null
+        }
+      />
 
       <Box
         id="emergency-profile"
@@ -334,8 +353,8 @@ function AccountPage() {
             </Text>
             <Text mt="1" color="orange.900">
               {isEnglish
-                ? "Save your details here. Then use the Back to setup button at the top to continue."
-                : "Speichere deine Angaben direkt hier. Tippe danach oben auf „Zur Einrichtung“, um weiterzumachen."}
+                ? "Save your details here. Then continue directly with the button below."
+                : "Speichere deine Angaben direkt hier. Danach geht es direkt mit dem Button unten weiter."}
             </Text>
           </Box>
         )}
@@ -410,6 +429,16 @@ function AccountPage() {
             {isProfileLoading && <Text color="gray.600">{text.emergencyProfileLoading}</Text>}
             {profileError && <Text color="red.700">{profileError}</Text>}
             {profileMessage && <Text color="teal.700" fontWeight="600">{profileMessage}</Text>}
+            {isOnboarding && onboardingFocus === "emergency-profile" && profileMessage === text.emergencyProfileSaved && (
+              <Button
+                as={Link}
+                to="/konto?from=einrichtung&focus=emergency-contacts#emergency-contacts"
+                colorPalette="orange"
+                size="lg"
+              >
+                {isEnglish ? "Continue to emergency contacts" : "Weiter zu den Notfallkontakten"}
+              </Button>
+            )}
 
             <Button
               as={Link}

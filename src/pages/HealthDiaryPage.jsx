@@ -417,6 +417,7 @@ function HealthDiaryPage() {
         timelineLinkedMedication: "Linked medication: {name}",
         linkedMedication: "Related medication (optional)",
         noMedicationLink: "No medication selected",
+        openMedications: "Open / edit medications",
         doctorEmail: "Email address of doctor's practice (optional)",
         doctorEmailPlaceholder: "practice@example.com",
         doctorEmailHint:
@@ -526,6 +527,7 @@ function HealthDiaryPage() {
         timelineLinkedMedication: "Verknüpftes Medikament: {name}",
         linkedMedication: "Zugehöriges Medikament (optional)",
         noMedicationLink: "Kein Medikament ausgewählt",
+        openMedications: "Medikamente öffnen / bearbeiten",
         doctorEmail: "E-Mail-Adresse der Arztpraxis (optional)",
         doctorEmailPlaceholder: "praxis@beispiel.de",
         doctorEmailHint:
@@ -1526,6 +1528,16 @@ function HealthDiaryPage() {
                   </option>
                 ))}
               </select>
+              <Button
+                as={Link}
+                to="/meine-medikamente"
+                variant="outline"
+                colorPalette="teal"
+                size="sm"
+                mt="3"
+              >
+                {text.openMedications}
+              </Button>
             </Box>
 
             {formData.type === "symptom" ? (

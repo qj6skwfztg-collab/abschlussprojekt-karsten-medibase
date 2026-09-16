@@ -375,8 +375,8 @@ function OnboardingWizard() {
                 size="lg"
                 onClick={goBack}
                 disabled={!lastActionId}
-                flex="1 1 180px"
-                minW="180px"
+                flex="1 1 150px"
+                minW="0"
               >
                 {isEnglish ? "Back" : "Zurück"}
               </Button>
@@ -385,13 +385,13 @@ function OnboardingWizard() {
                 colorPalette="orange"
                 size="lg"
                 onClick={skipCurrent}
-                flex="1 1 180px"
-                minW="180px"
+                flex="1 1 170px"
+                minW="0"
               >
                 {isEnglish ? "Skip" : "Überspringen"}
               </Button>
               {nextItem.id !== "reminders" && (
-                <Button as={Link} to={getOnboardingPath(nextItem.path, nextItem.focus)} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
+                <Button as={Link} to={getOnboardingPath(nextItem.path, nextItem.focus)} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 210px" minW="0">
                   {isEnglish ? "Open this step" : "Diesen Schritt öffnen"}
                 </Button>
               )}
@@ -400,8 +400,8 @@ function OnboardingWizard() {
                 variant={nextItem.id === "reminders" ? "solid" : "outline"}
                 size="lg"
                 onClick={markDone}
-                flex="1 1 220px"
-                minW="220px"
+                flex="1 1 210px"
+                minW="0"
               >
                 {getNextButtonText(nextItem)}
               </Button>

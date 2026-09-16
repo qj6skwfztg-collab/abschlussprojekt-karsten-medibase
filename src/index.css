@@ -1172,6 +1172,10 @@ header .accessibility-buttons button {
   border-width: 2px;
   border-radius: 18px;
   font-weight: 800;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
   transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
 }
 

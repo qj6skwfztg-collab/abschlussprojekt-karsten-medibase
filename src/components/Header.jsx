@@ -163,6 +163,10 @@ function Header({ onMenuStateChange }) {
                   {isEnglish ? "Health diary" : "Gesundheitstagebuch"}
                 </Link>
 
+                <Link className="header-link header-my-medications-link" to="/meine-medikamente" onClick={closeMenu} {...getNavigationLinkProps("/meine-medikamente")}>
+                  {isEnglish ? "My medications" : "Meine Medikamente"}
+                </Link>
+
                 <Link className="header-link header-emergency-contacts-link" to="/konto#emergency-contacts" onClick={closeMenu} {...getNavigationLinkProps("/konto")}>
                   {isEnglish ? "Emergency contacts" : "Notfallkontakte"}
                 </Link>
@@ -175,15 +179,9 @@ function Header({ onMenuStateChange }) {
                 {isEnglish ? "Medications" : "Medikamente"}
               </Text>
               <Flex className="nav-group-links" gap="2" align="center" flexWrap="wrap">
-                <Link className="header-link" to="/medikamente" onClick={closeMenu} {...getNavigationLinkProps("/medikamente")}>
+                <Link className="header-link header-search-medications-link" to="/medikamente" onClick={closeMenu} {...getNavigationLinkProps("/medikamente")}>
                   {isEnglish ? "Search medications" : "Medikamente suchen"}
                 </Link>
-
-                {user && (
-                  <Link className="header-link" to="/meine-medikamente" onClick={closeMenu} {...getNavigationLinkProps("/meine-medikamente")}>
-                    {isEnglish ? "My medications" : "Meine Medikamente"}
-                  </Link>
-                )}
 
                 {user?.uid === ADMIN_UID && user.emailVerified && (
                   <Link className="header-link" to="/neuer-eintrag" onClick={closeMenu} {...getNavigationLinkProps("/neuer-eintrag")}>

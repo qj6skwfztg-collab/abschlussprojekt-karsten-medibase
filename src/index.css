@@ -106,7 +106,9 @@ header #main-navigation .header-emergency-link:focus-visible {
 }
 
 header #main-navigation .header-account-link,
-header #main-navigation .header-diary-link {
+header #main-navigation .header-diary-link,
+header #main-navigation .header-my-medications-link,
+header #main-navigation .header-search-medications-link {
   border: 1px solid transparent;
   font-weight: 700;
 }
@@ -121,9 +123,19 @@ header #main-navigation .header-diary-link {
   border-color: rgba(178, 245, 234, 0.62);
 }
 
+header #main-navigation .header-my-medications-link {
+  background: rgba(197, 218, 255, 0.2) !important;
+  border-color: rgba(190, 210, 255, 0.66);
+}
+
 header #main-navigation .header-emergency-contacts-link {
   background: rgba(246, 173, 85, 0.2) !important;
   border-color: rgba(246, 173, 85, 0.68);
+}
+
+header #main-navigation .header-search-medications-link {
+  background: rgba(246, 173, 85, 0.18) !important;
+  border-color: rgba(246, 173, 85, 0.64);
 }
 
 header #main-navigation .header-account-link[aria-current="page"] {
@@ -138,8 +150,20 @@ header #main-navigation .header-diary-link[aria-current="page"] {
   box-shadow: 0 0 0 2px rgba(178, 245, 234, 0.45);
 }
 
+header #main-navigation .header-my-medications-link[aria-current="page"] {
+  background: #c5d8ff !important;
+  color: #1a365d;
+  box-shadow: 0 0 0 2px rgba(197, 216, 255, 0.45);
+}
+
 header #main-navigation .header-emergency-contacts-link[aria-current="page"] {
   background: #feebc8 !important;
+  color: #7b341e;
+  box-shadow: 0 0 0 2px rgba(246, 173, 85, 0.42);
+}
+
+header #main-navigation .header-search-medications-link[aria-current="page"] {
+  background: #fbd38d !important;
   color: #7b341e;
   box-shadow: 0 0 0 2px rgba(246, 173, 85, 0.42);
 }
@@ -612,6 +636,22 @@ header .accessibility-buttons button {
   }
 
   header #main-navigation .nav-group-personal .header-link {
+    border-radius: 14px;
+    padding: 13px 14px !important;
+  }
+
+  header #main-navigation .nav-group-medications {
+    padding: 12px 10px;
+    border: 1px solid rgba(246, 173, 85, 0.38);
+    border-radius: 18px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 250, 240, 0.12),
+      rgba(246, 173, 85, 0.1)
+    );
+  }
+
+  header #main-navigation .nav-group-medications .header-search-medications-link {
     border-radius: 14px;
     padding: 13px 14px !important;
   }

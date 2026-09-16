@@ -392,7 +392,7 @@ function OnboardingWizard() {
               </Button>
               {nextItem.id !== "reminders" && (
                 <Button as={Link} to={getOnboardingPath(nextItem.path, nextItem.focus)} state={{ fromOnboarding: true }} colorPalette="teal" size="lg" flex="1 1 220px" minW="220px">
-                  {isEnglish ? "Open and enter data" : "Öffnen und Daten eintragen"}
+                  {isEnglish ? "Open this step" : "Diesen Schritt öffnen"}
                 </Button>
               )}
               <Button

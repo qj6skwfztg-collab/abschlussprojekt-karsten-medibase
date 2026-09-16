@@ -304,12 +304,12 @@ function AccountPage() {
               role="status"
             >
               <Text fontWeight="800" color="orange.900">
-                {isEnglish ? "Setup: add emergency contacts" : "Einrichtung: Notfallkontakte eintragen"}
+                {isEnglish ? "After saving, continue here" : "Nach dem Speichern hier weiter"}
               </Text>
               <Text mt="1" color="orange.900">
                 {isEnglish
-                  ? "Save your contact here. Then continue directly with the button below."
-                  : "Speichere den Kontakt direkt hier. Danach geht es direkt mit dem Button unten weiter."}
+                  ? "Save the contact. Curaelis then shows the next button right here."
+                  : "Speichere den Kontakt. Danach zeigt Curaelis den nächsten Button direkt hier an."}
               </Text>
             </Box>
           ) : null

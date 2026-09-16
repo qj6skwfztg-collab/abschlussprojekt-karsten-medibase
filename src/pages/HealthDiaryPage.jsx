@@ -401,7 +401,7 @@ function HealthDiaryPage() {
         lastEntries: "Last {count} measurements",
         systolic: "Systolic",
         diastolicShort: "Diastolic",
-        exportPdf: "Download PDF",
+        exportPdf: "Create PDF",
         email: "Send email to doctor's practice",
         shareContacts: "Share PDF + files",
         reportContents: "Contents of the doctor package",
@@ -435,8 +435,8 @@ function HealthDiaryPage() {
         fileHint: "Choose photos or documents from your phone. They stay on this device until you share them.",
         shareFilesHint: "On a phone, use “Share PDF / send by email” to include the selected files.",
         pdfCreating: "The PDF is being created …",
-        pdfSaved: "The PDF was created. On iPhone, use Share → Save to Files if the PDF preview opens. For a doctor email, use “Share PDF / send by email”.",
-        pdfLocation: "File: {fileName}. On a computer it is usually in Downloads. On iPhone, tap Share → Save to Files and choose Downloads or another folder.",
+        pdfSaved: "The PDF was created. On a computer it is usually saved to Downloads. On iPhone, choose Save to Files in the share menu.",
+        pdfLocation: "File: {fileName}. On a computer it is usually in Downloads. On iPhone, it is saved wherever you choose in Files.",
         pdfError: "The PDF could not be created. Please try again.",
         sharePdf: "Share PDF + files",
         emailOpening: "Opening your email app …",
@@ -511,7 +511,7 @@ function HealthDiaryPage() {
         lastEntries: "Letzte {count} Messungen",
         systolic: "Systolisch",
         diastolicShort: "Diastolisch",
-        exportPdf: "PDF herunterladen",
+        exportPdf: "PDF erstellen",
         email: "E-Mail an Arztpraxis senden",
         shareContacts: "PDF + Dateien teilen",
         reportContents: "Inhalte des Arztpakets",
@@ -545,8 +545,8 @@ function HealthDiaryPage() {
         fileHint: "Wähle Bilder oder Dokumente vom Handy aus. Sie bleiben auf diesem Gerät, bis du sie teilst.",
         shareFilesHint: "Auf dem Handy nutzt du anschließend „PDF teilen / per E-Mail senden“, damit die Dateien mitgegeben werden.",
         pdfCreating: "Die PDF wird erstellt …",
-        pdfSaved: "Die PDF wurde erstellt. Wenn sich auf dem iPhone die Vorschau öffnet, tippe auf Teilen → In Dateien sichern. Für den Arztversand nutze „PDF teilen / per E-Mail senden“.",
-        pdfLocation: "Datei: {fileName}. Am PC liegt sie normalerweise im Ordner Downloads. Auf dem iPhone tippe auf Teilen → In Dateien sichern und wähle Downloads oder einen anderen Ordner.",
+        pdfSaved: "Die PDF wurde erstellt. Am PC liegt sie normalerweise im Ordner Downloads. Auf dem iPhone wählst du im Teilen-Menü „In Dateien sichern“.",
+        pdfLocation: "Datei: {fileName}. Am PC liegt sie normalerweise im Ordner Downloads. Auf dem iPhone liegt sie dort, wo du sie in Dateien sicherst.",
         pdfError: "Die PDF konnte nicht erstellt werden. Bitte versuche es erneut.",
         sharePdf: "PDF + Dateien teilen",
         emailOpening: "Die Mail-App wird geöffnet …",
@@ -970,11 +970,32 @@ function HealthDiaryPage() {
 
     try {
       const pdf = await createReportPdf();
-      triggerPdfDownload(pdf, getReportFileName());
+      const file = createReportFile(pdf);
+
+      if (
+        navigator.share &&
+        navigator.canShare &&
+        navigator.canShare({ files: [file] })
+      ) {
+        await navigator.share({
+          title: text.reportTitle,
+          text: text.reportTitle,
+          files: [file],
+        });
+      } else {
+        triggerPdfDownload(pdf, getReportFileName());
+      }
+
       setPrintMessage(text.pdfSaved);
       setPdfDownloadInfo(true);
-    } catch {
-      setPrintMessage(text.pdfError);
+      window.setTimeout(() => {
+        document.documentElement.style.zoom = "";
+        document.body.style.zoom = "";
+      }, 250);
+    } catch (error) {
+      setPrintMessage(
+        error?.name === "AbortError" ? text.shareCancelled : text.pdfError
+      );
     }
   }
 

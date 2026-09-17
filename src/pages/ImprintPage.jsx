@@ -61,8 +61,12 @@ function ImprintPage() {
       </Heading>
 
       <Text>
-        Curaelis stellt allgemeine Informationen zu Medikamenten bereit und
-        ersetzt keine medizinische Beratung.
+        Diese Anwendung dient der persönlichen Organisation von
+        Gesundheitsinformationen. Sie ersetzt keine ärztliche Beratung,
+        Diagnose oder Behandlung. Medizinische Entscheidungen dürfen nicht
+        allein aufgrund der angezeigten Informationen getroffen werden. Bitte
+        wende dich bei Fragen an Ärztin, Arzt oder Apotheke. Im Notfall rufe
+        den Notruf 112.
       </Text>
 
       <Heading size="md" mt="8" mb="3">
@@ -72,7 +76,8 @@ function ImprintPage() {
       <Text>
         Die Inhalte dieser Anwendung dienen ausschließlich der allgemeinen
         Orientierung. Für individuelle medizinische Entscheidungen ist immer
-        medizinisches Fachpersonal zu konsultieren.
+        medizinisches Fachpersonal zu konsultieren. Im Notfall ist der Notruf
+        112 zu wählen.
       </Text>
     </Box>
   );

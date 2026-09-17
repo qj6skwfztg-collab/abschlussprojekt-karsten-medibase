@@ -570,7 +570,7 @@ function HealthDiaryPage() {
         noNote: "Keine Notiz",
         noSymptom: "Beschwerde",
         notMedicalAdvice:
-          "Curaelis dokumentiert deine Einträge, stellt aber keine Diagnosen. Rufe im Notfall den Rettungsdienst.",
+          "Diese Anwendung dient der persönlichen Organisation von Gesundheitsinformationen. Sie ersetzt keine ärztliche Beratung, Diagnose oder Behandlung. Medizinische Entscheidungen dürfen nicht allein aufgrund der angezeigten Informationen getroffen werden. Bitte wende dich bei Fragen an Ärztin, Arzt oder Apotheke. Im Notfall rufe den Notruf 112.",
       };
 
   const selectedType = entryTypes[formData.type];

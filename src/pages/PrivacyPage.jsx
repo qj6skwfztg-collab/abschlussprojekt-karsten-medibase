@@ -138,10 +138,12 @@ function PrivacyPage() {
       </Heading>
 
       <Text>
-        Curaelis verarbeitet persönliche Angaben zur Nutzung der Anwendung,
-        bietet aber keine medizinische Beratung. Medikamenteninformationen sind
-        nur allgemeine Orientierung und ersetzen keine Packungsbeilage oder
-        Beratung durch medizinisches Fachpersonal.
+        Diese Anwendung dient der persönlichen Organisation von
+        Gesundheitsinformationen. Sie ersetzt keine ärztliche Beratung,
+        Diagnose oder Behandlung. Medizinische Entscheidungen dürfen nicht
+        allein aufgrund der angezeigten Informationen getroffen werden. Bitte
+        wende dich bei Fragen an Ärztin, Arzt oder Apotheke. Im Notfall rufe
+        den Notruf 112.
       </Text>
     </Box>
   );

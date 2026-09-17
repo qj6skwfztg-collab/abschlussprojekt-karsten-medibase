@@ -767,6 +767,7 @@ function HealthDiaryPage() {
     if (reportOptions.emergencyProfile) {
       lines.push(isEnglish ? "EMERGENCY PASS DETAILS" : "ANGABEN AUS DEM NOTFALLPASS");
       const profileLines = [
+        [isEnglish ? "Name" : "Name", profile.fullName],
         [isEnglish ? "Phone number" : "Telefonnummer", profile.phone],
         [isEnglish ? "Address" : "Adresse", profile.address],
         [isEnglish ? "Allergies" : "Allergien", profile.allergies],

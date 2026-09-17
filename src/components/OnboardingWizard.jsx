@@ -122,6 +122,7 @@ function OnboardingWizard() {
 
         const profileData = profile.exists() ? profile.data() : {};
         const hasProfileData = [
+          profileData.fullName,
           profileData.phone,
           profileData.address,
           profileData.allergies,

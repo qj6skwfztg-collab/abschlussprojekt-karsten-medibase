@@ -131,6 +131,7 @@ function EmergencyPass({ selectedCountry }) {
         lastUpdated: "Last updated",
         completeness: "Pass completeness",
         completenessHint: "Add the missing sections in your account.",
+        fullName: "Name",
         phone: "Phone number",
         address: "Address",
         allergies: "Allergies",
@@ -188,6 +189,7 @@ function EmergencyPass({ selectedCountry }) {
         lastUpdated: "Zuletzt aktualisiert",
         completeness: "Vollständigkeit des Passes",
         completenessHint: "Ergänze die fehlenden Bereiche in deinem Konto.",
+        fullName: "Name",
         phone: "Telefonnummer",
         address: "Adresse",
         allergies: "Allergien",
@@ -377,6 +379,7 @@ function EmergencyPass({ selectedCountry }) {
     if (shareOptions.profile) {
       lines.push(isEnglish ? "Important health details:" : "Wichtige Gesundheitsangaben:");
       [
+        [text.fullName, passProfile.fullName],
         [text.phone, passProfile.phone],
         [text.address, passProfile.address],
         [text.allergies, passProfile.allergies],
@@ -809,6 +812,13 @@ const emergencyText = isEnglish
                   </>
                 ) : (
                   <SimpleGrid columns={{ base: 1, md: 2 }} gap="4">
+                    {passProfile.fullName && (
+                      <Box>
+                        <Text fontWeight="700">{text.fullName}</Text>
+                        <Text>{passProfile.fullName}</Text>
+                      </Box>
+                    )}
+
                     {passProfile.phone && (
                       <Box>
                         <Text fontWeight="700">{text.phone}</Text>

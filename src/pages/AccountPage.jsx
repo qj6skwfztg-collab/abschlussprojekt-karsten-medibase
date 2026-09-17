@@ -96,6 +96,8 @@ function AccountPage() {
         emergencyProfileTitle: "Emergency pass & personal emergency details",
         emergencyProfileDescription:
           "Add optional information that should be visible in your private Curaelis emergency pass.",
+        fullName: "Name",
+        fullNamePlaceholder: "Full name shown in the emergency pass",
         phone: "Phone number",
         phonePlaceholder: "For example, +49 176 1234567",
         address: "Address",
@@ -152,6 +154,8 @@ function AccountPage() {
         emergencyProfileTitle: "Notfallpass & persönliche Notfalldaten",
         emergencyProfileDescription:
           "Füge optionale Angaben hinzu, die in deinem privaten Curaelis-Notfallpass angezeigt werden sollen.",
+        fullName: "Name",
+        fullNamePlaceholder: "Vollständiger Name für den Notfallpass",
         phone: "Telefonnummer",
         phonePlaceholder: "Zum Beispiel 0176 1234567",
         address: "Adresse",
@@ -347,6 +351,7 @@ function AccountPage() {
 
       <Box
         id="emergency-profile"
+        className="account-emergency-profile"
         borderWidth="1px"
         borderColor="teal.200"
         borderRadius="lg"
@@ -361,6 +366,20 @@ function AccountPage() {
 
         <form onSubmit={handleProfileSubmit}>
           <Stack gap="4">
+            <Box>
+              <Text as="label" htmlFor="profile-full-name" display="block" mb="2" fontWeight="600">
+                {text.fullName}
+              </Text>
+              <Input
+                id="profile-full-name"
+                name="fullName"
+                value={profileForm.fullName}
+                onChange={handleProfileChange}
+                placeholder={text.fullNamePlaceholder}
+                maxLength={120}
+              />
+            </Box>
+
             <Box>
               <Text as="label" htmlFor="profile-phone" display="block" mb="2" fontWeight="600">
                 {text.phone}

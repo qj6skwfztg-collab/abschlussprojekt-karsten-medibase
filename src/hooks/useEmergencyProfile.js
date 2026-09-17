@@ -9,6 +9,7 @@ import {
 import { auth, db } from "../firebase";
 
 export const emptyEmergencyProfile = {
+  fullName: "",
   phone: "",
   address: "",
   allergies: "",
@@ -78,6 +79,7 @@ function useEmergencyProfile() {
     await setDoc(
       doc(db, "users", currentUser.uid, "emergencyProfile", "main"),
       {
+        fullName: (nextProfile.fullName || "").trim(),
         phone: (nextProfile.phone || "").trim(),
         address: (nextProfile.address || "").trim(),
         allergies: (nextProfile.allergies || "").trim(),

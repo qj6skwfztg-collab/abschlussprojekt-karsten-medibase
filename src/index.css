@@ -117,6 +117,7 @@ header #main-navigation .header-emergency-link:focus-visible {
 header #main-navigation .header-account-link,
 header #main-navigation .header-diary-link,
 header #main-navigation .header-my-medications-link,
+header #main-navigation .header-emergency-contacts-link,
 header #main-navigation .header-search-medications-link,
 header #main-navigation .header-home-link,
 header #main-navigation .header-auth-link,
@@ -422,6 +423,10 @@ header .accessibility-buttons button {
   background: linear-gradient(135deg, #fffaf0 0%, #ffffff 72%);
   box-shadow: 0 10px 26px rgba(246, 173, 85, 0.1);
   scroll-margin-top: 24px;
+}
+
+.account-emergency-profile {
+  margin-top: 32px;
 }
 
 .account-onboarding-reopen {
@@ -900,9 +905,9 @@ header .accessibility-buttons button {
   header #main-navigation .header-link,
   header #main-navigation .nav-group-help a,
   header #main-navigation .nav-group-account button {
-    min-height: 42px;
-    padding: 8px 10px !important;
-    font-size: 0.9rem !important;
+    min-height: 40px;
+    padding: 7px 9px !important;
+    font-size: 0.86rem !important;
     line-height: 1.2;
     white-space: nowrap;
   }

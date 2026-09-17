@@ -635,6 +635,14 @@ function HealthDiaryPage() {
     }));
   }
 
+  function getSelectedReportLabels() {
+    return [
+      reportOptions.health ? text.reportHealth : null,
+      reportOptions.medications ? text.reportMedications : null,
+      reportOptions.emergencyProfile ? text.reportEmergencyProfile : null,
+    ].filter(Boolean);
+  }
+
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -1344,6 +1352,24 @@ function HealthDiaryPage() {
           <Text fontWeight="800" color="teal.900">
             {isEnglish ? "Your sending folder" : "Deine Versandmappe"}
           </Text>
+          <Box mt="2">
+            <Text fontSize="sm" fontWeight="700" color="teal.900">
+              {isEnglish ? "Selected contents:" : "Ausgewählte Inhalte:"}
+            </Text>
+            {getSelectedReportLabels().length > 0 ? (
+              <Stack gap="1" mt="1">
+                {getSelectedReportLabels().map((label) => (
+                  <Text key={label} fontSize="sm" color="gray.700">
+                    ✅ {label}
+                  </Text>
+                ))}
+              </Stack>
+            ) : (
+              <Text fontSize="sm" color="red.700" mt="1">
+                {text.reportNoSelection}
+              </Text>
+            )}
+          </Box>
           <Stack gap="1" mt="2">
             <Text fontSize="sm" color={pdfDownloadInfo ? "teal.800" : "gray.600"}>
               {pdfDownloadInfo ? "✅" : "⬜️"} {getReportFileName()}

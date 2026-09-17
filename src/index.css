@@ -932,6 +932,11 @@ header .accessibility-buttons button {
     line-height: 1.2;
   }
 
+  header #main-navigation .header-my-medications-link,
+  header #main-navigation .header-emergency-contacts-link {
+    min-width: 148px;
+  }
+
   header #main-navigation .header-emergency-contacts-link {
     background: rgba(246, 173, 85, 0.14) !important;
     border-color: rgba(246, 173, 85, 0.68) !important;

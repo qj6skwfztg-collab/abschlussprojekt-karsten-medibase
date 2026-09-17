@@ -1765,6 +1765,7 @@ html.high-contrast #root {
 }
 
 html.high-contrast * {
+  background-color: transparent !important;
   color: #f8fffd !important;
   border-color: #d8fffa !important;
   text-shadow: none !important;
@@ -1826,6 +1827,51 @@ html.high-contrast a:hover {
   background: #1c5750 !important;
   color: #ffffff !important;
   border-color: #ffffff !important;
+}
+
+html.high-contrast .health-diary-actions,
+html.high-contrast .health-diary-form,
+html.high-contrast .health-report-send-guide,
+html.high-contrast .health-report-options,
+html.high-contrast .health-report-visual,
+html.high-contrast .health-report-attachment-basket,
+html.high-contrast .health-report-action-group,
+html.high-contrast .health-report-email-fallback,
+html.high-contrast .health-report-print-message,
+html.high-contrast .health-report-download-info,
+html.high-contrast .onboarding-focus-banner {
+  background: #102d2a !important;
+  color: #f8fffd !important;
+  border-color: #9fe8df !important;
+}
+
+html.high-contrast .health-report-send-guide,
+html.high-contrast .health-report-options,
+html.high-contrast .health-report-attachment-basket,
+html.high-contrast .health-report-action-group,
+html.high-contrast .health-report-email-fallback,
+html.high-contrast .health-report-download-info,
+html.high-contrast .onboarding-focus-banner {
+  box-shadow: inset 0 0 0 1px rgba(159, 232, 223, 0.32) !important;
+}
+
+html.high-contrast .health-report-option,
+html.high-contrast .health-report-share-callout {
+  background: #123d38 !important;
+  color: #f8fffd !important;
+  border-color: #d8fffa !important;
+}
+
+html.high-contrast .health-report-option input {
+  accent-color: #9fe8df;
+}
+
+html.high-contrast .health-report-action-hint,
+html.high-contrast .health-report-files,
+html.high-contrast .health-report-files *,
+html.high-contrast .health-report-attachment-basket *,
+html.high-contrast .health-report-download-info * {
+  color: #f8fffd !important;
 }
 
 html.high-contrast *:focus-visible {

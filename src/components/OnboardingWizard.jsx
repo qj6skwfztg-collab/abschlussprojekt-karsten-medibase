@@ -9,6 +9,7 @@ import { getMedicationNotificationPermission } from "../native/medicationNotific
 import MedicationReminderPermission from "./MedicationReminderPermission";
 
 export const ONBOARDING_PENDING_KEY_PREFIX = "curaelis-onboarding-pending:";
+export const ONBOARDING_RETURN_PATH_KEY_PREFIX = "curaelis-onboarding-return-path:";
 const ONBOARDING_STATE_KEY_PREFIX = "curaelis-onboarding-state:";
 const DOCTOR_EMAIL_STORAGE_KEY = "curaelis-doctor-email";
 
@@ -121,6 +122,8 @@ function OnboardingWizard() {
 
         const profileData = profile.exists() ? profile.data() : {};
         const hasProfileData = [
+          profileData.phone,
+          profileData.address,
           profileData.allergies,
           profileData.conditions,
           profileData.bloodGroup,
@@ -252,10 +255,14 @@ function OnboardingWizard() {
   }
 
   function finishSetup() {
+    const returnPath = localStorage.getItem(
+      getStorageKey(ONBOARDING_RETURN_PATH_KEY_PREFIX, user.uid)
+    );
     localStorage.removeItem(getStorageKey(ONBOARDING_PENDING_KEY_PREFIX, user.uid));
+    localStorage.removeItem(getStorageKey(ONBOARDING_RETURN_PATH_KEY_PREFIX, user.uid));
     localStorage.removeItem(getStorageKey(ONBOARDING_STATE_KEY_PREFIX, user.uid));
     setIsDismissed(true);
-    navigate("/meine-medikamente", {
+    navigate(returnPath || "/meine-medikamente", {
       replace: true,
       state: { onboardingFinished: true },
     });

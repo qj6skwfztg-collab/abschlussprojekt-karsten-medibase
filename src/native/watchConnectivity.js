@@ -41,6 +41,8 @@ export async function syncEmergencyPassToWatch({
     })),
 
     emergencyProfile: {
+      phone: profile.phone || "",
+      address: profile.address || "",
       allergies: profile.allergies || "",
       conditions: profile.conditions || "",
       bloodGroup: profile.bloodGroup || "",

@@ -103,6 +103,15 @@ header #main-navigation .header-emergency-link:focus-visible {
   header #main-navigation .nav-group-help .header-link:hover {
     box-shadow: inset 0 -3px 0 #f6ad55, 0 8px 16px rgba(0, 0, 0, 0.16);
   }
+
+  header #main-navigation .header-home-link:hover,
+  header #main-navigation .header-auth-link:hover,
+  header #main-navigation .header-logout-link:hover {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border-color: rgba(255, 255, 255, 0.72) !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 -3px 0 #b2f5ea, 0 8px 16px rgba(0, 0, 0, 0.16) !important;
+  }
 }
 
 header #main-navigation .header-account-link,
@@ -110,13 +119,15 @@ header #main-navigation .header-diary-link,
 header #main-navigation .header-my-medications-link,
 header #main-navigation .header-search-medications-link,
 header #main-navigation .header-home-link,
-header #main-navigation .header-auth-link {
+header #main-navigation .header-auth-link,
+header #main-navigation .header-logout-link {
   border: 1px solid transparent;
   font-weight: 700;
 }
 
 header #main-navigation .header-home-link,
-header #main-navigation .header-auth-link {
+header #main-navigation .header-auth-link,
+header #main-navigation .header-logout-link {
   background: rgba(255, 255, 255, 0.1) !important;
   border-color: rgba(255, 255, 255, 0.42);
   border-radius: 10px;
@@ -899,7 +910,8 @@ header .accessibility-buttons button {
   header #main-navigation .nav-group-personal .header-link,
   header #main-navigation .nav-group-medications .header-search-medications-link,
   header #main-navigation .header-home-link,
-  header #main-navigation .header-auth-link {
+  header #main-navigation .header-auth-link,
+  header #main-navigation .header-logout-link {
     border-radius: 10px !important;
     box-shadow: none;
   }

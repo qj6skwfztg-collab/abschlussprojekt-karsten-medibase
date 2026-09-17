@@ -9,6 +9,8 @@ import {
 import { auth, db } from "../firebase";
 
 export const emptyEmergencyProfile = {
+  phone: "",
+  address: "",
   allergies: "",
   conditions: "",
   bloodGroup: "",
@@ -76,10 +78,12 @@ function useEmergencyProfile() {
     await setDoc(
       doc(db, "users", currentUser.uid, "emergencyProfile", "main"),
       {
-        allergies: nextProfile.allergies.trim(),
-        conditions: nextProfile.conditions.trim(),
-        bloodGroup: nextProfile.bloodGroup.trim(),
-        specialNotes: nextProfile.specialNotes.trim(),
+        phone: (nextProfile.phone || "").trim(),
+        address: (nextProfile.address || "").trim(),
+        allergies: (nextProfile.allergies || "").trim(),
+        conditions: (nextProfile.conditions || "").trim(),
+        bloodGroup: (nextProfile.bloodGroup || "").trim(),
+        specialNotes: (nextProfile.specialNotes || "").trim(),
         updatedAt: serverTimestamp(),
       }
     );

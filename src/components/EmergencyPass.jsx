@@ -131,6 +131,8 @@ function EmergencyPass({ selectedCountry }) {
         lastUpdated: "Last updated",
         completeness: "Pass completeness",
         completenessHint: "Add the missing sections in your account.",
+        phone: "Phone number",
+        address: "Address",
         allergies: "Allergies",
         conditions: "Important conditions",
         bloodGroup: "Blood group",
@@ -186,6 +188,8 @@ function EmergencyPass({ selectedCountry }) {
         lastUpdated: "Zuletzt aktualisiert",
         completeness: "Vollständigkeit des Passes",
         completenessHint: "Ergänze die fehlenden Bereiche in deinem Konto.",
+        phone: "Telefonnummer",
+        address: "Adresse",
         allergies: "Allergien",
         conditions: "Wichtige Erkrankungen",
         bloodGroup: "Blutgruppe",
@@ -373,6 +377,8 @@ function EmergencyPass({ selectedCountry }) {
     if (shareOptions.profile) {
       lines.push(isEnglish ? "Important health details:" : "Wichtige Gesundheitsangaben:");
       [
+        [text.phone, passProfile.phone],
+        [text.address, passProfile.address],
         [text.allergies, passProfile.allergies],
         [text.conditions, passProfile.conditions],
         [text.bloodGroup, passProfile.bloodGroup],
@@ -803,6 +809,20 @@ const emergencyText = isEnglish
                   </>
                 ) : (
                   <SimpleGrid columns={{ base: 1, md: 2 }} gap="4">
+                    {passProfile.phone && (
+                      <Box>
+                        <Text fontWeight="700">{text.phone}</Text>
+                        <Text>{passProfile.phone}</Text>
+                      </Box>
+                    )}
+
+                    {passProfile.address && (
+                      <Box>
+                        <Text fontWeight="700">{text.address}</Text>
+                        <Text whiteSpace="pre-wrap">{passProfile.address}</Text>
+                      </Box>
+                    )}
+
                     {passProfile.allergies && (
                       <Box>
                         <Text fontWeight="700">{text.allergies}</Text>

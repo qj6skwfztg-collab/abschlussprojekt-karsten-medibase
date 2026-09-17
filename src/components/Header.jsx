@@ -243,7 +243,7 @@ function Header({ onMenuStateChange }) {
             >
               {user ? (
                 <Button
-                  className="header-link"
+                  className="header-link header-logout-link"
                   size="sm"
                   variant="outline"
                   color="white"

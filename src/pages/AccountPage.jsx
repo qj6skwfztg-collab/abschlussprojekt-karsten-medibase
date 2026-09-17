@@ -16,7 +16,10 @@ import deleteAccount from "../hooks/useDeleteAccount";
 import useEmergencyProfile from "../hooks/useEmergencyProfile";
 import PasswordField from "../components/PasswordField";
 import EmergencyContacts from "../components/EmergencyContacts";
-import { ONBOARDING_PENDING_KEY_PREFIX } from "../components/OnboardingWizard";
+import {
+  ONBOARDING_PENDING_KEY_PREFIX,
+  ONBOARDING_RETURN_PATH_KEY_PREFIX,
+} from "../components/OnboardingWizard";
 
 function AccountPage() {
   const { isEnglish } = useLanguage();
@@ -53,6 +56,10 @@ function AccountPage() {
       `${ONBOARDING_PENDING_KEY_PREFIX}${currentUser.uid}`,
       "true"
     );
+    localStorage.setItem(
+      `${ONBOARDING_RETURN_PATH_KEY_PREFIX}${currentUser.uid}`,
+      "/konto"
+    );
     navigate("/einrichtung");
   }
 
@@ -86,9 +93,13 @@ function AccountPage() {
         email: "Email address",
         medications: "Open my medications",
         contacts: "Open emergency contacts",
-        emergencyProfileTitle: "Emergency pass details",
+        emergencyProfileTitle: "Emergency pass & personal emergency details",
         emergencyProfileDescription:
           "Add optional information that should be visible in your private Curaelis emergency pass.",
+        phone: "Phone number",
+        phonePlaceholder: "For example, +49 176 1234567",
+        address: "Address",
+        addressPlaceholder: "Street, postal code and city",
         allergies: "Allergies",
         allergiesPlaceholder: "For example, penicillin or pollen",
         conditions: "Important conditions",
@@ -138,9 +149,13 @@ function AccountPage() {
         email: "E-Mail-Adresse",
         medications: "Meine Medikamente öffnen",
         contacts: "Notfallkontakte öffnen",
-        emergencyProfileTitle: "Angaben für den Notfallpass",
+        emergencyProfileTitle: "Notfallpass & persönliche Notfalldaten",
         emergencyProfileDescription:
           "Füge optionale Angaben hinzu, die in deinem privaten Curaelis-Notfallpass angezeigt werden sollen.",
+        phone: "Telefonnummer",
+        phonePlaceholder: "Zum Beispiel 0176 1234567",
+        address: "Adresse",
+        addressPlaceholder: "Straße, Postleitzahl und Ort",
         allergies: "Allergien",
         allergiesPlaceholder: "Zum Beispiel Penicillin oder Pollen",
         conditions: "Wichtige Erkrankungen",
@@ -346,6 +361,36 @@ function AccountPage() {
 
         <form onSubmit={handleProfileSubmit}>
           <Stack gap="4">
+            <Box>
+              <Text as="label" htmlFor="profile-phone" display="block" mb="2" fontWeight="600">
+                {text.phone}
+              </Text>
+              <Input
+                id="profile-phone"
+                name="phone"
+                type="tel"
+                value={profileForm.phone}
+                onChange={handleProfileChange}
+                placeholder={text.phonePlaceholder}
+                maxLength={80}
+              />
+            </Box>
+
+            <Box>
+              <Text as="label" htmlFor="profile-address" display="block" mb="2" fontWeight="600">
+                {text.address}
+              </Text>
+              <Textarea
+                id="profile-address"
+                name="address"
+                value={profileForm.address}
+                onChange={handleProfileChange}
+                placeholder={text.addressPlaceholder}
+                maxLength={300}
+                rows={3}
+              />
+            </Box>
+
             <Box>
               <Text as="label" htmlFor="profile-allergies" display="block" mb="2" fontWeight="600">
                 {text.allergies}

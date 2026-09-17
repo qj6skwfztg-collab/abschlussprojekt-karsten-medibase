@@ -921,8 +921,20 @@ header .accessibility-buttons button {
     box-shadow: none;
   }
 
+  header #main-navigation .nav-group-personal .header-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    min-height: 40px;
+    padding: 7px 9px !important;
+    border-width: 1px !important;
+    line-height: 1.2;
+  }
+
   header #main-navigation .header-emergency-contacts-link {
     background: rgba(246, 173, 85, 0.14) !important;
+    border-color: rgba(246, 173, 85, 0.68) !important;
   }
 
   header #main-navigation .header-search-medications-link {

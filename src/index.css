@@ -1760,14 +1760,14 @@ p {
 
 html.high-contrast body,
 html.high-contrast #root {
-  background: #000 !important;
-  color: #fff !important;
+  background: #061a18 !important;
+  color: #f8fffd !important;
 }
 
 html.high-contrast * {
-  background-color: #000 !important;
-  color: #fff !important;
-  border-color: #fff !important;
+  color: #f8fffd !important;
+  border-color: #d8fffa !important;
+  text-shadow: none !important;
 }
 
 html.high-contrast header,
@@ -1776,12 +1776,27 @@ html.high-contrast main,
 html.high-contrast section,
 html.high-contrast article,
 html.high-contrast form {
-  background: #000 !important;
-  color: #fff !important;
+  background: #061a18 !important;
+  color: #f8fffd !important;
+}
+
+html.high-contrast .chakra-card,
+html.high-contrast [class*="card"],
+html.high-contrast [class*="Card"],
+html.high-contrast [class*="panel"],
+html.high-contrast [class*="Panel"],
+html.high-contrast [class*="section"],
+html.high-contrast [class*="Section"],
+html.high-contrast [class*="box"],
+html.high-contrast [class*="Box"] {
+  background: #102d2a !important;
+  color: #f8fffd !important;
+  border-color: #9fe8df !important;
+  box-shadow: 0 0 0 2px rgba(159, 232, 223, 0.32) !important;
 }
 
 html.high-contrast a {
-  color: #fff !important;
+  color: #f8fffd !important;
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
@@ -1794,15 +1809,23 @@ html.high-contrast a:hover {
 html.high-contrast input,
 html.high-contrast select,
 html.high-contrast textarea {
-  background: #000 !important;
-  color: #fff !important;
-  border: 2px solid #fff !important;
+  background: #0b2421 !important;
+  color: #f8fffd !important;
+  border: 2px solid #d8fffa !important;
 }
 
 html.high-contrast button {
-  background: #000 !important;
-  color: #fff !important;
-  border-color: #fff !important;
+  background: #123d38 !important;
+  color: #f8fffd !important;
+  border-color: #d8fffa !important;
+  box-shadow: none !important;
+}
+
+html.high-contrast button:hover,
+html.high-contrast a:hover {
+  background: #1c5750 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
 }
 
 html.high-contrast *:focus-visible {
@@ -1811,17 +1834,17 @@ html.high-contrast *:focus-visible {
 }
 
 html.high-contrast .mobile-bottom-navigation {
-  background: #000 !important;
-  border-top-color: #fff !important;
+  background: #061a18 !important;
+  border-top-color: #d8fffa !important;
 }
 
 html.high-contrast .mobile-bottom-link,
 html.high-contrast .mobile-bottom-link:last-child,
 html.high-contrast .mobile-bottom-link.is-active,
 html.high-contrast .mobile-bottom-link:last-child.is-active {
-  background: #000 !important;
-  color: #fff !important;
-  box-shadow: inset 0 0 0 2px #fff !important;
+  background: #123d38 !important;
+  color: #f8fffd !important;
+  box-shadow: inset 0 0 0 2px #d8fffa !important;
 }
 
 .contact-info-preview > p:first-child {

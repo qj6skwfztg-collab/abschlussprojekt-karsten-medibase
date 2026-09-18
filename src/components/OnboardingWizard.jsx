@@ -123,11 +123,14 @@ function OnboardingWizard() {
         const profileData = profile.exists() ? profile.data() : {};
         const hasProfileData = [
           profileData.fullName,
+          profileData.birthDate,
           profileData.phone,
           profileData.address,
+          profileData.doctorPractice,
           profileData.allergies,
           profileData.conditions,
           profileData.bloodGroup,
+          profileData.documentsHint,
           profileData.specialNotes,
         ].some((value) => String(value || "").trim());
 

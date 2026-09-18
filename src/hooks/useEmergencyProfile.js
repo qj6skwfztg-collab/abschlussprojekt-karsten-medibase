@@ -10,11 +10,14 @@ import { auth, db } from "../firebase";
 
 export const emptyEmergencyProfile = {
   fullName: "",
+  birthDate: "",
   phone: "",
   address: "",
+  doctorPractice: "",
   allergies: "",
   conditions: "",
   bloodGroup: "",
+  documentsHint: "",
   specialNotes: "",
   updatedAt: null,
 };
@@ -80,11 +83,14 @@ function useEmergencyProfile() {
       doc(db, "users", currentUser.uid, "emergencyProfile", "main"),
       {
         fullName: (nextProfile.fullName || "").trim(),
+        birthDate: (nextProfile.birthDate || "").trim(),
         phone: (nextProfile.phone || "").trim(),
         address: (nextProfile.address || "").trim(),
+        doctorPractice: (nextProfile.doctorPractice || "").trim(),
         allergies: (nextProfile.allergies || "").trim(),
         conditions: (nextProfile.conditions || "").trim(),
         bloodGroup: (nextProfile.bloodGroup || "").trim(),
+        documentsHint: (nextProfile.documentsHint || "").trim(),
         specialNotes: (nextProfile.specialNotes || "").trim(),
         updatedAt: serverTimestamp(),
       }

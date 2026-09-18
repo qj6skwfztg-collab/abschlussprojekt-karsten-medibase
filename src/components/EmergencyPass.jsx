@@ -132,11 +132,14 @@ function EmergencyPass({ selectedCountry }) {
         completeness: "Pass completeness",
         completenessHint: "Add the missing sections in your account.",
         fullName: "Name",
+        birthDate: "Date of birth",
         phone: "Phone number",
         address: "Address",
+        doctorPractice: "Family doctor / practice",
         allergies: "Allergies",
         conditions: "Important conditions",
         bloodGroup: "Blood group",
+        documentsHint: "Important documents",
         specialNotes: "Special notes",
         notMedicalAdvice:
           "This pass is an overview for emergencies and is not a medical diagnosis.",
@@ -190,11 +193,14 @@ function EmergencyPass({ selectedCountry }) {
         completeness: "Vollständigkeit des Passes",
         completenessHint: "Ergänze die fehlenden Bereiche in deinem Konto.",
         fullName: "Name",
+        birthDate: "Geburtsdatum",
         phone: "Telefonnummer",
         address: "Adresse",
+        doctorPractice: "Hausarzt / Praxis",
         allergies: "Allergien",
         conditions: "Wichtige Erkrankungen",
         bloodGroup: "Blutgruppe",
+        documentsHint: "Wichtige Dokumente",
         specialNotes: "Besondere Hinweise",
         notMedicalAdvice:
           "Dieser Pass ist eine Übersicht für Notfälle und keine medizinische Diagnose.",
@@ -380,11 +386,14 @@ function EmergencyPass({ selectedCountry }) {
       lines.push(isEnglish ? "Important health details:" : "Wichtige Gesundheitsangaben:");
       [
         [text.fullName, passProfile.fullName],
+        [text.birthDate, passProfile.birthDate],
         [text.phone, passProfile.phone],
         [text.address, passProfile.address],
+        [text.doctorPractice, passProfile.doctorPractice],
         [text.allergies, passProfile.allergies],
         [text.conditions, passProfile.conditions],
         [text.bloodGroup, passProfile.bloodGroup],
+        [text.documentsHint, passProfile.documentsHint],
         [text.specialNotes, passProfile.specialNotes],
       ].forEach(([label, value]) => {
         if (value) lines.push(`• ${label}: ${value}`);
@@ -819,6 +828,13 @@ const emergencyText = isEnglish
                       </Box>
                     )}
 
+                    {passProfile.birthDate && (
+                      <Box>
+                        <Text fontWeight="700">{text.birthDate}</Text>
+                        <Text>{passProfile.birthDate}</Text>
+                      </Box>
+                    )}
+
                     {passProfile.phone && (
                       <Box>
                         <Text fontWeight="700">{text.phone}</Text>
@@ -830,6 +846,13 @@ const emergencyText = isEnglish
                       <Box>
                         <Text fontWeight="700">{text.address}</Text>
                         <Text whiteSpace="pre-wrap">{passProfile.address}</Text>
+                      </Box>
+                    )}
+
+                    {passProfile.doctorPractice && (
+                      <Box>
+                        <Text fontWeight="700">{text.doctorPractice}</Text>
+                        <Text whiteSpace="pre-wrap">{passProfile.doctorPractice}</Text>
                       </Box>
                     )}
 
@@ -851,6 +874,13 @@ const emergencyText = isEnglish
                       <Box>
                         <Text fontWeight="700">{text.bloodGroup}</Text>
                         <Text>{passProfile.bloodGroup}</Text>
+                      </Box>
+                    )}
+
+                    {passProfile.documentsHint && (
+                      <Box>
+                        <Text fontWeight="700">{text.documentsHint}</Text>
+                        <Text whiteSpace="pre-wrap">{passProfile.documentsHint}</Text>
                       </Box>
                     )}
 

@@ -776,11 +776,14 @@ function HealthDiaryPage() {
       lines.push(isEnglish ? "EMERGENCY PASS DETAILS" : "ANGABEN AUS DEM NOTFALLPASS");
       const profileLines = [
         [isEnglish ? "Name" : "Name", profile.fullName],
+        [isEnglish ? "Date of birth" : "Geburtsdatum", profile.birthDate],
         [isEnglish ? "Phone number" : "Telefonnummer", profile.phone],
         [isEnglish ? "Address" : "Adresse", profile.address],
+        [isEnglish ? "Family doctor / practice" : "Hausarzt / Praxis", profile.doctorPractice],
         [isEnglish ? "Allergies" : "Allergien", profile.allergies],
         [isEnglish ? "Important conditions" : "Wichtige Erkrankungen", profile.conditions],
         [isEnglish ? "Blood group" : "Blutgruppe", profile.bloodGroup],
+        [isEnglish ? "Important documents" : "Wichtige Dokumente", profile.documentsHint],
         [isEnglish ? "Special notes" : "Besondere Hinweise", profile.specialNotes],
       ].filter(([, value]) => value?.trim());
 

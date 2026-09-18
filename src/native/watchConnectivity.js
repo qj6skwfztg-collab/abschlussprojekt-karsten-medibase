@@ -42,11 +42,14 @@ export async function syncEmergencyPassToWatch({
 
     emergencyProfile: {
       fullName: profile.fullName || "",
+      birthDate: profile.birthDate || "",
       phone: profile.phone || "",
       address: profile.address || "",
+      doctorPractice: profile.doctorPractice || "",
       allergies: profile.allergies || "",
       conditions: profile.conditions || "",
       bloodGroup: profile.bloodGroup || "",
+      documentsHint: profile.documentsHint || "",
       specialNotes: profile.specialNotes || "",
     },
   };

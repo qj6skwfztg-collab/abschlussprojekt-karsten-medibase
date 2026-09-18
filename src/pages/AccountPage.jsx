@@ -98,16 +98,23 @@ function AccountPage() {
           "Add optional information that should be visible in your private Curaelis emergency pass.",
         fullName: "Name",
         fullNamePlaceholder: "Full name shown in the emergency pass",
+        birthDate: "Date of birth",
+        birthDatePlaceholder: "For example, 01/31/1970",
         phone: "Phone number",
         phonePlaceholder: "For example, +49 176 1234567",
         address: "Address",
         addressPlaceholder: "Street, postal code and city",
+        doctorPractice: "Family doctor / practice",
+        doctorPracticePlaceholder: "Name, phone number or practice note",
         allergies: "Allergies",
         allergiesPlaceholder: "For example, penicillin or pollen",
         conditions: "Important conditions",
         conditionsPlaceholder: "For example, diabetes or asthma",
         bloodGroup: "Blood group",
         bloodGroupPlaceholder: "For example, A positive",
+        documentsHint: "Important documents",
+        documentsHintPlaceholder:
+          "For example, living will, power of attorney or organ donor card and where it can be found",
         specialNotes: "Special notes",
         specialNotesPlaceholder:
           "For example, important information for emergency helpers",
@@ -156,16 +163,23 @@ function AccountPage() {
           "Füge optionale Angaben hinzu, die in deinem privaten Curaelis-Notfallpass angezeigt werden sollen.",
         fullName: "Name",
         fullNamePlaceholder: "Vollständiger Name für den Notfallpass",
+        birthDate: "Geburtsdatum",
+        birthDatePlaceholder: "Zum Beispiel 31.01.1970",
         phone: "Telefonnummer",
         phonePlaceholder: "Zum Beispiel 0176 1234567",
         address: "Adresse",
         addressPlaceholder: "Straße, Postleitzahl und Ort",
+        doctorPractice: "Hausarzt / Praxis",
+        doctorPracticePlaceholder: "Name, Telefonnummer oder Praxis-Hinweis",
         allergies: "Allergien",
         allergiesPlaceholder: "Zum Beispiel Penicillin oder Pollen",
         conditions: "Wichtige Erkrankungen",
         conditionsPlaceholder: "Zum Beispiel Diabetes oder Asthma",
         bloodGroup: "Blutgruppe",
         bloodGroupPlaceholder: "Zum Beispiel A positiv",
+        documentsHint: "Wichtige Dokumente",
+        documentsHintPlaceholder:
+          "Zum Beispiel Patientenverfügung, Vorsorgevollmacht oder Organspendeausweis und wo sie liegen",
         specialNotes: "Besondere Hinweise",
         specialNotesPlaceholder:
           "Zum Beispiel wichtige Informationen für Ersthelfende",
@@ -340,6 +354,20 @@ function AccountPage() {
             </Box>
 
             <Box>
+              <Text as="label" htmlFor="profile-birth-date" display="block" mb="2" fontWeight="600">
+                {text.birthDate}
+              </Text>
+              <Input
+                id="profile-birth-date"
+                name="birthDate"
+                value={profileForm.birthDate}
+                onChange={handleProfileChange}
+                placeholder={text.birthDatePlaceholder}
+                maxLength={40}
+              />
+            </Box>
+
+            <Box>
               <Text as="label" htmlFor="profile-phone" display="block" mb="2" fontWeight="600">
                 {text.phone}
               </Text>
@@ -364,6 +392,21 @@ function AccountPage() {
                 value={profileForm.address}
                 onChange={handleProfileChange}
                 placeholder={text.addressPlaceholder}
+                maxLength={300}
+                rows={3}
+              />
+            </Box>
+
+            <Box>
+              <Text as="label" htmlFor="profile-doctor-practice" display="block" mb="2" fontWeight="600">
+                {text.doctorPractice}
+              </Text>
+              <Textarea
+                id="profile-doctor-practice"
+                name="doctorPractice"
+                value={profileForm.doctorPractice}
+                onChange={handleProfileChange}
+                placeholder={text.doctorPracticePlaceholder}
                 maxLength={300}
                 rows={3}
               />
@@ -408,6 +451,21 @@ function AccountPage() {
                 onChange={handleProfileChange}
                 placeholder={text.bloodGroupPlaceholder}
                 maxLength={30}
+              />
+            </Box>
+
+            <Box>
+              <Text as="label" htmlFor="profile-documents-hint" display="block" mb="2" fontWeight="600">
+                {text.documentsHint}
+              </Text>
+              <Textarea
+                id="profile-documents-hint"
+                name="documentsHint"
+                value={profileForm.documentsHint}
+                onChange={handleProfileChange}
+                placeholder={text.documentsHintPlaceholder}
+                maxLength={500}
+                rows={3}
               />
             </Box>
 

@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
+import { createSmsLink } from "../utils/smsLink";
 
 function EmergencyContacts({
   emergencyNumber,
@@ -184,15 +185,15 @@ function EmergencyContacts({
       return;
     }
 
-    const recipients = contacts
-      .map((contact) => contact.phone.trim())
-      .join(",");
-    const smsLink = `sms:${recipients}?body=${encodeURIComponent(emergencyText)}`;
+    const smsLink = createSmsLink(
+      contacts.map((contact) => contact.phone),
+      emergencyText
+    );
 
     setMessage(
       isEnglish
-        ? "The messaging app was opened. Tap Send to notify your emergency contacts."
-        : "Die Nachrichten-App wurde geöffnet. Tippe auf Senden, um deine Notfallkontakte zu benachrichtigen."
+        ? "The messaging app was opened. Check that all saved emergency contacts are listed, then tap Send."
+        : "Die Nachrichten-App wurde geöffnet. Prüfe, ob alle gespeicherten Notfallkontakte eingetragen sind, und tippe dann auf Senden."
     );
     setMessageType("success");
     window.location.href = smsLink;

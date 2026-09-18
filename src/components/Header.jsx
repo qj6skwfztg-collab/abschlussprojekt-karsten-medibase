@@ -62,7 +62,12 @@ function Header({ onMenuStateChange }) {
         as="header"
         background="teal.700"
         color="white"
-        padding={{ base: "3", md: "5" }}
+        paddingX={{ base: "3", md: "5" }}
+        paddingBottom={{ base: "3", md: "5" }}
+        paddingTop={{
+          base: "calc(0.75rem + env(safe-area-inset-top, 0px))",
+          md: "5",
+        }}
       >
       <Flex
         className="header-main"

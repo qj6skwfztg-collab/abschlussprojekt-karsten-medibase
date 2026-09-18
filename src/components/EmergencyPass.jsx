@@ -6,6 +6,7 @@ import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import useEmergencyProfile from "../hooks/useEmergencyProfile";
 import { Link } from "react-router-dom";
+import { createSmsLink } from "../utils/smsLink";
 import {
   Box,
   Button,
@@ -477,19 +478,18 @@ function EmergencyPass({ selectedCountry }) {
       return;
     }
 
-const emergencyText = isEnglish
-  ? `I may need help. My Curaelis emergency number is ${selectedCountry.ambulanceNumber}. Please contact me.`
-  : `Ich brauche möglicherweise Hilfe. Die Curaelis-Notrufnummer für mein Land ist ${selectedCountry.ambulanceNumber}. Bitte melde dich bei mir.`;
-    const recipients = contacts
-      .map((contact) => contact.phone.trim())
-      .join(",");
+    const emergencyText = isEnglish
+      ? `I may need help. My Curaelis emergency number is ${selectedCountry.ambulanceNumber}. Please contact me.`
+      : `Ich brauche möglicherweise Hilfe. Die Curaelis-Notrufnummer für mein Land ist ${selectedCountry.ambulanceNumber}. Bitte melde dich bei mir.`;
+    const smsLink = createSmsLink(
+      contacts.map((contact) => contact.phone),
+      emergencyText
+    );
 
     setMessage(text.messagePrepared);
     setMessageType("success");
 
-    window.location.href = `sms:${recipients}?body=${encodeURIComponent(
-      emergencyText
-    )}`;
+    window.location.href = smsLink;
   }
 
   return (

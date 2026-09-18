@@ -1,11 +1,12 @@
-// Registration is open in local development so the complete onboarding flow
-// can be tested. Production stays closed until the official launch switch is set.
-export const PUBLIC_REGISTRATION_ENABLED =
-  import.meta.env.PROD
-    ? import.meta.env.VITE_PUBLIC_REGISTRATION_ENABLED === "true"
-    : import.meta.env.VITE_PUBLIC_REGISTRATION_ENABLED !== "false";
+import { Capacitor } from "@capacitor/core";
 
-// Real phone calls stay disabled on the public preview website.
-// Set VITE_EMERGENCY_CALLS_ENABLED=true for the released app build.
+// Registration stays open unless it is deliberately disabled with
+// VITE_PUBLIC_REGISTRATION_ENABLED=false.
+export const PUBLIC_REGISTRATION_ENABLED =
+  import.meta.env.VITE_PUBLIC_REGISTRATION_ENABLED !== "false";
+
+// Real phone calls should work in the installed iOS app. They can still be
+// disabled explicitly for a public preview with VITE_EMERGENCY_CALLS_ENABLED=false.
 export const EMERGENCY_CALLS_ENABLED =
-  import.meta.env.VITE_EMERGENCY_CALLS_ENABLED === "true";
+  Capacitor.isNativePlatform() ||
+  import.meta.env.VITE_EMERGENCY_CALLS_ENABLED !== "false";

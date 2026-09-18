@@ -308,10 +308,17 @@ header .accessibility-buttons button {
 
 .medication-reminders-actions .medication-reminders-primary,
 .medication-reminders-actions .medication-reminders-secondary {
-  flex: 1 1 260px;
+  flex: 0 1 auto;
   min-width: 0;
   white-space: normal;
   text-align: center;
+}
+
+@media (min-width: 48em) {
+  .medication-reminders-actions .medication-reminders-primary,
+  .medication-reminders-actions .medication-reminders-secondary {
+    flex: 1 1 220px;
+  }
 }
 
 .my-medications-diary-link {
@@ -471,11 +478,28 @@ header .accessibility-buttons button {
   cursor: pointer;
 }
 
-.health-report-option input,
 .emergency-pass-checkbox input {
   width: 18px;
   height: 18px;
   accent-color: #0f766e;
+}
+
+.health-report-option {
+  appearance: none;
+  min-height: 50px;
+  text-align: left;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.health-report-option.is-selected {
+  color: #134e4a;
+  border-color: #14b8a6;
+  background: #f0fdfa;
+  box-shadow: 0 8px 18px rgba(20, 184, 166, 0.14);
+}
+
+.health-report-option:hover {
+  transform: translateY(-1px);
 }
 
 .health-timeline {
@@ -1852,8 +1876,8 @@ html.high-contrast .health-report-share-callout {
   border-color: #064e45 !important;
 }
 
-html.high-contrast .health-report-option input {
-  accent-color: #064e45;
+html.high-contrast .health-report-option.is-selected {
+  background: #e6fffa !important;
 }
 
 html.high-contrast .health-report-action-hint,

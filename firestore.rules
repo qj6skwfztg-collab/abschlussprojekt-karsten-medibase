@@ -98,25 +98,49 @@ service cloud.firestore {
 
     function validEmergencyProfile() {
       return request.resource.data.keys().hasAll([
+          'fullName',
+          'birthDate',
+          'phone',
+          'address',
+          'doctorPractice',
           'allergies',
           'conditions',
           'bloodGroup',
+          'documentsHint',
           'specialNotes',
           'updatedAt'
         ])
         && request.resource.data.keys().hasOnly([
+          'fullName',
+          'birthDate',
+          'phone',
+          'address',
+          'doctorPractice',
           'allergies',
           'conditions',
           'bloodGroup',
+          'documentsHint',
           'specialNotes',
           'updatedAt'
         ])
+        && request.resource.data.fullName is string
+        && request.resource.data.fullName.size() <= 120
+        && request.resource.data.birthDate is string
+        && request.resource.data.birthDate.size() <= 40
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() <= 40
+        && request.resource.data.address is string
+        && request.resource.data.address.size() <= 300
+        && request.resource.data.doctorPractice is string
+        && request.resource.data.doctorPractice.size() <= 300
         && request.resource.data.allergies is string
         && request.resource.data.allergies.size() <= 300
         && request.resource.data.conditions is string
         && request.resource.data.conditions.size() <= 300
         && request.resource.data.bloodGroup is string
         && request.resource.data.bloodGroup.size() <= 30
+        && request.resource.data.documentsHint is string
+        && request.resource.data.documentsHint.size() <= 500
         && request.resource.data.specialNotes is string
         && request.resource.data.specialNotes.size() <= 500
         && request.resource.data.updatedAt is timestamp;

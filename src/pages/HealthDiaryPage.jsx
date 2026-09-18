@@ -315,6 +315,7 @@ function HealthDiaryPage() {
   const [showOnboardingContinue, setShowOnboardingContinue] = useState(false);
   const [printMessage, setPrintMessage] = useState("");
   const [pdfDownloadInfo, setPdfDownloadInfo] = useState(false);
+  const [reportPreparedAt, setReportPreparedAt] = useState("");
   const [emailFallbackUrl, setEmailFallbackUrl] = useState("");
   const healthFormRef = useRef(null);
   const reportFileInputRef = useRef(null);
@@ -450,6 +451,8 @@ function HealthDiaryPage() {
           "No sharing app is available here. Download the PDF and attach it manually in your email app.",
         shareReady:
           "The share menu was opened. Choose your email app and check the data before sending.",
+        preparedAt:
+          "Prepared for sending on {date}. You can still change the selected contents above and create/send it again.",
         loading: "Loading entries …",
         empty: "You have not recorded any health data yet.",
         emptyHint: "Your saved measurements will appear here.",
@@ -560,6 +563,8 @@ function HealthDiaryPage() {
           "Hier ist keine Teilen-App verfügbar. Lade die PDF herunter und füge sie anschließend manuell in deiner Mail-App an.",
         shareReady:
           "Das Teilen-Menü wurde geöffnet. Wähle deine Mail-App und prüfe die Daten vor dem Senden.",
+        preparedAt:
+          "Zum Versand vorbereitet am {date}. Du kannst die ausgewählten Inhalte oben weiter ändern und danach erneut erstellen/teilen.",
         loading: "Einträge werden geladen …",
         empty: "Du hast noch keine Gesundheitsdaten eingetragen.",
         emptyHint: "Deine gespeicherten Messwerte erscheinen hier.",
@@ -627,12 +632,22 @@ function HealthDiaryPage() {
     setReportFiles(Array.from(event.target.files || []));
   }
 
-  function handleReportOptionChange(event) {
-    const { name, checked } = event.target;
+  function handleReportOptionToggle(name) {
     setReportOptions((previousOptions) => ({
       ...previousOptions,
-      [name]: checked,
+      [name]: !previousOptions[name],
     }));
+    setPdfDownloadInfo(false);
+    setReportPreparedAt("");
+  }
+
+  function markReportPrepared() {
+    setReportPreparedAt(
+      new Intl.DateTimeFormat(isEnglish ? "en-GB" : "de-DE", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(new Date())
+    );
   }
 
   function getSelectedReportLabels() {
@@ -1002,6 +1017,7 @@ function HealthDiaryPage() {
 
       setPrintMessage(text.pdfSaved);
       setPdfDownloadInfo(true);
+      markReportPrepared();
       window.setTimeout(() => {
         document.documentElement.style.zoom = "";
         document.body.style.zoom = "";
@@ -1040,6 +1056,7 @@ function HealthDiaryPage() {
       ) {
         triggerPdfDownload(pdf, getReportFileName());
         setPdfDownloadInfo(true);
+        markReportPrepared();
         setPrintMessage(text.shareUnsupported);
         return;
       }
@@ -1054,6 +1071,8 @@ function HealthDiaryPage() {
         files: shareFiles,
       });
       setPrintMessage(text.shareReady);
+      setPdfDownloadInfo(true);
+      markReportPrepared();
     } catch (error) {
       setPrintMessage(
         error?.name === "AbortError" ? text.shareCancelled : text.pdfError
@@ -1091,6 +1110,7 @@ function HealthDiaryPage() {
 
     setEmailFallbackUrl(mailtoUrl);
     setPrintMessage(text.emailOpening);
+    markReportPrepared();
     window.setTimeout(() => setPrintMessage(text.emailOpened), 700);
   }
 
@@ -1261,15 +1281,18 @@ function HealthDiaryPage() {
               ["medications", text.reportMedications],
               ["emergencyProfile", text.reportEmergencyProfile],
             ].map(([name, label]) => (
-              <label key={name} className="health-report-option">
-                <input
-                  type="checkbox"
-                  name={name}
-                  checked={reportOptions[name]}
-                  onChange={handleReportOptionChange}
-                />
+              <button
+                key={name}
+                type="button"
+                className={`health-report-option ${reportOptions[name] ? "is-selected" : ""}`}
+                aria-pressed={reportOptions[name]}
+                onClick={() => handleReportOptionToggle(name)}
+              >
+                <span aria-hidden="true">
+                  {reportOptions[name] ? "✓" : "○"}
+                </span>
                 <span>{label}</span>
-              </label>
+              </button>
             ))}
           </Flex>
         </Box>
@@ -1388,6 +1411,11 @@ function HealthDiaryPage() {
               ? "The PDF and selected files are prepared together for the Share button below."
               : "Die PDF und ausgewählten Dateien werden gemeinsam für den Teilen-Button unten vorbereitet."}
           </Text>
+          {reportPreparedAt && (
+            <Text mt="2" fontSize="sm" fontWeight="700" color="teal.800">
+              {text.preparedAt.replace("{date}", reportPreparedAt)}
+            </Text>
+          )}
         </Box>
         <Box className="health-report-action-group" mb="4">
           <Text className="health-report-action-title">

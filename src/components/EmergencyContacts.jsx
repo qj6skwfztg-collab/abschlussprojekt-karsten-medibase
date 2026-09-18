@@ -201,7 +201,7 @@ function EmergencyContacts({
   if (!user) {
     return (
       <Box id="emergency-contacts" className="account-emergency-contacts" marginTop="10">
-        <Heading size="lg" marginBottom="4">
+        <Heading size="md" marginBottom="4">
           {isEnglish ? "My emergency contacts" : "Meine Notfallkontakte"}
         </Heading>
         <Text marginBottom="5">
@@ -218,7 +218,7 @@ function EmergencyContacts({
 
   return (
     <Box id="emergency-contacts" className="account-emergency-contacts" marginTop="10">
-      <Heading size="lg" marginBottom="4">
+      <Heading size="md" marginBottom="4">
         {isEnglish ? "My emergency contacts" : "Meine Notfallkontakte"}
       </Heading>
 

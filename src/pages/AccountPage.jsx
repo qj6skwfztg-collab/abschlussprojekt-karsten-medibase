@@ -308,47 +308,6 @@ function AccountPage() {
         </Box>
       </Box>
 
-      <EmergencyContacts
-        allowDirectNotify
-        setupHint={
-          isOnboarding && onboardingFocus === "emergency-contacts" ? (
-            <Box
-              className="onboarding-focus-banner"
-              background="orange.50"
-              borderWidth="1px"
-              borderColor="orange.200"
-              borderRadius="xl"
-              padding="4"
-              mt="5"
-              role="status"
-            >
-              <Text fontWeight="800" color="orange.900">
-                {isEnglish ? "After saving, continue here" : "Nach dem Speichern hier weiter"}
-              </Text>
-              <Text mt="1" color="orange.900">
-                {isEnglish
-                  ? "Save the contact. Curaelis then shows the next button right here."
-                  : "Speichere den Kontakt. Danach zeigt Curaelis den nächsten Button direkt hier an."}
-              </Text>
-            </Box>
-          ) : null
-        }
-        setupContinue={
-          isOnboarding && onboardingFocus === "emergency-contacts" ? (
-            <Button
-              as={Link}
-              to="/gesundheitstagebuch?from=einrichtung&focus=doctor-email#doctor-email"
-              colorPalette="orange"
-              size="lg"
-              mt="5"
-              width="100%"
-            >
-              {isEnglish ? "Continue to doctor's practice email" : "Weiter zur Arztpraxis-E-Mail"}
-            </Button>
-          ) : null
-        }
-      />
-
       <Box
         id="emergency-profile"
         className="account-emergency-profile"
@@ -518,6 +477,47 @@ function AccountPage() {
           </Stack>
         </form>
       </Box>
+
+      <EmergencyContacts
+        allowDirectNotify
+        setupHint={
+          isOnboarding && onboardingFocus === "emergency-contacts" ? (
+            <Box
+              className="onboarding-focus-banner"
+              background="orange.50"
+              borderWidth="1px"
+              borderColor="orange.200"
+              borderRadius="xl"
+              padding="4"
+              mt="5"
+              role="status"
+            >
+              <Text fontWeight="800" color="orange.900">
+                {isEnglish ? "After saving, continue here" : "Nach dem Speichern hier weiter"}
+              </Text>
+              <Text mt="1" color="orange.900">
+                {isEnglish
+                  ? "Save the contact. Curaelis then shows the next button right here."
+                  : "Speichere den Kontakt. Danach zeigt Curaelis den nächsten Button direkt hier an."}
+              </Text>
+            </Box>
+          ) : null
+        }
+        setupContinue={
+          isOnboarding && onboardingFocus === "emergency-contacts" ? (
+            <Button
+              as={Link}
+              to="/gesundheitstagebuch?from=einrichtung&focus=doctor-email#doctor-email"
+              colorPalette="orange"
+              size="lg"
+              mt="5"
+              width="100%"
+            >
+              {isEnglish ? "Continue to doctor's practice email" : "Weiter zur Arztpraxis-E-Mail"}
+            </Button>
+          ) : null
+        }
+      />
 
       <Box
         as="details"

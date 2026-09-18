@@ -1,5 +1,4 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
-import { PUBLIC_CONTACT_INFO_ENABLED } from "../config/features";
 import useLanguage from "../hooks/useLanguage";
 
 function ImprintPage() {
@@ -27,39 +26,19 @@ function ImprintPage() {
         {isEnglish ? "Contact" : "Kontakt"}
       </Heading>
 
-      {PUBLIC_CONTACT_INFO_ENABLED ? (
-        <Text>
-          Telefon: 0171 2986859
-          <br />
-          E-Mail: {" "}
-          <a href="mailto:karsten.ketme@outlook.com">
-            karsten.ketme@outlook.com
-          </a>
-          <br />
-          Support: {" "}
-          <a href="mailto:support@curaelis.com">
-            support@curaelis.com
-          </a>
-        </Text>
-      ) : (
-        <Box
-          className="contact-info-preview"
-          aria-label={isEnglish ? "Contact details will be visible at the official launch" : "Kontaktangaben werden zum offiziellen Start sichtbar"}
-        >
-          <Text aria-hidden="true">
-            {isEnglish ? "Phone" : "Telefon"}: 000 00000000
-            <br />
-            E-Mail: kontakt••••••@••••••.de
-            <br />
-            Support: support••••••@••••••.com
-          </Text>
-          <Text mt="3" color="gray.600">
-            {isEnglish
-              ? "The contact details will be activated at the official launch."
-              : "Die Kontaktangaben werden zum offiziellen Start freigeschaltet."}
-          </Text>
-        </Box>
-      )}
+      <Text>
+        {isEnglish ? "Phone" : "Telefon"}: 0171 2986859
+        <br />
+        E-Mail:{" "}
+        <a href="mailto:karsten.ketme@outlook.com">
+          karsten.ketme@outlook.com
+        </a>
+        <br />
+        Support:{" "}
+        <a href="mailto:support@curaelis.com">
+          support@curaelis.com
+        </a>
+      </Text>
 
       <Heading size="md" mt="8" mb="3">
         {isEnglish ? "Notice about use" : "Hinweis zur Anwendung"}

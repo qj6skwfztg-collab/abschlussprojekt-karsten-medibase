@@ -1328,11 +1328,6 @@ header .accessibility-buttons button {
   filter: brightness(1.03);
 }
 
-.founder-callout {
-  letter-spacing: 0.005em;
-  text-rendering: optimizeLegibility;
-}
-
 .health-report-pdf-button,
 .health-report-doctor-button,
 .health-report-share-button {
@@ -1370,30 +1365,6 @@ header .accessibility-buttons button {
 .home-action-panel {
   border: 2px solid #b2f5ea !important;
   box-shadow: 0 12px 28px rgba(15, 118, 110, 0.1) !important;
-}
-
-.home-preview-notice {
-  margin-bottom: 18px;
-  padding: 14px 18px;
-  text-align: left;
-  background: linear-gradient(135deg, #fffaf0 0%, #fff 100%);
-  border: 2px solid #edc781;
-  border-radius: 18px;
-  box-shadow: 0 8px 18px rgba(180, 130, 45, 0.08);
-}
-
-.home-preview-notice-title {
-  color: #8a5a00;
-  font-size: 0.86rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-}
-
-.home-preview-notice-copy {
-  margin-top: 4px;
-  color: #5f4b24;
-  font-size: 0.95rem;
-  line-height: 1.45;
 }
 
 .home-safety-visual {
@@ -1982,13 +1953,6 @@ html.high-contrast .home-safety-card button,
 html.high-contrast .home-safety-card a[role="button"] {
   border: 3px solid #064e45 !important;
   box-shadow: 0 0 0 2px rgba(6, 78, 69, 0.16) !important;
-}
-
-.contact-info-preview > p:first-child {
-  filter: blur(5px);
-  user-select: none;
-  opacity: 0.7;
-  pointer-events: none;
 }
 
 @media print {

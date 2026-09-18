@@ -1,5 +1,4 @@
 import { Box, Heading, Link, List, Text } from "@chakra-ui/react";
-import { PUBLIC_CONTACT_INFO_ENABLED } from "../config/features";
 import useLanguage from "../hooks/useLanguage";
 
 function PrivacyPage() {
@@ -29,17 +28,13 @@ function PrivacyPage() {
         <br />
         49186 Bad Iburg
         <br />
-        {PUBLIC_CONTACT_INFO_ENABLED && (
-          <>
-            <br />
-            E-Mail: {" "}
-            <a href="mailto:karsten.ketme@outlook.com">
-              karsten.ketme@outlook.com
-            </a>
-            <br />
-            {isEnglish ? "Phone" : "Telefon"}: 0171 2986859
-          </>
-        )}
+        <br />
+        E-Mail:{" "}
+        <a href="mailto:karsten.ketme@outlook.com">
+          karsten.ketme@outlook.com
+        </a>
+        <br />
+        {isEnglish ? "Phone" : "Telefon"}: 0171 2986859
       </Text>
 
       <Heading size="md" mt="8" mb="3">

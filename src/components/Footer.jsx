@@ -1,7 +1,6 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import useLanguage from "../hooks/useLanguage";
-import { PUBLIC_CONTACT_INFO_ENABLED } from "../config/features";
 
 function Footer() {
   const { isEnglish } = useLanguage();
@@ -28,17 +27,15 @@ function Footer() {
         © 2026 Curaelis – {isEnglish ? "developed by" : "entwickelt von"} Karsten Rabeneck-Ketme
       </Text>
 
-      {PUBLIC_CONTACT_INFO_ENABLED && (
-        <Text marginTop="3" fontSize="sm">
-          Support: {" "}
-          <a
-            href="mailto:support@curaelis.com"
-            style={{ color: "inherit", textDecoration: "underline" }}
-          >
-            support@curaelis.com
-          </a>
-        </Text>
-      )}
+      <Text marginTop="3" fontSize="sm">
+        Support:{" "}
+        <a
+          href="mailto:support@curaelis.com"
+          style={{ color: "inherit", textDecoration: "underline" }}
+        >
+          support@curaelis.com
+        </a>
+      </Text>
 
       <Flex justify="center" gap="4" marginTop="4" fontSize="sm">
         <Link to="/impressum">

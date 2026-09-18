@@ -11,10 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import vitruvianImage from "../assets/medibase-vitruvian.png";
-import founderCharacter from "../assets/curaelis-karsten-anime.png";
 import SafetyNotice from "../components/SafetyNotice";
 import useLanguage from "../hooks/useLanguage";
-import { PREVIEW_NOTICE_ENABLED } from "../config/features";
 
 function ActionIcon({ symbol }) {
   return (
@@ -222,61 +220,6 @@ function HomePage() {
           </Text>
 
           <Box
-            display={{ base: "none", md: "block" }}
-            position="absolute"
-            top={{ base: "20px", md: "350px" }}
-            left={{ base: "0", md: "-10px" }}
-            width="190px"
-            padding="2"
-            borderRadius="3xl"
-            background="linear-gradient(135deg, rgba(230, 255, 250, 0.95), rgba(255, 255, 255, 0.85))"
-            border="1px solid"
-            borderColor="teal.100"
-            boxShadow="0 14px 30px rgba(13, 148, 136, 0.16)"
-            zIndex="2"
-          >
-            <Box
-              className="founder-callout"
-              marginBottom="2"
-              padding="2"
-              borderRadius="xl"
-              background="white"
-              border="1px solid"
-              borderColor="teal.200"
-              color="teal.900"
-              fontSize="sm"
-              fontWeight="700"
-              lineHeight="1.35"
-              textAlign="center"
-              boxShadow="sm"
-            >
-              {isEnglish ? "Take a look at what Curaelis can do!" : "Schau dir an, was Curaelis kann!"}
-            </Box>
-
-            <Image
-              src={founderCharacter}
-              alt={isEnglish ? "Anime illustration of the Curaelis developer presenting the app" : "Anime-Illustration des Curaelis-Entwicklers, der die App präsentiert"}
-              width="100%"
-              maxHeight="205px"
-              objectFit="contain"
-              objectPosition="bottom"
-              filter="drop-shadow(0 10px 12px rgba(15, 118, 110, 0.18))"
-            />
-
-            <Text
-              marginTop="1"
-              color="gray.600"
-              fontSize="2xs"
-              lineHeight="1.2"
-              textAlign="center"
-            >
-              {isEnglish
-                ? "Demo image – removed again before publication."
-                : "Demo-Bild – wird vor der Veröffentlichung wieder entfernt."}
-            </Text>
-          </Box>
-
-          <Box
             className="home-action-panel"
             marginTop="7"
             marginLeft="0"
@@ -288,19 +231,6 @@ function HomePage() {
             borderRadius="2xl"
             boxShadow="sm"
           >
-            {PREVIEW_NOTICE_ENABLED && (
-              <Box className="home-preview-notice" role="status">
-                <Text className="home-preview-notice-title">
-                  {isEnglish ? "Preview version" : "Aktuelle Vorschau"}
-                </Text>
-                <Text className="home-preview-notice-copy">
-                  {isEnglish
-                    ? "Curaelis is currently shown for demonstration. The full experience will be activated with the official app release."
-                    : "Curaelis ist aktuell nur zur Veranschaulichung online. Mit der Veröffentlichung der App wird die Website vollständig aktiviert."}
-                </Text>
-              </Box>
-            )}
-
             <Heading size="md" color="teal.900">
               {isEnglish ? "What would you like to do?" : "Was möchtest du tun?"}
             </Heading>

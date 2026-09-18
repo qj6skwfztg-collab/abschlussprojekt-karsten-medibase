@@ -658,6 +658,16 @@ function HealthDiaryPage() {
     ].filter(Boolean);
   }
 
+  function getReportSelectionSummary() {
+    const selectedCount = getSelectedReportLabels().length;
+
+    if (isEnglish) {
+      return `${selectedCount} content area${selectedCount === 1 ? "" : "s"} selected above. Change the selection in “Doctor package contents”.`;
+    }
+
+    return `${selectedCount} Inhaltsbereich${selectedCount === 1 ? "" : "e"} oben ausgewählt. Änderungen machst du direkt bei „Inhalte des Arztpakets“.`;
+  }
+
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -1380,16 +1390,12 @@ function HealthDiaryPage() {
           </Text>
           <Box mt="2">
             <Text fontSize="sm" fontWeight="700" color="teal.900">
-              {isEnglish ? "Selected contents:" : "Ausgewählte Inhalte:"}
+              {isEnglish ? "Selection:" : "Auswahl:"}
             </Text>
             {getSelectedReportLabels().length > 0 ? (
-              <Stack gap="1" mt="1">
-                {getSelectedReportLabels().map((label) => (
-                  <Text key={label} fontSize="sm" color="gray.700">
-                    ✅ {label}
-                  </Text>
-                ))}
-              </Stack>
+              <Text fontSize="sm" color="gray.700" mt="1">
+                {getReportSelectionSummary()}
+              </Text>
             ) : (
               <Text fontSize="sm" color="red.700" mt="1">
                 {text.reportNoSelection}

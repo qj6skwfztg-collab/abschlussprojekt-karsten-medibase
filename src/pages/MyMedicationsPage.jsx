@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -135,6 +135,8 @@ function MyMedicationsPage() {
         saved: "Medication was saved.",
         saveError: "The medication could not be saved.",
         editing: "You are now editing this medication.",
+        editingHint:
+          "Change the values in this form and then tap “Save changes”.",
         cancelled: "Editing was cancelled.",
         deleteConfirm: "Do you really want to delete this medication?",
         deleted: "Medication was deleted.",
@@ -177,6 +179,8 @@ function MyMedicationsPage() {
         saved: "Medikament wurde gespeichert.",
         saveError: "Das Medikament konnte nicht gespeichert werden.",
         editing: "Du bearbeitest jetzt dieses Medikament.",
+        editingHint:
+          "Ändere die Werte in diesem Formular und tippe danach auf „Änderungen speichern“.",
         cancelled: "Bearbeitung wurde abgebrochen.",
         deleteConfirm: "Möchtest du dieses Medikament wirklich löschen?",
         deleted: "Medikament wurde gelöscht.",
@@ -188,6 +192,8 @@ function MyMedicationsPage() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [showOnboardingContinue, setShowOnboardingContinue] = useState(false);
+  const formPanelRef = useRef(null);
+  const nameInputRef = useRef(null);
   const isReminderSetupStep = isOnboarding && onboardingFocus === "reminders";
 
   useEffect(() => {
@@ -309,6 +315,14 @@ function MyMedicationsPage() {
     });
 
     showMessage(text.editing, "info");
+
+    window.requestAnimationFrame(() => {
+      formPanelRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      nameInputRef.current?.focus({ preventScroll: true });
+    });
   }
 
   function handleCancelEdit() {
@@ -403,6 +417,7 @@ function MyMedicationsPage() {
       {isReminderSetupStep && renderReminderPanel({ isSetupStep: true })}
 
       <Box
+        ref={formPanelRef}
         id="personal-medication-form"
         className="personal-medication-form"
         borderWidth="1px"
@@ -411,12 +426,32 @@ function MyMedicationsPage() {
         padding="6"
         boxShadow="sm"
         mb="10"
+        borderColor={editingId ? "orange.300" : "transparent"}
       >
         <Heading size="md" color="teal.900" mb="6">
           {editingId
             ? text.editTitle
             : text.addTitle}
         </Heading>
+
+        {editingId && (
+          <Box
+            role="status"
+            background="orange.50"
+            borderLeftWidth="4px"
+            borderColor="orange.400"
+            padding="3"
+            borderRadius="md"
+            mb="5"
+          >
+            <Text fontWeight="800" color="orange.900">
+              {text.editing}
+            </Text>
+            <Text mt="1" color="orange.900">
+              {text.editingHint}
+            </Text>
+          </Box>
+        )}
 
         <form onSubmit={handleSubmit}>
           <Stack gap="5">
@@ -426,6 +461,7 @@ function MyMedicationsPage() {
               </Text>
 
               <Input
+                ref={nameInputRef}
                 id="name"
                 name="name"
                 placeholder={text.namePlaceholder}

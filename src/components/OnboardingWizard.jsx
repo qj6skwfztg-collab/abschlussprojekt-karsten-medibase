@@ -10,7 +10,8 @@ import MedicationReminderPermission from "./MedicationReminderPermission";
 
 export const ONBOARDING_PENDING_KEY_PREFIX = "curaelis-onboarding-pending:";
 export const ONBOARDING_RETURN_PATH_KEY_PREFIX = "curaelis-onboarding-return-path:";
-const ONBOARDING_STATE_KEY_PREFIX = "curaelis-onboarding-state:";
+export const ONBOARDING_STATE_KEY_PREFIX = "curaelis-onboarding-state:";
+export const ONBOARDING_RESTART_EVENT = "curaelis-onboarding-restart";
 const DOCTOR_EMAIL_STORAGE_KEY = "curaelis-doctor-email";
 
 const defaultSelection = {
@@ -46,6 +47,7 @@ function OnboardingWizard() {
   const [skipped, setSkipped] = useState([]);
   const [detected, setDetected] = useState({});
   const [isStarted, setIsStarted] = useState(false);
+  const [restartMode, setRestartMode] = useState(false);
   const [selectionError, setSelectionError] = useState("");
 
   const items = useMemo(
@@ -90,13 +92,33 @@ function OnboardingWizard() {
         if (Array.isArray(savedState?.completed)) setCompleted(savedState.completed);
         if (Array.isArray(savedState?.skipped)) setSkipped(savedState.skipped);
         setIsStarted(Boolean(savedState?.started));
+        setRestartMode(Boolean(savedState?.restartMode));
       } catch {
         setSelection(defaultSelection);
         setCompleted([]);
         setSkipped([]);
         setIsStarted(false);
+        setRestartMode(false);
       }
     });
+  }, []);
+
+  useEffect(() => {
+    function handleRestartRequest() {
+      setIsDismissed(false);
+      setSelection(defaultSelection);
+      setCompleted([]);
+      setSkipped([]);
+      setIsStarted(false);
+      setRestartMode(true);
+      setSelectionError("");
+    }
+
+    window.addEventListener(ONBOARDING_RESTART_EVENT, handleRestartRequest);
+
+    return () => {
+      window.removeEventListener(ONBOARDING_RESTART_EVENT, handleRestartRequest);
+    };
   }, []);
 
   useEffect(() => {
@@ -167,7 +189,7 @@ function OnboardingWizard() {
 
   const selectedItems = items.filter((item) => selection[item.id]);
   const isItemComplete = (item) =>
-    completed.includes(item.id) || Boolean(detected[item.id]);
+    completed.includes(item.id) || (!restartMode && Boolean(detected[item.id]));
   const nextItem = selectedItems.find(
     (item) => !isItemComplete(item) && !skipped.includes(item.id)
   );
@@ -196,7 +218,13 @@ function OnboardingWizard() {
     return isEnglish ? "Finish this step" : "Diesen Schritt abschließen";
   }
 
-  function saveState(nextSelection, nextCompleted, nextSkipped = skipped, started = true) {
+  function saveState(
+    nextSelection,
+    nextCompleted,
+    nextSkipped = skipped,
+    started = true,
+    nextRestartMode = restartMode
+  ) {
     localStorage.setItem(
       getStorageKey(ONBOARDING_STATE_KEY_PREFIX, user.uid),
       JSON.stringify({
@@ -204,6 +232,7 @@ function OnboardingWizard() {
         completed: nextCompleted,
         skipped: nextSkipped,
         started,
+        restartMode: nextRestartMode,
       })
     );
   }
@@ -225,7 +254,7 @@ function OnboardingWizard() {
     setCompleted([]);
     setSkipped([]);
     setIsStarted(true);
-    saveState(selection, [], []);
+    saveState(selection, [], [], true, restartMode);
   }
 
   function markDone() {
@@ -266,6 +295,7 @@ function OnboardingWizard() {
     localStorage.removeItem(getStorageKey(ONBOARDING_RETURN_PATH_KEY_PREFIX, user.uid));
     localStorage.removeItem(getStorageKey(ONBOARDING_STATE_KEY_PREFIX, user.uid));
     setIsDismissed(true);
+    setRestartMode(false);
     navigate(returnPath || "/meine-medikamente", {
       replace: true,
       state: { onboardingFinished: true },
@@ -351,8 +381,10 @@ function OnboardingWizard() {
                         <Text fontSize="xs" color="gray.600">
                           {isComplete
                             ? (isDetected
-                              ? (isEnglish ? "Already present" : "Bereits vorhanden")
-                              : (isEnglish ? "Nothing saved yet" : "Noch nichts hinterlegt"))
+                              ? (completed.includes(item.id)
+                                ? (isEnglish ? "Checked - data present" : "Geprüft - Daten vorhanden")
+                                : (isEnglish ? "Already present" : "Bereits vorhanden"))
+                              : (isEnglish ? "Checked" : "Geprüft"))
                             : isSkipped
                               ? (isEnglish ? "Skipped" : "Übersprungen")
                             : isCurrent

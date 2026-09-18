@@ -18,7 +18,9 @@ import PasswordField from "../components/PasswordField";
 import EmergencyContacts from "../components/EmergencyContacts";
 import {
   ONBOARDING_PENDING_KEY_PREFIX,
+  ONBOARDING_RESTART_EVENT,
   ONBOARDING_RETURN_PATH_KEY_PREFIX,
+  ONBOARDING_STATE_KEY_PREFIX,
 } from "../components/OnboardingWizard";
 
 function AccountPage() {
@@ -60,6 +62,16 @@ function AccountPage() {
       `${ONBOARDING_RETURN_PATH_KEY_PREFIX}${currentUser.uid}`,
       "/konto"
     );
+    localStorage.setItem(
+      `${ONBOARDING_STATE_KEY_PREFIX}${currentUser.uid}`,
+      JSON.stringify({
+        completed: [],
+        skipped: [],
+        started: false,
+        restartMode: true,
+      })
+    );
+    window.dispatchEvent(new Event(ONBOARDING_RESTART_EVENT));
     navigate("/einrichtung");
   }
 
@@ -313,11 +325,11 @@ function AccountPage() {
           </Heading>
           <Text marginBottom="3">
             {isEnglish
-              ? "Open the setup assistant again. Existing data stays safe and will be recognized automatically."
-              : "Öffne den Einrichtungsassistenten erneut. Vorhandene Daten bleiben erhalten und werden automatisch erkannt."}
+              ? "Restart the setup assistant. Existing data stays safe, but selected areas are checked again."
+              : "Starte den Einrichtungsassistenten neu. Vorhandene Daten bleiben erhalten, aber die ausgewählten Bereiche werden erneut geprüft."}
           </Text>
           <Button variant="outline" colorPalette="orange" onClick={reopenOnboarding}>
-            {isEnglish ? "Open setup again" : "Einrichtung erneut öffnen"}
+            {isEnglish ? "Restart setup" : "Einrichtung neu starten"}
           </Button>
         </Box>
       </Box>

@@ -460,7 +460,7 @@ function HealthDiaryPage() {
         noNote: "No note",
         noSymptom: "Symptom",
         notMedicalAdvice:
-          "Curaelis documents your entries but does not diagnose illnesses. In an emergency, call the emergency services.",
+          "This application is intended for the personal organization of health information. It does not replace medical advice, diagnosis or treatment. Medical decisions must not be made solely based on the information displayed. If you have questions, please contact a doctor or pharmacy. In an emergency, call your local emergency number.",
       }
     : {
         title: "Gesundheitstagebuch",
@@ -570,7 +570,7 @@ function HealthDiaryPage() {
         noNote: "Keine Notiz",
         noSymptom: "Beschwerde",
         notMedicalAdvice:
-          "Diese Anwendung dient der persönlichen Organisation von Gesundheitsinformationen. Sie ersetzt keine ärztliche Beratung, Diagnose oder Behandlung. Medizinische Entscheidungen dürfen nicht allein aufgrund der angezeigten Informationen getroffen werden. Bitte wende dich bei Fragen an Ärztin, Arzt oder Apotheke. Im Notfall rufe den Notruf 112.",
+          "Diese Anwendung dient der persönlichen Organisation von Gesundheitsinformationen. Sie ersetzt keine ärztliche Beratung, Diagnose oder Behandlung. Medizinische Entscheidungen dürfen nicht allein aufgrund der angezeigten Informationen getroffen werden. Bitte wende dich bei Fragen an Ärztin, Arzt oder Apotheke. Im Notfall rufe deine lokale Notrufnummer an; in Deutschland und vielen EU-Ländern ist das die 112.",
       };
 
   const selectedType = entryTypes[formData.type];

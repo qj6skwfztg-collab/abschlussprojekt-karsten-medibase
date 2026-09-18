@@ -1,13 +1,16 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { PUBLIC_CONTACT_INFO_ENABLED } from "../config/features";
+import useLanguage from "../hooks/useLanguage";
 
 function ImprintPage() {
+  const { isEnglish } = useLanguage();
+
   return (
     <Box maxW="900px" mx="auto" p="6">
-      <Heading mb="6">Impressum</Heading>
+      <Heading mb="6">{isEnglish ? "Legal notice" : "Impressum"}</Heading>
 
       <Heading size="md" mb="3">
-        Angaben gemäß § 5 DDG
+        {isEnglish ? "Information according to Section 5 DDG" : "Angaben gemäß § 5 DDG"}
       </Heading>
 
       <Text>
@@ -21,7 +24,7 @@ function ImprintPage() {
       </Text>
 
       <Heading size="md" mt="8" mb="3">
-        Kontakt
+        {isEnglish ? "Contact" : "Kontakt"}
       </Heading>
 
       {PUBLIC_CONTACT_INFO_ENABLED ? (
@@ -41,43 +44,41 @@ function ImprintPage() {
       ) : (
         <Box
           className="contact-info-preview"
-          aria-label="Kontaktangaben werden zum offiziellen Start sichtbar"
+          aria-label={isEnglish ? "Contact details will be visible at the official launch" : "Kontaktangaben werden zum offiziellen Start sichtbar"}
         >
           <Text aria-hidden="true">
-            Telefon: 000 00000000
+            {isEnglish ? "Phone" : "Telefon"}: 000 00000000
             <br />
             E-Mail: kontakt••••••@••••••.de
             <br />
             Support: support••••••@••••••.com
           </Text>
           <Text mt="3" color="gray.600">
-            Die Kontaktangaben werden zum offiziellen Start freigeschaltet.
+            {isEnglish
+              ? "The contact details will be activated at the official launch."
+              : "Die Kontaktangaben werden zum offiziellen Start freigeschaltet."}
           </Text>
         </Box>
       )}
 
       <Heading size="md" mt="8" mb="3">
-        Hinweis zur Anwendung
+        {isEnglish ? "Notice about use" : "Hinweis zur Anwendung"}
       </Heading>
 
       <Text>
-        Diese Anwendung dient der persönlichen Organisation von
-        Gesundheitsinformationen. Sie ersetzt keine ärztliche Beratung,
-        Diagnose oder Behandlung. Medizinische Entscheidungen dürfen nicht
-        allein aufgrund der angezeigten Informationen getroffen werden. Bitte
-        wende dich bei Fragen an Ärztin, Arzt oder Apotheke. Im Notfall rufe
-        den Notruf 112.
+        {isEnglish
+          ? "This application is intended for the personal organization of health information. It does not replace medical advice, diagnosis or treatment. Medical decisions must not be made solely based on the information displayed. If you have questions, please contact a doctor or pharmacy. In an emergency, call your local emergency number."
+          : "Diese Anwendung dient der persönlichen Organisation von Gesundheitsinformationen. Sie ersetzt keine ärztliche Beratung, Diagnose oder Behandlung. Medizinische Entscheidungen dürfen nicht allein aufgrund der angezeigten Informationen getroffen werden. Bitte wende dich bei Fragen an Ärztin, Arzt oder Apotheke. Im Notfall rufe deine lokale Notrufnummer an; in Deutschland und vielen EU-Ländern ist das die 112."}
       </Text>
 
       <Heading size="md" mt="8" mb="3">
-        Haftung für Inhalte
+        {isEnglish ? "Liability for content" : "Haftung für Inhalte"}
       </Heading>
 
       <Text>
-        Die Inhalte dieser Anwendung dienen ausschließlich der allgemeinen
-        Orientierung. Für individuelle medizinische Entscheidungen ist immer
-        medizinisches Fachpersonal zu konsultieren. Im Notfall ist der Notruf
-        112 zu wählen.
+        {isEnglish
+          ? "The content of this application is provided for general orientation only. For individual medical decisions, medical professionals must always be consulted. In an emergency, call your local emergency number."
+          : "Die Inhalte dieser Anwendung dienen ausschließlich der allgemeinen Orientierung. Für individuelle medizinische Entscheidungen ist immer medizinisches Fachpersonal zu konsultieren. Im Notfall rufe deine lokale Notrufnummer an; in Deutschland und vielen EU-Ländern ist das die 112."}
       </Text>
     </Box>
   );

@@ -312,6 +312,7 @@ function HealthDiaryPage() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [measuredAtWasEdited, setMeasuredAtWasEdited] = useState(false);
   const [showOnboardingContinue, setShowOnboardingContinue] = useState(false);
   const [printMessage, setPrintMessage] = useState("");
   const [pdfDownloadInfo, setPdfDownloadInfo] = useState(false);
@@ -671,6 +672,10 @@ function HealthDiaryPage() {
   function handleChange(event) {
     const { name, value } = event.target;
 
+    if (name === "measuredAt") {
+      setMeasuredAtWasEdited(true);
+    }
+
     setFormData((previousData) => ({
       ...previousData,
       [name]: value,
@@ -753,6 +758,7 @@ function HealthDiaryPage() {
 
   function handleEdit(entry) {
     setEditingId(entry.id);
+    setMeasuredAtWasEdited(true);
     setFormData({
       type: entry.type,
       value: String(entry.value ?? ""),
@@ -775,6 +781,7 @@ function HealthDiaryPage() {
 
   function handleCancelEdit() {
     setEditingId(null);
+    setMeasuredAtWasEdited(false);
     setFormData({ ...emptyForm, measuredAt: getLocalDateTimeValue() });
     setMessage("");
     setMessageType("");
@@ -1129,7 +1136,11 @@ function HealthDiaryPage() {
     setMessage("");
     setMessageType("");
 
-    const measuredAt = new Date(formData.measuredAt);
+    const measuredAtValue =
+      editingId || measuredAtWasEdited
+        ? formData.measuredAt
+        : getLocalDateTimeValue();
+    const measuredAt = new Date(measuredAtValue);
     const value = Number(formData.value);
     const secondaryValue = Number(formData.secondaryValue || 0);
 
@@ -1150,7 +1161,7 @@ function HealthDiaryPage() {
     if (
       !Number.isFinite(value) ||
       value < 0 ||
-      !formData.measuredAt ||
+      !measuredAtValue ||
       Number.isNaN(measuredAt.getTime()) ||
       (formData.type === "bloodPressure" &&
         (!Number.isFinite(secondaryValue) || secondaryValue <= 0))
@@ -1188,6 +1199,7 @@ function HealthDiaryPage() {
         setShowOnboardingContinue(true);
       }
       setFormData({ ...emptyForm, measuredAt: getLocalDateTimeValue() });
+      setMeasuredAtWasEdited(false);
       setEditingId(null);
     } catch (saveError) {
       console.error("Curaelis health entry save failed", saveError);

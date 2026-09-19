@@ -53,7 +53,7 @@ function LoginPage() {
       ) === "true";
 
       navigate(
-        hasPendingOnboarding ? "/einrichtung" : "/meine-medikamente",
+        hasPendingOnboarding ? "/einrichtung" : "/",
         { replace: true }
       );
     } catch (firebaseError) {

@@ -595,6 +595,7 @@ function AccountPage() {
         borderColor="red.200"
         borderRadius="lg"
         padding="4"
+        mt="10"
       >
         <Box
           as="summary"

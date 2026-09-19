@@ -189,7 +189,7 @@ function OnboardingWizard() {
 
   const selectedItems = items.filter((item) => selection[item.id]);
   const isItemComplete = (item) =>
-    completed.includes(item.id) || (!restartMode && Boolean(detected[item.id]));
+    completed.includes(item.id) || Boolean(detected[item.id]);
   const nextItem = selectedItems.find(
     (item) => !isItemComplete(item) && !skipped.includes(item.id)
   );
@@ -296,7 +296,7 @@ function OnboardingWizard() {
     localStorage.removeItem(getStorageKey(ONBOARDING_STATE_KEY_PREFIX, user.uid));
     setIsDismissed(true);
     setRestartMode(false);
-    navigate(returnPath || "/meine-medikamente", {
+    navigate(returnPath || "/", {
       replace: true,
       state: { onboardingFinished: true },
     });
@@ -486,7 +486,7 @@ function OnboardingWizard() {
               </Button>
             )}
             <Button colorPalette="teal" size="lg" onClick={finishSetup}>
-              {isEnglish ? "Go to my medications" : "Zu meinen Medikamenten"}
+              {isEnglish ? "Go to start page" : "Zur Startseite"}
             </Button>
           </Stack>
         )}

@@ -1838,17 +1838,6 @@ function HealthDiaryPage() {
         )}
       </Box>
 
-      <Box
-        className="health-diary-warning"
-        padding="4"
-        mb="8"
-        borderLeftWidth="4px"
-        borderColor="orange.400"
-        background="orange.50"
-      >
-        <Text fontWeight="700">{text.notMedicalAdvice}</Text>
-      </Box>
-
       <HealthTimeline
         entries={healthEntries}
         medications={userMedications}
@@ -2002,6 +1991,17 @@ function HealthDiaryPage() {
           </Stack>
         )}
         </Box>
+      </Box>
+
+      <Box
+        className="health-diary-warning"
+        padding="4"
+        mt="8"
+        borderLeftWidth="4px"
+        borderColor="orange.400"
+        background="orange.50"
+      >
+        <Text fontWeight="700">{text.notMedicalAdvice}</Text>
       </Box>
       </Box>
     </Box>

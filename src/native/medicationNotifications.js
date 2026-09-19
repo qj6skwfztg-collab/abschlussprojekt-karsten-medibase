@@ -2,6 +2,8 @@ import { Capacitor } from "@capacitor/core";
 import { LocalNotifications } from "@capacitor/local-notifications";
 
 const REMINDER_IDS_KEY = "curaelis-native-reminder-ids";
+const NOTIFICATION_SOUND = "default";
+const NOTIFICATION_INTERRUPTION_LEVEL = "active";
 
 function isNativeNotificationsAvailable() {
   return Capacitor.isNativePlatform();
@@ -114,6 +116,8 @@ export async function scheduleMedicationTestNotification() {
         schedule: {
           at: new Date(Date.now() + 5000),
         },
+        sound: NOTIFICATION_SOUND,
+        interruptionLevel: NOTIFICATION_INTERRUPTION_LEVEL,
         foreground: true,
       },
     ],
@@ -153,6 +157,8 @@ export async function syncNativeMedicationReminders(medications) {
         schedule: {
           on: { hour, minute },
         },
+        sound: NOTIFICATION_SOUND,
+        interruptionLevel: NOTIFICATION_INTERRUPTION_LEVEL,
         extra: { url: "/meine-medikamente", medicationId: medication.id },
         foreground: true,
       };

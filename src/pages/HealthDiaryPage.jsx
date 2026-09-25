@@ -1378,7 +1378,9 @@ function HealthDiaryPage() {
               mt="4"
               width="100%"
             >
-              {isEnglish ? "Back to setup overview" : "Zurück zur Einrichtungsübersicht"}
+              {isEnglish
+                ? "Save doctor's practice email and finish setup"
+                : "Arztpraxis-E-Mail speichern und Einrichtung abschließen"}
             </Button>
           )}
         </Box>

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Heading,
   SimpleGrid,
   Text,
@@ -119,33 +120,45 @@ function MedicationsPage() {
                   : "Dieses Medikament ist noch nicht als Curaelis-Karte vorhanden. Du kannst es direkt auf der offiziellen BfArM-Website suchen."}
               </Text>
 
-              <Button
-                as="a"
-                href={getOfficialMedicationSearchUrl(searchTerm)}
-                target="_blank"
-                rel="noopener noreferrer"
-                marginTop="4"
-                colorPalette="teal"
-              >
-                {isEnglish
-                  ? "Search on the official BfArM website"
-                  : "Offizielle BfArM-Suche öffnen"}
-              </Button>
+              <Flex marginTop="4" gap="3" wrap="wrap" align="stretch">
+                <Button
+                  as="a"
+                  href={getOfficialMedicationSearchUrl(searchTerm)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  colorPalette="teal"
+                  flex={{ base: "1 1 100%", md: "0 1 auto" }}
+                  minWidth={{ base: "100%", md: "260px" }}
+                  whiteSpace="normal"
+                  height="auto"
+                  minHeight="48px"
+                  paddingY="3"
+                >
+                  {isEnglish
+                    ? "Search on the official BfArM website"
+                    : "Offizielle BfArM-Suche öffnen"}
+                </Button>
 
-              <Button
-                as="a"
-                href="https://www.apotheken.de/beipackzettelsuche"
-                target="_blank"
-                rel="noopener noreferrer"
-                marginTop="3"
-                background="green.600"
-                color="white"
-                _hover={{ background: "green.700" }}
-              >
-                {isEnglish
-                  ? "Open alternative leaflet search"
-                  : "Alternative Beipackzettel-Suche öffnen"}
-              </Button>
+                <Button
+                  as="a"
+                  href="https://www.apotheken.de/beipackzettelsuche"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  background="green.600"
+                  color="white"
+                  _hover={{ background: "green.700" }}
+                  flex={{ base: "1 1 100%", md: "0 1 auto" }}
+                  minWidth={{ base: "100%", md: "320px" }}
+                  whiteSpace="normal"
+                  height="auto"
+                  minHeight="48px"
+                  paddingY="3"
+                >
+                  {isEnglish
+                    ? "Open alternative leaflet search"
+                    : "Alternative Beipackzettel-Suche öffnen"}
+                </Button>
+              </Flex>
 
               <Text marginTop="2" fontSize="sm" color="gray.600">
                 {isEnglish

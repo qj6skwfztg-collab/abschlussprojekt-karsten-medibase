@@ -21,6 +21,7 @@ import {
 import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import { createSmsLink } from "../utils/smsLink";
+import { markOnboardingStepComplete } from "../utils/onboarding";
 
 function EmergencyContacts({
   emergencyNumber,
@@ -29,6 +30,7 @@ function EmergencyContacts({
   allowDirectNotify = false,
   setupHint = null,
   setupContinue = null,
+  managementOnly = false,
 }) {
   const { isEnglish } = useLanguage();
   const [name, setName] = useState("");
@@ -114,6 +116,8 @@ function EmergencyContacts({
           createdAt: serverTimestamp(),
         }
       );
+
+      markOnboardingStepComplete(user.uid, "contacts");
 
       setName("");
       setPhone("");
@@ -224,10 +228,16 @@ function EmergencyContacts({
       </Heading>
 
       <Text marginBottom="5">
-        {isEnglish ? "You can save up to three people. A message is not sent automatically; it first opens in your messaging app." : "Du kannst bis zu drei Personen speichern. Eine Nachricht wird nicht automatisch versendet, sondern zuerst in deiner Nachrichten-App geöffnet."}
+        {managementOnly
+          ? (isEnglish
+            ? "Save and delete up to three emergency contacts here. Prepare a help message only under Emergency help."
+            : "Lege hier bis zu drei Notfallkontakte an oder lösche sie. Eine Hilfenachricht kannst du ausschließlich unter Notfallhilfe vorbereiten.")
+          : (isEnglish
+            ? "You can save up to three people. A message is not sent automatically; it first opens in your messaging app."
+            : "Du kannst bis zu drei Personen speichern. Eine Nachricht wird nicht automatisch versendet, sondern zuerst in deiner Nachrichten-App geöffnet.")}
       </Text>
 
-      {!hideNotifyAction && (emergencyCallStarted || allowDirectNotify) && contacts.length > 0 && (
+      {!managementOnly && !hideNotifyAction && (emergencyCallStarted || allowDirectNotify) && contacts.length > 0 && (
         <Button
           marginBottom="5"
           background="orange.500"
@@ -240,7 +250,7 @@ function EmergencyContacts({
         </Button>
       )}
 
-      {!hideNotifyAction && !allowDirectNotify && !emergencyCallStarted && contacts.length > 0 && (
+      {!managementOnly && !hideNotifyAction && !allowDirectNotify && !emergencyCallStarted && contacts.length > 0 && (
         <Text marginBottom="5" color="gray.600">
           {isEnglish
             ? "Start the emergency call first. Then you can notify all saved contacts together."
@@ -290,7 +300,7 @@ function EmergencyContacts({
         </Text>
       )}
 
-      {messageType === "success" && setupContinue}
+      {(messageType === "success" || contacts.length > 0) && setupContinue}
 
       <SimpleGrid
         columns={{ base: 1, md: 2 }}

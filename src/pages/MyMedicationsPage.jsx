@@ -14,6 +14,8 @@ import { Link, useLocation } from "react-router-dom";
 import useUserMedications from "../hooks/useUserMedications";
 import useLanguage from "../hooks/useLanguage";
 import MedicationReminderPermission from "../components/MedicationReminderPermission";
+import { auth } from "../firebase";
+import { markOnboardingStepComplete } from "../utils/onboarding";
 
 const emptyForm = {
   name: "",
@@ -295,6 +297,8 @@ function MyMedicationsPage() {
         showMessage(text.saved, "success");
       }
 
+      markOnboardingStepComplete(auth.currentUser?.uid, "medication");
+
       if (isOnboarding && onboardingFocus === "medication") {
         setShowOnboardingContinue(true);
       }
@@ -360,7 +364,10 @@ function MyMedicationsPage() {
         mb={isSetupStep ? "8" : "0"}
         mt={isSetupStep ? "0" : "8"}
       >
-        <MedicationReminderPermission medications={userMedications} />
+        <MedicationReminderPermission
+          medications={userMedications}
+          onGranted={() => markOnboardingStepComplete(auth.currentUser?.uid, "reminders")}
+        />
         {isSetupStep && (
           <>
             <Box
@@ -385,6 +392,7 @@ function MyMedicationsPage() {
             <Button
               as={Link}
               to="/gesundheitstagebuch?from=einrichtung&focus=health"
+              onClick={() => markOnboardingStepComplete(auth.currentUser?.uid, "reminders")}
               colorPalette="orange"
               size="lg"
               mt="5"
@@ -640,15 +648,16 @@ function MyMedicationsPage() {
               </Box>
             )}
 
-            {isOnboarding && onboardingFocus === "medication" && showOnboardingContinue && (
+            {isOnboarding && onboardingFocus === "medication" && (showOnboardingContinue || userMedications.length > 0) && (
               <Button
                 as={Link}
-                to="/gesundheitstagebuch?from=einrichtung&focus=health"
+                to="/meine-medikamente?from=einrichtung&focus=reminders#onboarding-reminders"
+                onClick={() => markOnboardingStepComplete(auth.currentUser?.uid, "medication")}
                 colorPalette="orange"
                 size="lg"
                 width="100%"
               >
-                {isEnglish ? "Continue to health diary" : "Weiter zum Gesundheitstagebuch"}
+                {isEnglish ? "Continue to intake reminders" : "Weiter zu den Einnahmeerinnerungen"}
               </Button>
             )}
           </Stack>

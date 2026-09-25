@@ -8,7 +8,7 @@ import {
   syncNativeMedicationReminders,
 } from "../native/medicationNotifications";
 
-function MedicationReminderPermission({ medications = [] }) {
+function MedicationReminderPermission({ medications = [], onGranted }) {
   const { isEnglish } = useLanguage();
   const [message, setMessage] = useState("");
   const [isNative, setIsNative] = useState(false);
@@ -39,6 +39,7 @@ function MedicationReminderPermission({ medications = [] }) {
       setPermission(result.display);
 
       if (result.display === "granted") {
+        onGranted?.();
         await syncNativeMedicationReminders(medications);
         setMessage(
           isEnglish
@@ -72,6 +73,7 @@ function MedicationReminderPermission({ medications = [] }) {
 
     if (permission === "granted") {
       setPermission(permission);
+      onGranted?.();
       setMessage(
         isEnglish ? "Notifications are now allowed." : "Benachrichtigungen sind jetzt erlaubt."
       );

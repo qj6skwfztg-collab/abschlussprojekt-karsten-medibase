@@ -132,6 +132,21 @@ function MedicationsPage() {
                   : "Offizielle BfArM-Suche öffnen"}
               </Button>
 
+              <Button
+                as="a"
+                href="https://www.apotheken.de/beipackzettelsuche"
+                target="_blank"
+                rel="noopener noreferrer"
+                marginTop="3"
+                background="green.600"
+                color="white"
+                _hover={{ background: "green.700" }}
+              >
+                {isEnglish
+                  ? "Open alternative leaflet search"
+                  : "Alternative Beipackzettel-Suche öffnen"}
+              </Button>
+
               <Text marginTop="2" fontSize="sm" color="gray.600">
                 {isEnglish
                   ? `Search term: “${searchTerm.trim()}”`

@@ -22,6 +22,7 @@ import {
   ONBOARDING_RETURN_PATH_KEY_PREFIX,
   ONBOARDING_STATE_KEY_PREFIX,
 } from "../components/OnboardingWizard";
+import { markOnboardingStepComplete } from "../utils/onboarding";
 
 function AccountPage() {
   const { isEnglish } = useLanguage();
@@ -228,6 +229,19 @@ function AccountPage() {
           "Aus Sicherheitsgründen musst du dich erneut anmelden und die Löschung danach wiederholen.",
       };
 
+  const hasEmergencyProfileData = [
+    "fullName",
+    "birthDate",
+    "phone",
+    "address",
+    "doctorPractice",
+    "allergies",
+    "conditions",
+    "bloodGroup",
+    "documentsHint",
+    "specialNotes",
+  ].some((fieldName) => String(profileForm?.[fieldName] || "").trim());
+
   function handleProfileChange(event) {
     const { name, value } = event.target;
 
@@ -244,6 +258,7 @@ function AccountPage() {
 
     try {
       await saveEmergencyProfile(profileForm);
+      markOnboardingStepComplete(auth.currentUser?.uid, "emergencyProfile");
       setProfileMessage(text.emergencyProfileSaved);
     } catch {
       setProfileMessage(text.emergencyProfileError);
@@ -524,10 +539,11 @@ function AccountPage() {
             {isProfileLoading && <Text color="gray.600">{text.emergencyProfileLoading}</Text>}
             {profileError && <Text color="red.700">{profileError}</Text>}
             {profileMessage && <Text color="teal.700" fontWeight="600">{profileMessage}</Text>}
-            {isOnboarding && onboardingFocus === "emergency-profile" && profileMessage === text.emergencyProfileSaved && (
+            {isOnboarding && onboardingFocus === "emergency-profile" && (profileMessage === text.emergencyProfileSaved || hasEmergencyProfileData) && (
               <Button
                 as={Link}
                 to="/konto?from=einrichtung&focus=emergency-contacts#emergency-contacts"
+                onClick={() => markOnboardingStepComplete(auth.currentUser?.uid, "emergencyProfile")}
                 colorPalette="orange"
                 size="lg"
               >
@@ -549,7 +565,7 @@ function AccountPage() {
       </Box>
 
       <EmergencyContacts
-        allowDirectNotify
+        managementOnly
         setupHint={
           isOnboarding && onboardingFocus === "emergency-contacts" ? (
             <Box
@@ -578,6 +594,7 @@ function AccountPage() {
             <Button
               as={Link}
               to="/gesundheitstagebuch?from=einrichtung&focus=doctor-email#doctor-email"
+              onClick={() => markOnboardingStepComplete(auth.currentUser?.uid, "contacts")}
               colorPalette="orange"
               size="lg"
               mt="5"

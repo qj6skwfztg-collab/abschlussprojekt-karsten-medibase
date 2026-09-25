@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Button, Flex, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
@@ -7,12 +7,25 @@ import { auth, db } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import { getMedicationNotificationPermission } from "../native/medicationNotifications";
 import MedicationReminderPermission from "./MedicationReminderPermission";
+import {
+  ONBOARDING_PENDING_KEY_PREFIX,
+  ONBOARDING_PROGRESS_EVENT,
+  ONBOARDING_RETURN_PATH_KEY_PREFIX,
+  ONBOARDING_STATE_KEY_PREFIX,
+  markOnboardingStepComplete,
+} from "../utils/onboarding";
 
-export const ONBOARDING_PENDING_KEY_PREFIX = "curaelis-onboarding-pending:";
-export const ONBOARDING_RETURN_PATH_KEY_PREFIX = "curaelis-onboarding-return-path:";
-export const ONBOARDING_STATE_KEY_PREFIX = "curaelis-onboarding-state:";
+export {
+  ONBOARDING_PENDING_KEY_PREFIX,
+  ONBOARDING_RETURN_PATH_KEY_PREFIX,
+  ONBOARDING_STATE_KEY_PREFIX,
+} from "../utils/onboarding";
 export const ONBOARDING_RESTART_EVENT = "curaelis-onboarding-restart";
 const DOCTOR_EMAIL_STORAGE_KEY = "curaelis-doctor-email";
+
+function getDoctorEmailStorageKey(uid) {
+  return `${DOCTOR_EMAIL_STORAGE_KEY}:${uid}`;
+}
 
 const defaultSelection = {
   medication: true,
@@ -72,36 +85,48 @@ function OnboardingWizard() {
     [isEnglish]
   );
 
+  const loadOnboardingState = useCallback((currentUser) => {
+    if (
+      !currentUser ||
+      localStorage.getItem(getStorageKey(ONBOARDING_PENDING_KEY_PREFIX, currentUser.uid)) !== "true"
+    ) {
+      setSelection(defaultSelection);
+      setCompleted([]);
+      setSkipped([]);
+      setIsStarted(false);
+      setRestartMode(false);
+      setSelectionError("");
+      return;
+    }
+
+    try {
+      const savedState = JSON.parse(
+        localStorage.getItem(getStorageKey(ONBOARDING_STATE_KEY_PREFIX, currentUser.uid)) || "null"
+      );
+
+      setSelection(savedState?.selection ? { ...defaultSelection, ...savedState.selection } : defaultSelection);
+      setCompleted(Array.isArray(savedState?.completed) ? savedState.completed : []);
+      setSkipped(Array.isArray(savedState?.skipped) ? savedState.skipped : []);
+      setIsStarted(Boolean(savedState?.started));
+      setRestartMode(Boolean(savedState?.restartMode));
+      setSelectionError("");
+    } catch {
+      setSelection(defaultSelection);
+      setCompleted([]);
+      setSkipped([]);
+      setIsStarted(false);
+      setRestartMode(false);
+      setSelectionError("");
+    }
+  }, []);
+
   useEffect(() => {
     return onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setIsDismissed(false);
-
-      if (!currentUser || localStorage.getItem(
-        getStorageKey(ONBOARDING_PENDING_KEY_PREFIX, currentUser.uid)
-      ) !== "true") {
-        return;
-      }
-
-      try {
-        const savedState = JSON.parse(
-          localStorage.getItem(getStorageKey(ONBOARDING_STATE_KEY_PREFIX, currentUser.uid)) || "null"
-        );
-
-        if (savedState?.selection) setSelection({ ...defaultSelection, ...savedState.selection });
-        if (Array.isArray(savedState?.completed)) setCompleted(savedState.completed);
-        if (Array.isArray(savedState?.skipped)) setSkipped(savedState.skipped);
-        setIsStarted(Boolean(savedState?.started));
-        setRestartMode(Boolean(savedState?.restartMode));
-      } catch {
-        setSelection(defaultSelection);
-        setCompleted([]);
-        setSkipped([]);
-        setIsStarted(false);
-        setRestartMode(false);
-      }
+      loadOnboardingState(currentUser);
     });
-  }, []);
+  }, [loadOnboardingState]);
 
   useEffect(() => {
     function handleRestartRequest() {
@@ -120,6 +145,26 @@ function OnboardingWizard() {
       window.removeEventListener(ONBOARDING_RESTART_EVENT, handleRestartRequest);
     };
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      return undefined;
+    }
+
+    function handleProgress(event) {
+      if (event?.detail?.uid && event.detail.uid !== user.uid) {
+        return;
+      }
+
+      loadOnboardingState(user);
+    }
+
+    window.addEventListener(ONBOARDING_PROGRESS_EVENT, handleProgress);
+
+    return () => {
+      window.removeEventListener(ONBOARDING_PROGRESS_EVENT, handleProgress);
+    };
+  }, [loadOnboardingState, user]);
 
   useEffect(() => {
     if (!user) {
@@ -162,7 +207,7 @@ function OnboardingWizard() {
           health: healthEntries.size > 0,
           emergencyProfile: hasProfileData,
           contacts: emergencyContacts.size > 0,
-          doctorEmail: Boolean(localStorage.getItem(DOCTOR_EMAIL_STORAGE_KEY)?.trim()),
+          doctorEmail: Boolean(localStorage.getItem(getDoctorEmailStorageKey(user.uid))?.trim()),
         });
       } catch {
         // The wizard still works with its manually confirmed progress if a
@@ -188,8 +233,7 @@ function OnboardingWizard() {
   }
 
   const selectedItems = items.filter((item) => selection[item.id]);
-  const isItemComplete = (item) =>
-    completed.includes(item.id) || Boolean(detected[item.id]);
+  const isItemComplete = (item) => completed.includes(item.id);
   const nextItem = selectedItems.find(
     (item) => !isItemComplete(item) && !skipped.includes(item.id)
   );
@@ -402,7 +446,9 @@ function OnboardingWizard() {
               <Text mt="3">{nextItem.description}</Text>
               {nextItem.id === "reminders" ? (
                 <Box mt="5">
-                  <MedicationReminderPermission />
+                  <MedicationReminderPermission
+                    onGranted={() => markOnboardingStepComplete(user.uid, "reminders")}
+                  />
                 </Box>
               ) : (
                 <Text mt="3" color="teal.800" fontWeight="700">

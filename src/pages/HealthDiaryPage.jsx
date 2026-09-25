@@ -16,6 +16,8 @@ import useUserMedications from "../hooks/useUserMedications";
 import useEmergencyProfile from "../hooks/useEmergencyProfile";
 import useLanguage from "../hooks/useLanguage";
 import HealthTimeline from "../components/HealthTimeline";
+import { auth } from "../firebase";
+import { markOnboardingStepComplete } from "../utils/onboarding";
 
 const entryTypes = {
   bloodPressure: {
@@ -74,6 +76,10 @@ const emptyForm = {
 };
 
 const DOCTOR_EMAIL_STORAGE_KEY = "curaelis-doctor-email";
+
+function getDoctorEmailStorageKey(uid) {
+  return uid ? `${DOCTOR_EMAIL_STORAGE_KEY}:${uid}` : DOCTOR_EMAIL_STORAGE_KEY;
+}
 
 function formatEntryDate(timestamp, isEnglish) {
   if (!timestamp?.toDate) {
@@ -327,7 +333,7 @@ function HealthDiaryPage() {
     emergencyProfile: false,
   });
   const [doctorEmail, setDoctorEmail] = useState(
-    () => localStorage.getItem(DOCTOR_EMAIL_STORAGE_KEY) || ""
+    () => localStorage.getItem(getDoctorEmailStorageKey(auth.currentUser?.uid)) || ""
   );
 
   useEffect(() => {
@@ -619,7 +625,7 @@ function HealthDiaryPage() {
     const value = event.target.value;
 
     setDoctorEmail(value);
-    localStorage.setItem(DOCTOR_EMAIL_STORAGE_KEY, value);
+    localStorage.setItem(getDoctorEmailStorageKey(auth.currentUser?.uid), value);
   }
 
   function focusDoctorEmailField() {
@@ -1196,6 +1202,7 @@ function HealthDiaryPage() {
       }
 
       if (isOnboarding && onboardingFocus === "health") {
+        markOnboardingStepComplete(auth.currentUser?.uid, "health");
         setShowOnboardingContinue(true);
       }
       setFormData({ ...emptyForm, measuredAt: getLocalDateTimeValue() });
@@ -1365,6 +1372,7 @@ function HealthDiaryPage() {
             <Button
               as={Link}
               to="/einrichtung"
+              onClick={() => markOnboardingStepComplete(auth.currentUser?.uid, "doctorEmail")}
               colorPalette="orange"
               size="lg"
               mt="4"
@@ -1824,16 +1832,17 @@ function HealthDiaryPage() {
             {message}
           </Box>
         )}
-        {isOnboarding && onboardingFocus === "health" && showOnboardingContinue && (
+        {isOnboarding && onboardingFocus === "health" && (showOnboardingContinue || healthEntries.length > 0) && (
           <Button
             as={Link}
-            to="/konto?from=einrichtung&focus=emergency-contacts#emergency-contacts"
+            to="/konto?from=einrichtung&focus=emergency-profile#emergency-profile"
+            onClick={() => markOnboardingStepComplete(auth.currentUser?.uid, "health")}
             colorPalette="orange"
             size="lg"
             mt="5"
             width="100%"
           >
-            {isEnglish ? "Continue to emergency contacts" : "Weiter zu den Notfallkontakten"}
+            {isEnglish ? "Continue to emergency pass" : "Weiter zum Notfallpass"}
           </Button>
         )}
       </Box>

@@ -53,7 +53,7 @@ function getHealthValue(entry) {
   return `${entry.value} ${entry.unit}`;
 }
 
-function EmergencyPass({ selectedCountry }) {
+function EmergencyPass({ selectedCountry, showContactMessageAction = false }) {
   const { isEnglish } = useLanguage();
   const { profile } = useEmergencyProfile();
   const [user, setUser] = useState(null);
@@ -103,7 +103,7 @@ function EmergencyPass({ selectedCountry }) {
         contacts: "Emergency contacts",
         noContacts: "No emergency contacts saved.",
         openContacts: "Open and edit emergency contacts",
-        contactMessage: "Prepare message",
+        contactMessage: "Prepare help message",
         messageConfirm:
           "Open your messaging app with an emergency message prepared for your contacts? You must tap Send yourself.",
         messagePrepared:
@@ -164,7 +164,7 @@ function EmergencyPass({ selectedCountry }) {
         contacts: "Notfallkontakte",
         noContacts: "Keine Notfallkontakte gespeichert.",
         openContacts: "Notfallkontakte öffnen und bearbeiten",
-        contactMessage: "Nachricht vorbereiten",
+        contactMessage: "Hilfenachricht vorbereiten",
         messageConfirm:
           "Soll die Nachrichten-App mit einer Notfallnachricht an deine Kontakte geöffnet werden? Du musst selbst auf Senden tippen.",
         messagePrepared:
@@ -461,7 +461,9 @@ function EmergencyPass({ selectedCountry }) {
   }
 
   function deleteOfflineCopy() {
+    localStorage.removeItem(OFFLINE_PASS_ENABLED_KEY);
     localStorage.removeItem(OFFLINE_PASS_STORAGE_KEY);
+    setOfflineEnabled(false);
     setOfflineSnapshot(null);
     setMessageType("success");
     setMessage(isEnglish ? "The offline copy was deleted." : "Die Offline-Kopie wurde gelöscht.");
@@ -755,20 +757,21 @@ function EmergencyPass({ selectedCountry }) {
                         </Box>
                       ))}
 
-                      <Button
-                        type="button"
-                        variant="outline"
-                        colorPalette="red"
-                        onClick={prepareContactMessage}
-                        width="100%"
-                        whiteSpace="normal"
-                        height="auto"
-                        minHeight="58px"
-                        paddingY="3"
-                        fontWeight="800"
-                      >
-                        ✉️ {text.contactMessage}
-                      </Button>
+                      {showContactMessageAction && (
+                        <Button
+                          type="button"
+                          colorPalette="orange"
+                          onClick={prepareContactMessage}
+                          width="100%"
+                          whiteSpace="normal"
+                          height="auto"
+                          minHeight="58px"
+                          paddingY="3"
+                          fontWeight="800"
+                        >
+                          ✉️ {text.contactMessage}
+                        </Button>
+                      )}
                     </Stack>
                   )}
 

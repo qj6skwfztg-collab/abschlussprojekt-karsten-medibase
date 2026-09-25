@@ -188,10 +188,11 @@ function EmergencyPage() {
 
       <EmergencyPass selectedCountry={selectedCountry} />
 
-        <EmergencyContacts
-          emergencyNumber={selectedCountry.ambulanceNumber}
-          emergencyCallStarted={emergencyCallStarted}
-        />
+      <EmergencyContacts
+        allowDirectNotify
+        emergencyNumber={selectedCountry.ambulanceNumber}
+        emergencyCallStarted={emergencyCallStarted}
+      />
     </Box>
   );
 }

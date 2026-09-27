@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { Capacitor } from "@capacitor/core";
 import {
   Box,
   Button,
@@ -49,9 +50,14 @@ function LoginPage() {
         return;
       }
 
-      const hasPendingOnboarding = localStorage.getItem(
-        `${ONBOARDING_PENDING_KEY_PREFIX}${userCredential.user.uid}`
-      ) === "true";
+      const onboardingKey = `${ONBOARDING_PENDING_KEY_PREFIX}${userCredential.user.uid}`;
+      const hasPendingOnboarding =
+        Capacitor.isNativePlatform() &&
+        localStorage.getItem(onboardingKey) === "true";
+
+      if (!Capacitor.isNativePlatform()) {
+        localStorage.removeItem(onboardingKey);
+      }
 
       navigate(
         hasPendingOnboarding ? "/einrichtung" : "/",

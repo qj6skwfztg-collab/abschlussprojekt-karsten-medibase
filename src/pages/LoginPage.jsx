@@ -17,6 +17,7 @@ import { auth } from "../firebase";
 import useLanguage from "../hooks/useLanguage";
 import PasswordField from "../components/PasswordField";
 import { ONBOARDING_PENDING_KEY_PREFIX } from "../components/OnboardingWizard";
+import { PUBLIC_REGISTRATION_ENABLED } from "../config/features";
 
 function LoginPage() {
   const { isEnglish } = useLanguage();
@@ -152,12 +153,20 @@ function LoginPage() {
             {isEnglish ? "Forgot password" : "Passwort vergessen"}
           </Button>
 
-          <Text>
-            {isEnglish ? "No account yet? " : "Noch kein Konto? "}
-            <Link to="/registrieren">
-              {isEnglish ? "Create account" : "Konto erstellen"}
-            </Link>
-          </Text>
+          {PUBLIC_REGISTRATION_ENABLED ? (
+            <Text>
+              {isEnglish ? "No account yet? " : "Noch kein Konto? "}
+              <Link to="/registrieren">
+                {isEnglish ? "Create account" : "Konto erstellen"}
+              </Link>
+            </Text>
+          ) : (
+            <Text fontSize="sm" color="gray.600">
+              {isEnglish
+                ? "The web access is intended for existing Curaelis users. Please create a new account in the iOS app."
+                : "Der Webzugang ist für bestehende Curaelis-Nutzer gedacht. Bitte erstelle ein neues Konto in der iOS-App."}
+            </Text>
+          )}
 
           {message && <Text>{message}</Text>}
         </Stack>

@@ -24,22 +24,22 @@ function AboutPage() {
       {!isNativeApp && (
         <Box className="about-install-card">
           <Heading size="md">
-            {isEnglish ? "Use Curaelis like an app" : "Curaelis wie eine App nutzen"}
+            {isEnglish ? "Use web access on your computer" : "Webzugang am Computer nutzen"}
           </Heading>
           <Text marginTop="2">
             {isEnglish
-              ? "Install the Curaelis web app on your device for quick access from the home screen."
-              : "Installiere die Curaelis-Web-App auf deinem Gerät und öffne sie schnell über den Startbildschirm."}
+              ? "Sign in on the website to manage your data and entries comfortably on a larger screen."
+              : "Melde dich auf der Website an, um deine Daten und Einträge bequem auf einem größeren Bildschirm zu bearbeiten."}
           </Text>
           <Button
             as={Link}
-            to="/installieren"
+            to="/login"
             marginTop="4"
             size="lg"
             colorPalette="teal"
             className="about-install-button"
           >
-            📱 Curaelis installieren
+            {isEnglish ? "Open web access" : "Webzugang öffnen"}
           </Button>
         </Box>
       )}

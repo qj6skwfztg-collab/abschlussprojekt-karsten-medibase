@@ -22,7 +22,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-export const ADMIN_UID = "IjelVzBlIIgkJWgLiDdHrhLtwDf1";
+export const ADMIN_UID = "LFDGwtv57gSW7yqycQsDFcwbv513";
 
 const isNativeIOS =
   Capacitor.isNativePlatform() &&

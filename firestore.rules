@@ -15,7 +15,7 @@ service cloud.firestore {
 
     function isAdmin() {
       return isVerifiedUser()
-        && request.auth.uid == 'IjelVzBlIIgkJWgLiDdHrhLtwDf1';
+        && request.auth.uid == 'LFDGwtv57gSW7yqycQsDFcwbv513';
     }
 
     function validTime(value) {

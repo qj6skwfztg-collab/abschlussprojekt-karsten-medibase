@@ -276,6 +276,18 @@ header .accessibility-buttons button {
   box-shadow: 0 8px 20px rgba(56, 161, 105, 0.08) !important;
 }
 
+.medication-taken-panel {
+  padding: 14px;
+  background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 78%);
+  border: 1px solid #b7ded9;
+  border-radius: 18px;
+}
+
+.medication-taken-panel button {
+  min-height: 52px;
+  white-space: normal;
+}
+
 .medication-reminders-primary,
 .medication-reminders-secondary,
 .my-medications-diary-link,
@@ -519,6 +531,34 @@ header .accessibility-buttons button {
   border-radius: 999px;
   font-size: 0.82rem;
   font-weight: 800;
+}
+
+.health-timeline-filters {
+  align-items: center;
+}
+
+.health-timeline-filter {
+  min-height: 42px;
+  padding: 8px 14px;
+  color: #285e61;
+  font-weight: 800;
+  border: 1px solid #9ed4d0;
+  border-radius: 999px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.health-timeline-filter:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(45, 55, 72, 0.12);
+}
+
+.health-timeline-filter.is-selected {
+  color: #134e4a;
+  border-color: #14b8a6;
+  background: #e6fffa;
+  box-shadow: 0 6px 14px rgba(20, 184, 166, 0.13);
 }
 
 .health-timeline-item {
@@ -1158,6 +1198,13 @@ header .accessibility-buttons button {
   padding: 14px 16px;
   background: linear-gradient(135deg, #ebf8ff, #f0fdfa);
   border: 1px solid #90cdf4;
+  border-radius: 18px;
+}
+
+.doctor-contact-box {
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #f8fffb, #ffffff);
+  border: 1px solid #b7ded9;
   border-radius: 18px;
 }
 

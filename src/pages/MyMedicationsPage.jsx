@@ -24,6 +24,28 @@ const emptyForm = {
   notes: "",
 };
 
+const TAKEN_MEDICATIONS_STORAGE_KEY = "curaelis-taken-medications";
+
+function getTodayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getTakenMedicationsStorageKey(uid) {
+  return uid ? `${TAKEN_MEDICATIONS_STORAGE_KEY}:${uid}` : TAKEN_MEDICATIONS_STORAGE_KEY;
+}
+
+function readTakenMedications(uid) {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem(getTakenMedicationsStorageKey(uid)) || "{}"
+    );
+
+    return saved.date === getTodayKey() && saved.items ? saved.items : {};
+  } catch {
+    return {};
+  }
+}
+
 function normalizeTime(value) {
   const time = String(value ?? "").trim();
 
@@ -128,6 +150,9 @@ function MyMedicationsPage() {
         noteShort: "Note:",
         noNote: "No note",
         reminderSet: "Reminder times saved",
+        intakeTodayTitle: "Taken today?",
+        taken: "Taken",
+        notTaken: "Open",
         emptyHint: "Use the form above to save your first personal medication.",
         edit: "Edit",
         delete: "Delete",
@@ -172,6 +197,9 @@ function MyMedicationsPage() {
         noteShort: "Notiz:",
         noNote: "Keine Notiz",
         reminderSet: "Erinnerungszeiten gespeichert",
+        intakeTodayTitle: "Heute eingenommen?",
+        taken: "Eingenommen",
+        notTaken: "Offen",
         emptyHint: "Nutze das Formular oben, um dein erstes persönliches Medikament zu speichern.",
         edit: "Bearbeiten",
         delete: "Löschen",
@@ -194,9 +222,40 @@ function MyMedicationsPage() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [showOnboardingContinue, setShowOnboardingContinue] = useState(false);
+  const [takenMedications, setTakenMedications] = useState(() =>
+    readTakenMedications(auth.currentUser?.uid)
+  );
   const formPanelRef = useRef(null);
   const nameInputRef = useRef(null);
   const isReminderSetupStep = isOnboarding && onboardingFocus === "reminders";
+
+  function getTakenKey(medicationId, time) {
+    return `${medicationId}:${time}`;
+  }
+
+  function handleToggleTaken(medicationId, time) {
+    setTakenMedications((previousItems) => {
+      const key = getTakenKey(medicationId, time);
+      const nextItems = {
+        ...previousItems,
+        [key]: !previousItems[key],
+      };
+
+      if (!nextItems[key]) {
+        delete nextItems[key];
+      }
+
+      localStorage.setItem(
+        getTakenMedicationsStorageKey(auth.currentUser?.uid),
+        JSON.stringify({
+          date: getTodayKey(),
+          items: nextItems,
+        })
+      );
+
+      return nextItems;
+    });
+  }
 
   useEffect(() => {
     const targetId = onboardingFocus === "reminders"
@@ -700,6 +759,9 @@ function MyMedicationsPage() {
               key={medication.id}
               medication={medication}
               text={text}
+              takenMedications={takenMedications}
+              getTakenKey={getTakenKey}
+              onToggleTaken={handleToggleTaken}
               onEdit={handleEdit}
               onDelete={handleDelete}
             />
@@ -712,7 +774,15 @@ function MyMedicationsPage() {
   );
 }
 
-function MedicationCard({ medication, text, onEdit, onDelete }) {
+function MedicationCard({
+  medication,
+  text,
+  takenMedications,
+  getTakenKey,
+  onToggleTaken,
+  onEdit,
+  onDelete,
+}) {
   const medicationTimes = getMedicationTimes(medication);
 
   return (
@@ -791,6 +861,34 @@ function MedicationCard({ medication, text, onEdit, onDelete }) {
     <Text mb="3">
       <strong>{text.dosageShort}</strong> {medication.dosage}
     </Text>
+
+    <Box className="medication-taken-panel" mb="4">
+      <Text fontWeight="800" color="teal.900" mb="3">
+        {text.intakeTodayTitle}
+      </Text>
+      <Stack gap="2">
+        {medicationTimes.map((time, index) => {
+          const takenKey = getTakenKey(medication.id, time);
+          const isTaken = Boolean(takenMedications[takenKey]);
+
+          return (
+            <Button
+              key={`${takenKey}-${index}`}
+              type="button"
+              variant={isTaken ? "solid" : "outline"}
+              colorPalette={isTaken ? "green" : "teal"}
+              size="lg"
+              width="100%"
+              justifyContent="space-between"
+              onClick={() => onToggleTaken(medication.id, time)}
+            >
+              <span>{time} Uhr</span>
+              <span>{isTaken ? `✓ ${text.taken}` : text.notTaken}</span>
+            </Button>
+          );
+        })}
+      </Stack>
+    </Box>
 
     <Box
       background="gray.50"

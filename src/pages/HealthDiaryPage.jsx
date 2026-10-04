@@ -76,9 +76,37 @@ const emptyForm = {
 };
 
 const DOCTOR_EMAIL_STORAGE_KEY = "curaelis-doctor-email";
+const DOCTOR_PREP_STORAGE_KEY = "curaelis-doctor-prep";
+const DOCTOR_CONTACT_STORAGE_KEY = "curaelis-doctor-contact";
 
 function getDoctorEmailStorageKey(uid) {
   return uid ? `${DOCTOR_EMAIL_STORAGE_KEY}:${uid}` : DOCTOR_EMAIL_STORAGE_KEY;
+}
+
+function getDoctorPrepStorageKey(uid) {
+  return uid ? `${DOCTOR_PREP_STORAGE_KEY}:${uid}` : DOCTOR_PREP_STORAGE_KEY;
+}
+
+function getDoctorContactStorageKey(uid) {
+  return uid ? `${DOCTOR_CONTACT_STORAGE_KEY}:${uid}` : DOCTOR_CONTACT_STORAGE_KEY;
+}
+
+function readDoctorContact(uid) {
+  try {
+    const savedContact = JSON.parse(
+      localStorage.getItem(getDoctorContactStorageKey(uid)) || "{}"
+    );
+
+    return {
+      name: savedContact.name || "",
+      phone: savedContact.phone || "",
+    };
+  } catch {
+    return {
+      name: "",
+      phone: "",
+    };
+  }
 }
 
 function formatEntryDate(timestamp, isEnglish) {
@@ -335,6 +363,12 @@ function HealthDiaryPage() {
   const [doctorEmail, setDoctorEmail] = useState(
     () => localStorage.getItem(getDoctorEmailStorageKey(auth.currentUser?.uid)) || ""
   );
+  const [doctorPrepNotes, setDoctorPrepNotes] = useState(
+    () => localStorage.getItem(getDoctorPrepStorageKey(auth.currentUser?.uid)) || ""
+  );
+  const [doctorContact, setDoctorContact] = useState(() =>
+    readDoctorContact(auth.currentUser?.uid)
+  );
 
   useEffect(() => {
     const targetId = onboardingFocus === "health" || onboardingFocus === "doctor-email"
@@ -420,6 +454,9 @@ function HealthDiaryPage() {
         timelineTitle: "Your health timeline",
         timelineHint: "Measurements and medication starts together in chronological order.",
         timelineCount: "{count} timeline entries",
+        timelineFilterAll: "All",
+        timelineFilterHealth: "Health values",
+        timelineFilterMedications: "Medications",
         timelineMeasurement: "Measurement",
         timelineMedication: "Medication plan",
         timelineLinkedMedication: "Linked medication: {name}",
@@ -430,6 +467,13 @@ function HealthDiaryPage() {
         doctorEmailPlaceholder: "practice@example.com",
         doctorEmailHint:
           "Saved only on this device. Enter it once on each device and check the address before sending.",
+        doctorContactTitle: "Doctor contact (optional)",
+        doctorContactName: "Practice or doctor name",
+        doctorContactNamePlaceholder: "Practice Dr. Smith",
+        doctorContactPhone: "Phone number",
+        doctorContactPhonePlaceholder: "+49 …",
+        doctorContactHint:
+          "Optional. This keeps the practice details together with your doctor report.",
         emailMissing: "Please enter the doctor's practice email address first.",
         emailInvalid: "Please check the email address.",
         emailAttachmentNote:
@@ -438,6 +482,14 @@ function HealthDiaryPage() {
         reportTitle: "Doctor report",
         reportHint:
           "Create a clear PDF for a medical appointment. Then choose whether to open an email to the practice or share the PDF and additional files.",
+        appointmentPrepTitle: "Prepare your appointment",
+        appointmentPrepLabel: "Questions or notes for the appointment",
+        appointmentPrepPlaceholder:
+          "For example: What changed? Which questions should I ask? Which symptoms should I mention?",
+        appointmentPrepHint:
+          "Optional. These notes are added to the same doctor PDF and are saved only on this device.",
+        reportAppointmentPrep: "APPOINTMENT PREPARATION",
+        reportDoctorContact: "DOCTOR CONTACT",
         attachFiles: "Attach files",
         filesSelected: "Selected files",
         fileHint: "Choose photos or documents from your phone. They stay on this device until you share them.",
@@ -532,6 +584,9 @@ function HealthDiaryPage() {
         timelineTitle: "Deine Gesundheits-Zeitleiste",
         timelineHint: "Messwerte und Medikamentenstarts gemeinsam chronologisch geordnet.",
         timelineCount: "{count} Zeitleisten-Einträge",
+        timelineFilterAll: "Alles",
+        timelineFilterHealth: "Messwerte",
+        timelineFilterMedications: "Medikamente",
         timelineMeasurement: "Messwert",
         timelineMedication: "Medikamentenplan",
         timelineLinkedMedication: "Verknüpftes Medikament: {name}",
@@ -542,6 +597,13 @@ function HealthDiaryPage() {
         doctorEmailPlaceholder: "praxis@beispiel.de",
         doctorEmailHint:
           "Wird nur auf diesem Gerät gespeichert. Auf jedem Gerät einmal eintragen und vor dem Versand prüfen.",
+        doctorContactTitle: "Arztkontakt (optional)",
+        doctorContactName: "Praxis oder Arztname",
+        doctorContactNamePlaceholder: "Praxis Dr. Beispiel",
+        doctorContactPhone: "Telefonnummer",
+        doctorContactPhonePlaceholder: "+49 …",
+        doctorContactHint:
+          "Optional. So bleiben die wichtigsten Praxisdaten direkt bei deiner Arztübersicht.",
         emailMissing: "Gib zuerst die E-Mail-Adresse der Arztpraxis ein.",
         emailInvalid: "Bitte überprüfe die E-Mail-Adresse.",
         emailAttachmentNote:
@@ -550,6 +612,14 @@ function HealthDiaryPage() {
         reportTitle: "Arztübersicht",
         reportHint:
           "Erstelle eine übersichtliche PDF für den Arzttermin. Danach kannst du eine Mail an die Praxis öffnen oder die PDF zusammen mit zusätzlichen Dateien teilen.",
+        appointmentPrepTitle: "Arzttermin vorbereiten",
+        appointmentPrepLabel: "Fragen oder Notizen für den Termin",
+        appointmentPrepPlaceholder:
+          "Zum Beispiel: Was hat sich verändert? Welche Fragen möchte ich stellen? Welche Beschwerden soll ich ansprechen?",
+        appointmentPrepHint:
+          "Optional. Diese Notizen kommen in dieselbe Arzt-PDF und werden nur auf diesem Gerät gespeichert.",
+        reportAppointmentPrep: "ARZTTERMIN-VORBEREITUNG",
+        reportDoctorContact: "ARZTKONTAKT",
         attachFiles: "Dateien anfügen",
         filesSelected: "Ausgewählte Dateien",
         fileHint: "Wähle Bilder oder Dokumente vom Handy aus. Sie bleiben auf diesem Gerät, bis du sie teilst.",
@@ -626,6 +696,26 @@ function HealthDiaryPage() {
 
     setDoctorEmail(value);
     localStorage.setItem(getDoctorEmailStorageKey(auth.currentUser?.uid), value);
+  }
+
+  function handleDoctorPrepNotesChange(event) {
+    const value = event.target.value;
+
+    setDoctorPrepNotes(value);
+    localStorage.setItem(getDoctorPrepStorageKey(auth.currentUser?.uid), value);
+  }
+
+  function handleDoctorContactChange(field, value) {
+    const nextContact = {
+      ...doctorContact,
+      [field]: value,
+    };
+
+    setDoctorContact(nextContact);
+    localStorage.setItem(
+      getDoctorContactStorageKey(auth.currentUser?.uid),
+      JSON.stringify(nextContact)
+    );
   }
 
   function focusDoctorEmailField() {
@@ -795,6 +885,26 @@ function HealthDiaryPage() {
 
   function getReportLines() {
     const lines = [];
+    const trimmedDoctorPrepNotes = doctorPrepNotes.trim();
+    const contactLines = [
+      [isEnglish ? "Practice / doctor" : "Praxis / Arzt", doctorContact.name],
+      [isEnglish ? "Phone" : "Telefon", doctorContact.phone],
+      [isEnglish ? "Email" : "E-Mail", doctorEmail],
+    ].filter(([, value]) => value?.trim());
+
+    if (trimmedDoctorPrepNotes) {
+      lines.push(text.reportAppointmentPrep);
+      trimmedDoctorPrepNotes
+        .split(/\n+/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .forEach((line) => lines.push(`• ${line}`));
+    }
+
+    if (contactLines.length > 0) {
+      lines.push(text.reportDoctorContact);
+      contactLines.forEach(([label, value]) => lines.push(`${label}: ${value.trim()}`));
+    }
 
     if (reportOptions.medications) {
       lines.push(isEnglish ? "CURRENT MEDICATION PLAN" : "AKTUELLER MEDIKAMENTENPLAN");
@@ -1332,7 +1442,60 @@ function HealthDiaryPage() {
             <Text fontSize="sm" color="gray.600">{text.fileHint}</Text>
           </Box>
         </Flex>
+        <Box className="health-report-send-guide" mb="5">
+          <Text fontWeight="800" color="teal.900">
+            {text.appointmentPrepTitle}
+          </Text>
+          <Text as="label" htmlFor="doctor-prep-notes" display="block" mt="3" mb="2" fontWeight="600">
+            {text.appointmentPrepLabel}
+          </Text>
+          <Textarea
+            id="doctor-prep-notes"
+            value={doctorPrepNotes}
+            onChange={handleDoctorPrepNotesChange}
+            placeholder={text.appointmentPrepPlaceholder}
+            rows={4}
+          />
+          <Text mt="2" fontSize="sm" color="gray.700">
+            {text.appointmentPrepHint}
+          </Text>
+        </Box>
         <Box mb="5">
+          <Box className="doctor-contact-box" mb="5">
+            <Text fontWeight="800" color="teal.900" mb="1">
+              {text.doctorContactTitle}
+            </Text>
+            <Text fontSize="sm" color="gray.700" mb="4">
+              {text.doctorContactHint}
+            </Text>
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap="3">
+              <Box>
+                <Text as="label" htmlFor="doctor-contact-name" display="block" mb="2" fontWeight="600">
+                  {text.doctorContactName}
+                </Text>
+                <Input
+                  id="doctor-contact-name"
+                  value={doctorContact.name}
+                  onChange={(event) => handleDoctorContactChange("name", event.target.value)}
+                  placeholder={text.doctorContactNamePlaceholder}
+                  autoComplete="organization"
+                />
+              </Box>
+              <Box>
+                <Text as="label" htmlFor="doctor-contact-phone" display="block" mb="2" fontWeight="600">
+                  {text.doctorContactPhone}
+                </Text>
+                <Input
+                  id="doctor-contact-phone"
+                  type="tel"
+                  value={doctorContact.phone}
+                  onChange={(event) => handleDoctorContactChange("phone", event.target.value)}
+                  placeholder={text.doctorContactPhonePlaceholder}
+                  autoComplete="tel"
+                />
+              </Box>
+            </SimpleGrid>
+          </Box>
           <Text as="label" htmlFor="doctor-email" display="block" mb="2" fontWeight="600">
             {text.doctorEmail}
           </Text>
@@ -1377,10 +1540,16 @@ function HealthDiaryPage() {
               size="lg"
               mt="4"
               width="100%"
+              height="auto"
+              minHeight="48px"
+              whiteSpace="normal"
+              textAlign="center"
+              lineHeight="1.3"
+              py="3"
             >
               {isEnglish
-                ? "Save doctor's practice email and finish setup"
-                : "Arztpraxis-E-Mail speichern und Einrichtung abschließen"}
+                ? "Save email and finish setup"
+                : "E-Mail speichern und abschließen"}
             </Button>
           )}
         </Box>

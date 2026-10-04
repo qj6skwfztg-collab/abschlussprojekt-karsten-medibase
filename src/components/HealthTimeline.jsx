@@ -1,4 +1,5 @@
 import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { useState } from "react";
 
 function getDateValue(value) {
   if (value?.toDate) {
@@ -50,7 +51,8 @@ function getEntryValue(entry) {
 }
 
 function HealthTimeline({ entries, medications, isEnglish, text }) {
-  const items = [
+  const [filter, setFilter] = useState("all");
+  const allItems = [
     ...entries.map((entry) => ({
       id: `health-${entry.id}`,
       date: entry.measuredAt,
@@ -74,7 +76,9 @@ function HealthTimeline({ entries, medications, isEnglish, text }) {
         ? medication.intakeTimes.join(", ")
         : medication.intakeTime || "",
     })),
-  ]
+  ];
+  const items = allItems
+    .filter((item) => filter === "all" || item.kind === filter)
     .sort((first, second) => {
       const firstTime = getDateValue(first.date)?.getTime() ?? 0;
       const secondTime = getDateValue(second.date)?.getTime() ?? 0;
@@ -100,6 +104,22 @@ function HealthTimeline({ entries, medications, isEnglish, text }) {
         <Text className="health-timeline-count">
           {text.timelineCount.replace("{count}", String(items.length))}
         </Text>
+      </Flex>
+      <Flex className="health-timeline-filters" gap="2" wrap="wrap" mb="5">
+        {[
+          ["all", text.timelineFilterAll],
+          ["health", text.timelineFilterHealth],
+          ["medication", text.timelineFilterMedications],
+        ].map(([filterName, label]) => (
+          <button
+            key={filterName}
+            type="button"
+            className={`health-timeline-filter ${filter === filterName ? "is-selected" : ""}`}
+            onClick={() => setFilter(filterName)}
+          >
+            {label}
+          </button>
+        ))}
       </Flex>
 
       <Stack className="health-timeline-list" gap="0">

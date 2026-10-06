@@ -92,7 +92,6 @@ function MedicationsPage() {
   const ePrescriptionInfoUrl = isEnglish
     ? "https://www.gematik.de/en/applications/e-prescription"
     : "https://www.bundesgesundheitsministerium.de/e-rezept";
-  const ePrescriptionAppInfoUrl = "https://www.das-e-rezept-fuer-deutschland.de/app";
 
   return (
     <Box id="medication-overview" padding={{ base: "6", md: "8" }} maxWidth="1200px" margin="0 auto" scrollMarginTop="24px">
@@ -113,6 +112,50 @@ function MedicationsPage() {
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
       />
+
+      <Box
+        marginTop="6"
+        padding={{ base: "4", md: "5" }}
+        borderWidth="1px"
+        borderColor="teal.200"
+        borderRadius="2xl"
+        background="linear-gradient(135deg, rgba(240,253,250,0.95), rgba(255,251,235,0.95))"
+      >
+        <Heading size="sm">
+          {isEnglish ? "E-prescription & online pharmacy" : "E‑Rezept & Online‑Apotheke"}
+        </Heading>
+
+        <Text marginTop="2" color="gray.700">
+          {isEnglish
+            ? "If you have an e-prescription, redeem it securely outside Curaelis via the official e-prescription app, your health insurance app, or directly at a pharmacy or online pharmacy."
+            : "Wenn du ein E‑Rezept hast, löst du es sicher außerhalb von Curaelis ein – über die offizielle E‑Rezept-App, deine Krankenkassen-App oder direkt bei einer Apotheke/Online-Apotheke."}
+        </Text>
+
+        <Text marginTop="2" fontSize="sm" color="gray.600">
+          {isEnglish
+            ? "Curaelis does not process prescription codes, does not transmit prescriptions and does not order medication."
+            : "Curaelis verarbeitet keine Rezeptcodes, übermittelt keine Rezepte und bestellt keine Medikamente."}
+        </Text>
+
+        <Button
+          as="a"
+          href={ePrescriptionInfoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          colorPalette="teal"
+          marginTop="4"
+          width={{ base: "100%", md: "auto" }}
+          minWidth={{ md: "280px" }}
+          whiteSpace="normal"
+          height="auto"
+          minHeight="48px"
+          paddingY="3"
+        >
+          {isEnglish
+            ? "Open official e-prescription information"
+            : "Offizielle E‑Rezept-Infos öffnen"}
+        </Button>
+      </Box>
 
       {filteredMedications.length === 0 ? (
         <Box marginTop="6" padding="5" borderWidth="1px" borderRadius="lg">
@@ -244,69 +287,6 @@ function MedicationsPage() {
         </Box>
       )}
 
-      <Box
-        marginTop="8"
-        padding={{ base: "5", md: "6" }}
-        borderWidth="1px"
-        borderColor="teal.200"
-        borderRadius="2xl"
-        background="linear-gradient(135deg, rgba(240,253,250,0.95), rgba(255,251,235,0.95))"
-      >
-        <Heading size="md">
-          {isEnglish ? "E-prescription & online pharmacy" : "E‑Rezept & Online‑Apotheke"}
-        </Heading>
-
-        <Text marginTop="3" color="gray.700">
-          {isEnglish
-            ? "Curaelis helps you organize your medication plan and reminders. E-prescriptions are redeemed securely outside Curaelis via the official e-prescription app, your health insurance app, or directly at a pharmacy or online pharmacy."
-            : "Curaelis hilft dir, deinen Medikamentenplan und Erinnerungen zu organisieren. E‑Rezepte löst du sicher außerhalb von Curaelis ein – über die offizielle E‑Rezept-App, deine Krankenkassen-App oder direkt bei einer Apotheke/Online-Apotheke."}
-        </Text>
-
-        <Text marginTop="3" fontSize="sm" color="gray.600">
-          {isEnglish
-            ? "Curaelis does not process prescription codes, does not transmit prescriptions and does not order medication."
-            : "Curaelis verarbeitet keine Rezeptcodes, übermittelt keine Rezepte und bestellt keine Medikamente."}
-        </Text>
-
-        <Flex marginTop="5" gap="3" wrap="wrap" align="stretch">
-          <Button
-            as="a"
-            href={ePrescriptionInfoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            colorPalette="teal"
-            flex={{ base: "1 1 100%", md: "0 1 auto" }}
-            minWidth={{ base: "100%", md: "260px" }}
-            whiteSpace="normal"
-            height="auto"
-            minHeight="48px"
-            paddingY="3"
-          >
-            {isEnglish
-              ? "Open official information"
-              : "Offizielle Infos öffnen"}
-          </Button>
-
-          <Button
-            as="a"
-            href={ePrescriptionAppInfoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="outline"
-            colorPalette="teal"
-            flex={{ base: "1 1 100%", md: "0 1 auto" }}
-            minWidth={{ base: "100%", md: "260px" }}
-            whiteSpace="normal"
-            height="auto"
-            minHeight="48px"
-            paddingY="3"
-          >
-            {isEnglish
-              ? "Learn about the e-prescription app"
-              : "E‑Rezept-App ansehen"}
-          </Button>
-        </Flex>
-      </Box>
     </Box>
   );
 }

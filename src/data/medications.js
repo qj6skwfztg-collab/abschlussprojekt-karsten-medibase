@@ -541,6 +541,18 @@ const categoryDetails = {
     sideEffects: "Mögliche Nebenwirkungen können Müdigkeit am nächsten Tag, Schwindel, Konzentrations- oder Gedächtnisprobleme sein.",
     warnings: "Nicht mit Alkohol oder anderen beruhigenden Mitteln kombinieren.",
   },
+  "Gichtmittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Magen-Darm-Beschwerden, Hautreaktionen oder Veränderungen von Blutwerten sein.",
+    warnings: "Bei Hautausschlag, starken Beschwerden oder Nierenerkrankungen ärztlich Rücksprache halten.",
+  },
+  "Urologische Medikamente": {
+    sideEffects: "Mögliche Nebenwirkungen können Schwindel, Blutdruckabfall, Mundtrockenheit oder sexuelle Funktionsstörungen sein.",
+    warnings: "Bei Kreislaufbeschwerden, Schwangerschaft oder geplanten Eingriffen ärztlich oder in der Apotheke nachfragen.",
+  },
+  "Knochenstoffwechsel-Mittel": {
+    sideEffects: "Mögliche Nebenwirkungen können Magen-Darm-Beschwerden, Knochen-, Muskel- oder Gelenkschmerzen sein.",
+    warnings: "Die Einnahmehinweise sind je nach Präparat sehr wichtig. Bei Schluckbeschwerden ärztlich nachfragen.",
+  },
   "Vitamine und Mineralstoffe": {
     sideEffects: "Bei zu hoher Einnahme können Übelkeit, Bauchbeschwerden oder Veränderungen von Blutwerten auftreten.",
     warnings: "Auch Nahrungsergänzung kann Nebenwirkungen haben. Bei Vorerkrankungen vorher nachfragen.",
@@ -617,6 +629,26 @@ const additionalMedicationDefinitions = [
   ["amitriptylin", "Amitriptylin", ["Saroten"], "Amitriptylin", "Psychiatrische Medikamente", "Mental health medication", "Amitriptylin wird unter anderem bei bestimmten Depressionen und Nervenschmerzen eingesetzt."],
   ["zolpidem", "Zolpidem", ["Stilnox"], "Zolpidem", "Schlafmittel", "Sleep medication", "Zolpidem ist ein verschreibungspflichtiges Schlafmittel."],
   ["duloxetin", "Duloxetin", ["Cymbalta"], "Duloxetin", "Psychiatrische Medikamente", "Mental health medication", "Duloxetin wird bei bestimmten psychischen Erkrankungen und Nervenschmerzen eingesetzt."],
+  ["metoprolol", "Metoprolol", ["Beloc"], "Metoprolol", "Herz- und Blutdruckmittel", "Heart and blood pressure medication", "Metoprolol gehört zu den Betablockern und wird unter anderem bei bestimmten Herz-Kreislauf-Erkrankungen eingesetzt."],
+  ["carvedilol", "Carvedilol", [], "Carvedilol", "Herz- und Blutdruckmittel", "Heart and blood pressure medication", "Carvedilol gehört zu den Betablockern und wird bei bestimmten Herz-Kreislauf-Erkrankungen eingesetzt."],
+  ["rosuvastatin", "Rosuvastatin", ["Crestor"], "Rosuvastatin", "Cholesterinsenker", "Cholesterol-lowering medication", "Rosuvastatin gehört zu den Statinen und wird zur Senkung bestimmter Blutfettwerte eingesetzt."],
+  ["pravastatin", "Pravastatin", [], "Pravastatin", "Cholesterinsenker", "Cholesterol-lowering medication", "Pravastatin gehört zu den Statinen und wird zur Senkung bestimmter Blutfettwerte eingesetzt."],
+  ["dapagliflozin", "Dapagliflozin", ["Forxiga"], "Dapagliflozin", "Diabetesmittel", "Diabetes medication", "Dapagliflozin wird unter anderem bei Typ-2-Diabetes sowie bestimmten Herz- oder Nierenerkrankungen eingesetzt."],
+  ["gliclazid", "Gliclazid", [], "Gliclazid", "Diabetesmittel", "Diabetes medication", "Gliclazid wird bei bestimmten Formen von Typ-2-Diabetes eingesetzt."],
+  ["insulin-lispro", "Insulin lispro", ["Humalog"], "Insulin lispro", "Diabetesmittel", "Diabetes medication", "Insulin lispro ist ein schnell wirkendes Insulin zur Behandlung von Diabetes."],
+  ["insulin-degludec", "Insulin degludec", ["Tresiba"], "Insulin degludec", "Diabetesmittel", "Diabetes medication", "Insulin degludec ist ein lang wirkendes Insulin zur Behandlung von Diabetes."],
+  ["ipratropium", "Ipratropium", ["Atrovent"], "Ipratropium", "Asthma- und Atemwegsmittel", "Asthma and respiratory medication", "Ipratropium erweitert die Atemwege und wird bei bestimmten Atemwegserkrankungen eingesetzt."],
+  ["levocetirizin", "Levocetirizin", [], "Levocetirizin", "Allergiemittel", "Allergy medication", "Levocetirizin ist ein Antihistaminikum zur Behandlung bestimmter allergischer Beschwerden."],
+  ["esomeprazol", "Esomeprazol", ["Nexium"], "Esomeprazol", "Magenmittel", "Stomach medication", "Esomeprazol vermindert die Bildung von Magensäure und wird bei säurebedingten Beschwerden eingesetzt."],
+  ["famotidin", "Famotidin", [], "Famotidin", "Magenmittel", "Stomach medication", "Famotidin vermindert die Magensäurewirkung und wird bei bestimmten Magenbeschwerden eingesetzt."],
+  ["allopurinol", "Allopurinol", [], "Allopurinol", "Gichtmittel", "Gout medication", "Allopurinol senkt die Harnsäurebildung und wird bei bestimmten Formen der Gichtbehandlung eingesetzt."],
+  ["colchicin", "Colchicin", [], "Colchicin", "Gichtmittel", "Gout medication", "Colchicin wird bei bestimmten Gichtbeschwerden eingesetzt und muss sorgfältig nach ärztlicher Vorgabe angewendet werden."],
+  ["tamsulosin", "Tamsulosin", [], "Tamsulosin", "Urologische Medikamente", "Urology medication", "Tamsulosin wird bei bestimmten Beschwerden im Zusammenhang mit einer vergrößerten Prostata eingesetzt."],
+  ["finasterid", "Finasterid", [], "Finasterid", "Urologische Medikamente", "Urology medication", "Finasterid wird unter anderem bei bestimmten Prostatabeschwerden oder Haarausfall eingesetzt."],
+  ["solifenacin", "Solifenacin", ["Vesikur"], "Solifenacin", "Urologische Medikamente", "Urology medication", "Solifenacin wird bei bestimmten Formen einer überaktiven Blase eingesetzt."],
+  ["alendronsaeure", "Alendronsäure", ["Alendronat"], "Alendronsäure", "Knochenstoffwechsel-Mittel", "Bone metabolism medication", "Alendronsäure wird bei bestimmten Formen von Osteoporose eingesetzt."],
+  ["levetiracetam", "Levetiracetam", ["Keppra"], "Levetiracetam", "Nervenschmerz- und Epilepsiemittel", "Nerve pain and epilepsy medication", "Levetiracetam wird zur Behandlung bestimmter Epilepsieformen eingesetzt."],
+  ["lamotrigin", "Lamotrigin", ["Lamictal"], "Lamotrigin", "Nervenschmerz- und Epilepsiemittel", "Nerve pain and epilepsy medication", "Lamotrigin wird bei bestimmten Epilepsieformen und teils bei psychischen Erkrankungen eingesetzt."],
 ];
 
 const officialMedicationSource =

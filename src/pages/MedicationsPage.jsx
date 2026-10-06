@@ -7,6 +7,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import MedicationCard from "../components/MedicationCard";
 import MedicationSearch from "../components/MedicationSearch";
 import MedicationCategoryFilter from "../components/MedicationCategoryFilter";
@@ -84,6 +85,15 @@ function MedicationsPage() {
     return `https://www.bfarm.de/SiteGlobals/Forms/Suche/Servicesuche_Formular.html?${searchParams.toString()}`;
   }
 
+  const cleanedSearchTerm = searchTerm.trim();
+  const officialSearchUrl = cleanedSearchTerm
+    ? getOfficialMedicationSearchUrl(cleanedSearchTerm)
+    : "";
+  const ePrescriptionInfoUrl = isEnglish
+    ? "https://www.gematik.de/en/applications/e-prescription"
+    : "https://www.bundesgesundheitsministerium.de/e-rezept";
+  const ePrescriptionAppInfoUrl = "https://www.das-e-rezept-fuer-deutschland.de/app";
+
   return (
     <Box id="medication-overview" padding={{ base: "6", md: "8" }} maxWidth="1200px" margin="0 auto" scrollMarginTop="24px">
       <Heading>{isEnglish ? "Medication overview" : "Medikamentenübersicht"}</Heading>
@@ -116,14 +126,14 @@ function MedicationsPage() {
             <>
               <Text marginTop="2">
                 {isEnglish
-                  ? "This medication is not yet available as a Curaelis card. You can search for it directly on the official BfArM website."
-                  : "Dieses Medikament ist noch nicht als Curaelis-Karte vorhanden. Du kannst es direkt auf der offiziellen BfArM-Website suchen."}
+                  ? "This medication is not yet available as a Curaelis card. You can search externally on the official BfArM website or add it manually to your personal medication plan."
+                  : "Dieses Medikament ist noch nicht als Curaelis-Karte vorhanden. Du kannst extern auf der offiziellen BfArM-Website suchen oder es manuell in deinen persönlichen Medikamentenplan übernehmen."}
               </Text>
 
               <Flex marginTop="4" gap="3" wrap="wrap" align="stretch">
                 <Button
                   as="a"
-                  href={getOfficialMedicationSearchUrl(searchTerm)}
+                  href={officialSearchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   colorPalette="teal"
@@ -135,8 +145,25 @@ function MedicationsPage() {
                   paddingY="3"
                 >
                   {isEnglish
-                    ? "Search on the official BfArM website"
+                    ? "Open official BfArM search"
                     : "Offizielle BfArM-Suche öffnen"}
+                </Button>
+
+                <Button
+                  as={Link}
+                  to={`/meine-medikamente?name=${encodeURIComponent(cleanedSearchTerm)}&from=medication-search`}
+                  variant="outline"
+                  colorPalette="teal"
+                  flex={{ base: "1 1 100%", md: "0 1 auto" }}
+                  minWidth={{ base: "100%", md: "260px" }}
+                  whiteSpace="normal"
+                  height="auto"
+                  minHeight="48px"
+                  paddingY="3"
+                >
+                  {isEnglish
+                    ? "Add manually to my plan"
+                    : "Manuell in meinen Plan übernehmen"}
                 </Button>
 
                 <Button
@@ -165,6 +192,12 @@ function MedicationsPage() {
                   ? `Search term: “${searchTerm.trim()}”`
                   : `Gesuchter Begriff: „${searchTerm.trim()}“`}
               </Text>
+
+              <Text marginTop="2" fontSize="sm" color="gray.600">
+                {isEnglish
+                  ? "Curaelis does not provide dosage recommendations. Please check the package leaflet and ask a doctor or pharmacy if unsure."
+                  : "Curaelis gibt keine Dosierungsempfehlungen. Bitte prüfe die Packungsbeilage und frage bei Unsicherheit Arzt oder Apotheke."}
+              </Text>
             </>
           )}
         </Box>
@@ -182,6 +215,98 @@ function MedicationsPage() {
           ))}
         </SimpleGrid>
       )}
+
+      {filteredMedications.length > 0 && cleanedSearchTerm && (
+        <Box marginTop="8" padding="5" borderWidth="1px" borderRadius="lg" background="teal.50">
+          <Heading size="sm">
+            {isEnglish ? "Need the official source?" : "Offizielle Quelle benötigt?"}
+          </Heading>
+          <Text marginTop="2">
+            {isEnglish
+              ? "You can also search the current official BfArM information externally. This opens outside Curaelis."
+              : "Du kannst zusätzlich extern in den aktuellen offiziellen BfArM-Informationen suchen. Das öffnet außerhalb von Curaelis."}
+          </Text>
+          <Button
+            as="a"
+            href={officialSearchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outline"
+            colorPalette="teal"
+            marginTop="4"
+            whiteSpace="normal"
+            height="auto"
+            minHeight="48px"
+            paddingY="3"
+          >
+            {isEnglish ? "Open BfArM search" : "BfArM-Suche öffnen"}
+          </Button>
+        </Box>
+      )}
+
+      <Box
+        marginTop="8"
+        padding={{ base: "5", md: "6" }}
+        borderWidth="1px"
+        borderColor="teal.200"
+        borderRadius="2xl"
+        background="linear-gradient(135deg, rgba(240,253,250,0.95), rgba(255,251,235,0.95))"
+      >
+        <Heading size="md">
+          {isEnglish ? "E-prescription & online pharmacy" : "E‑Rezept & Online‑Apotheke"}
+        </Heading>
+
+        <Text marginTop="3" color="gray.700">
+          {isEnglish
+            ? "Curaelis helps you organize your medication plan and reminders. E-prescriptions are redeemed securely outside Curaelis via the official e-prescription app, your health insurance app, or directly at a pharmacy or online pharmacy."
+            : "Curaelis hilft dir, deinen Medikamentenplan und Erinnerungen zu organisieren. E‑Rezepte löst du sicher außerhalb von Curaelis ein – über die offizielle E‑Rezept-App, deine Krankenkassen-App oder direkt bei einer Apotheke/Online-Apotheke."}
+        </Text>
+
+        <Text marginTop="3" fontSize="sm" color="gray.600">
+          {isEnglish
+            ? "Curaelis does not process prescription codes, does not transmit prescriptions and does not order medication."
+            : "Curaelis verarbeitet keine Rezeptcodes, übermittelt keine Rezepte und bestellt keine Medikamente."}
+        </Text>
+
+        <Flex marginTop="5" gap="3" wrap="wrap" align="stretch">
+          <Button
+            as="a"
+            href={ePrescriptionInfoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            colorPalette="teal"
+            flex={{ base: "1 1 100%", md: "0 1 auto" }}
+            minWidth={{ base: "100%", md: "260px" }}
+            whiteSpace="normal"
+            height="auto"
+            minHeight="48px"
+            paddingY="3"
+          >
+            {isEnglish
+              ? "Open official information"
+              : "Offizielle Infos öffnen"}
+          </Button>
+
+          <Button
+            as="a"
+            href={ePrescriptionAppInfoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outline"
+            colorPalette="teal"
+            flex={{ base: "1 1 100%", md: "0 1 auto" }}
+            minWidth={{ base: "100%", md: "260px" }}
+            whiteSpace="normal"
+            height="auto"
+            minHeight="48px"
+            paddingY="3"
+          >
+            {isEnglish
+              ? "Learn about the e-prescription app"
+              : "E‑Rezept-App ansehen"}
+          </Button>
+        </Flex>
+      </Box>
     </Box>
   );
 }

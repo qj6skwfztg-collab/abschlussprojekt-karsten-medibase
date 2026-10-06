@@ -1,4 +1,4 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 import SafetyNotice from "../components/SafetyNotice";
 import useMedications from "../hooks/useMedications";
@@ -42,6 +42,43 @@ function MedicationDetailPage() {
       <Text marginTop="4">
         {isEnglish ? medication.descriptionEn ?? medication.description : medication.description}
       </Text>
+
+      <Flex marginTop="6" gap="3" wrap="wrap" align="stretch">
+        <Button
+          as={Link}
+          to={`/meine-medikamente?name=${encodeURIComponent(medication.name)}&from=medication-database`}
+          colorPalette="teal"
+          minWidth={{ base: "100%", md: "280px" }}
+          whiteSpace="normal"
+          height="auto"
+          minHeight="48px"
+          paddingY="3"
+        >
+          {isEnglish
+            ? "Add to my medication plan"
+            : "In meinen Medikamentenplan übernehmen"}
+        </Button>
+
+        {medication.sourceUrl && (
+          <Button
+            as="a"
+            href={medication.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            variant="outline"
+            colorPalette="teal"
+            minWidth={{ base: "100%", md: "240px" }}
+            whiteSpace="normal"
+            height="auto"
+            minHeight="48px"
+            paddingY="3"
+          >
+            {isEnglish
+              ? "Open official source"
+              : "Offizielle Quelle öffnen"}
+          </Button>
+        )}
+      </Flex>
 
       <Box marginTop="6" padding="5" borderWidth="1px" borderRadius="lg">
         <Heading size="sm">

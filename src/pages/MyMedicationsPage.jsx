@@ -109,6 +109,7 @@ function MyMedicationsPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const onboardingFocus = searchParams.get("focus");
+  const medicationNameFromSearch = searchParams.get("name") || "";
   const isOnboarding =
     searchParams.get("from") === "einrichtung" ||
     Boolean(location.state?.fromOnboarding);
@@ -217,7 +218,10 @@ function MyMedicationsPage() {
         deleteError: "Das Medikament konnte nicht gelöscht werden.",
       };
 
-  const [formData, setFormData] = useState(emptyForm);
+  const [formData, setFormData] = useState(() => ({
+    ...emptyForm,
+    name: medicationNameFromSearch.trim(),
+  }));
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
@@ -228,6 +232,23 @@ function MyMedicationsPage() {
   const formPanelRef = useRef(null);
   const nameInputRef = useRef(null);
   const isReminderSetupStep = isOnboarding && onboardingFocus === "reminders";
+
+  useEffect(() => {
+    const cleanedMedicationName = medicationNameFromSearch.trim();
+
+    if (!cleanedMedicationName) {
+      return;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      document.getElementById("personal-medication-form")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [medicationNameFromSearch]);
 
   function getTakenKey(medicationId, time) {
     return `${medicationId}:${time}`;

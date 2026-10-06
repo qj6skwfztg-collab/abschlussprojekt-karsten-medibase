@@ -89,9 +89,14 @@ function MedicationsPage() {
   const officialSearchUrl = cleanedSearchTerm
     ? getOfficialMedicationSearchUrl(cleanedSearchTerm)
     : "";
+  const bFarmMedicationInfoUrl = cleanedSearchTerm
+    ? officialSearchUrl
+    : "https://www.bfarm.de/DE/Arzneimittel/_node.html";
   const ePrescriptionInfoUrl = isEnglish
     ? "https://www.gematik.de/en/applications/e-prescription"
     : "https://www.bundesgesundheitsministerium.de/e-rezept";
+  const medlinePlusDrugInfoUrl = "https://medlineplus.gov/druginformation.html";
+  const fdaDrugInfoUrl = "https://www.fda.gov/drugs/information-consumers-and-patients-drugs/find-information-about-drug";
 
   return (
     <Box id="medication-overview" padding={{ base: "6", md: "8" }} maxWidth="1200px" margin="0 auto" scrollMarginTop="24px">
@@ -122,39 +127,97 @@ function MedicationsPage() {
         background="linear-gradient(135deg, rgba(240,253,250,0.95), rgba(255,251,235,0.95))"
       >
         <Heading size="sm">
-          {isEnglish ? "E-prescription & online pharmacy" : "E‑Rezept & Online‑Apotheke"}
+          {isEnglish ? "Official information & prescriptions" : "Offizielle Infos & Rezepte"}
         </Heading>
 
         <Text marginTop="2" color="gray.700">
           {isEnglish
-            ? "If you have an e-prescription, redeem it securely outside Curaelis via the official e-prescription app, your health insurance app, or directly at a pharmacy or online pharmacy."
-            : "Wenn du ein E‑Rezept hast, löst du es sicher außerhalb von Curaelis ein – über die offizielle E‑Rezept-App, deine Krankenkassen-App oder direkt bei einer Apotheke/Online-Apotheke."}
+            ? "Medication information, prescriptions and pharmacies are regulated differently in each country. Curaelis therefore only opens neutral official sources and does not process prescriptions."
+            : "Medikamenteninfos, Rezepte und Apotheken sind je nach Land unterschiedlich geregelt. Curaelis öffnet deshalb nur neutrale offizielle Quellen und verarbeitet keine Rezepte."}
         </Text>
 
         <Text marginTop="2" fontSize="sm" color="gray.600">
           {isEnglish
-            ? "Curaelis does not process prescription codes, does not transmit prescriptions and does not order medication."
-            : "Curaelis verarbeitet keine Rezeptcodes, übermittelt keine Rezepte und bestellt keine Medikamente."}
+            ? "For countries not listed here, please use your local health authority, doctor or pharmacy. Curaelis does not order medication."
+            : "Für andere Länder nutze bitte die zuständige Gesundheitsbehörde, deine Arztpraxis oder Apotheke. Curaelis bestellt keine Medikamente."}
         </Text>
 
-        <Button
-          as="a"
-          href={ePrescriptionInfoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          colorPalette="teal"
-          marginTop="4"
-          width={{ base: "100%", md: "auto" }}
-          minWidth={{ md: "280px" }}
-          whiteSpace="normal"
-          height="auto"
-          minHeight="48px"
-          paddingY="3"
-        >
-          {isEnglish
-            ? "Open official e-prescription information"
-            : "Offizielle E‑Rezept-Infos öffnen"}
-        </Button>
+        <Flex marginTop="4" gap="3" wrap="wrap" align="stretch">
+          <Button
+            as="a"
+            href={bFarmMedicationInfoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            colorPalette="teal"
+            flex={{ base: "1 1 100%", md: "0 1 auto" }}
+            minWidth={{ base: "100%", md: "280px" }}
+            whiteSpace="normal"
+            height="auto"
+            minHeight="48px"
+            paddingY="3"
+          >
+            {cleanedSearchTerm
+              ? (isEnglish ? "Germany: open BfArM search" : "Deutschland: BfArM-Suche öffnen")
+              : (isEnglish ? "Germany: open BfArM information" : "Deutschland: BfArM-Infos öffnen")}
+          </Button>
+
+          <Button
+            as="a"
+            href={ePrescriptionInfoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outline"
+            colorPalette="teal"
+            flex={{ base: "1 1 100%", md: "0 1 auto" }}
+            minWidth={{ base: "100%", md: "280px" }}
+            whiteSpace="normal"
+            height="auto"
+            minHeight="48px"
+            paddingY="3"
+          >
+            {isEnglish
+              ? "Germany: e-prescription information"
+              : "Deutschland: E‑Rezept-Infos"}
+          </Button>
+
+          <Button
+            as="a"
+            href={medlinePlusDrugInfoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outline"
+            colorPalette="teal"
+            flex={{ base: "1 1 100%", md: "0 1 auto" }}
+            minWidth={{ base: "100%", md: "280px" }}
+            whiteSpace="normal"
+            height="auto"
+            minHeight="48px"
+            paddingY="3"
+          >
+            {isEnglish
+              ? "USA: open MedlinePlus"
+              : "USA: MedlinePlus öffnen"}
+          </Button>
+
+          <Button
+            as="a"
+            href={fdaDrugInfoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outline"
+            colorPalette="teal"
+            flex={{ base: "1 1 100%", md: "0 1 auto" }}
+            minWidth={{ base: "100%", md: "280px" }}
+            whiteSpace="normal"
+            height="auto"
+            minHeight="48px"
+            paddingY="3"
+          >
+            {isEnglish
+              ? "USA: open FDA information"
+              : "USA: FDA-Infos öffnen"}
+          </Button>
+        </Flex>
       </Box>
 
       {filteredMedications.length === 0 ? (

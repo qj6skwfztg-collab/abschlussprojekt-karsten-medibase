@@ -443,6 +443,83 @@ function HomePage() {
           </Box>
         </SimpleGrid>
 
+        <Box
+          marginTop="10"
+          padding={{ base: "5", md: "7" }}
+          borderRadius="2xl"
+          borderWidth="1px"
+          borderColor="teal.100"
+          background="linear-gradient(135deg, rgba(240,253,250,0.96), rgba(255,251,235,0.96))"
+          boxShadow="sm"
+        >
+          <Text
+            fontSize="sm"
+            fontWeight="800"
+            color="teal.700"
+            textTransform="uppercase"
+            letterSpacing="0.08em"
+          >
+            {isEnglish ? "No subscription" : "Kein Abo"}
+          </Text>
+
+          <Heading size="lg" marginTop="2" color="teal.950">
+            {isEnglish ? "One purchase. Medication plan included." : "Einmal kaufen. Medikamentenplan inklusive."}
+          </Heading>
+
+          <Text marginTop="3" color="gray.700" fontSize={{ base: "md", md: "lg" }}>
+            {isEnglish
+              ? "Curaelis gives you a clear everyday health companion for a one-time purchase: search medications, build your own medication plan, save reminders and keep emergency contacts ready — without ads or a subscription."
+              : "Curaelis gibt dir für einen einmaligen Kauf einen klaren Gesundheitsbegleiter für den Alltag: Medikamente suchen, deinen eigenen Medikamentenplan anlegen, Erinnerungen speichern und Notfallkontakte griffbereit halten – ohne Werbung und ohne Abo."}
+          </Text>
+
+          <SimpleGrid columns={{ base: 1, md: 3 }} gap="4" marginTop="6">
+            <Box padding="4" borderRadius="xl" background="white" borderWidth="1px" borderColor="teal.100">
+              <Heading size="sm" color="teal.900">
+                {isEnglish ? "Medication database included" : "Medikamenten-Datenbank dabei"}
+              </Heading>
+              <Text marginTop="2" color="gray.700">
+                {isEnglish
+                  ? "The integrated database helps you search for medications and add useful information to your personal plan."
+                  : "Die integrierte Datenbank hilft beim Suchen von Medikamenten und beim Übernehmen wichtiger Angaben in deinen persönlichen Plan."}
+              </Text>
+            </Box>
+
+            <Box padding="4" borderRadius="xl" background="white" borderWidth="1px" borderColor="teal.100">
+              <Heading size="sm" color="teal.900">
+                {isEnglish ? "Account & storage" : "Konto & Speicherung"}
+              </Heading>
+              <Text marginTop="2" color="gray.700">
+                {isEnglish
+                  ? "You can store app data such as your medication plan, reminders and emergency contacts under your account. Curaelis uses Firebase by Google Cloud for sign-in and protected storage."
+                  : "Du kannst App-Daten wie Medikamentenplan, Erinnerungen und Notfallkontakte unter deinem Konto speichern. Für Anmeldung und geschützte Speicherung nutzt Curaelis Firebase von Google Cloud."}
+              </Text>
+            </Box>
+
+            <Box padding="4" borderRadius="xl" background="white" borderWidth="1px" borderColor="teal.100">
+              <Heading size="sm" color="teal.900">
+                {isEnglish ? "No ads, no subscription" : "Keine Werbung, kein Abo"}
+              </Heading>
+              <Text marginTop="2" color="gray.700">
+                {isEnglish
+                  ? "The one-time price supports development, maintenance and secure technical operation without advertising-based financing."
+                  : "Der Einmalpreis unterstützt Weiterentwicklung, Pflege und sicheren technischen Betrieb – ohne werbefinanzierte Nutzung."}
+              </Text>
+            </Box>
+          </SimpleGrid>
+
+          <Text
+            marginTop="5"
+            paddingTop="5"
+            borderTopWidth="1px"
+            borderColor="teal.100"
+            color="gray.700"
+          >
+            {isEnglish
+              ? "This can save time in everyday situations, before appointments and in emergencies: important details are organised in one place and can be shared by you from your device if needed, for example by email to a doctor's office. Curaelis does not replace medical documentation and does not store a complete patient record — you decide what you enter and what you share."
+              : "Das kann im Alltag, vor Arztterminen und im Notfall Zeit sparen: Wichtige Angaben sind an einem Ort geordnet und können bei Bedarf von dir selbst über dein Gerät weitergeleitet werden, zum Beispiel per Mail an eine Arztpraxis. Curaelis ersetzt keine ärztliche Dokumentation und speichert keine vollständige Patientenakte – du entscheidest, was du einträgst und was du teilst."}
+          </Text>
+        </Box>
+
         <SafetyNotice />
       </Box>
 

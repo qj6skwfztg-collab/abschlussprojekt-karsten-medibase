@@ -475,7 +475,7 @@ function HomePage() {
           <SimpleGrid columns={{ base: 1, md: 3 }} gap="4" marginTop="6">
             <Box padding="4" borderRadius="xl" background="white" borderWidth="1px" borderColor="teal.100">
               <Heading size="sm" color="teal.900">
-                {isEnglish ? "Medication database included" : "Starke Medikamenten-Datenbank"}
+                {isEnglish ? "Integrated medication database" : "Integrierte Medikamenten-Datenbank"}
               </Heading>
               <Text marginTop="2" color="gray.700">
                 {isEnglish

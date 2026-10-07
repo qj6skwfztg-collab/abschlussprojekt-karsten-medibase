@@ -17,9 +17,51 @@ function AboutPage() {
 
       <Text marginTop="4">
         {isEnglish
-          ? "Curaelis brings medication information, personal medication plans, intake reminders, health measurements and emergency details together in one calm, clearly structured place. The goal is to make everyday health organisation easier to understand and easier to manage."
-          : "Curaelis verbindet verständliche Medikamenteninformationen, persönliche Medikamentenpläne, Einnahmeerinnerungen, Gesundheitsmesswerte und wichtige Notfalldaten an einem ruhigen, klar strukturierten Ort. So wird die Organisation im Gesundheitsalltag verständlicher und leichter handhabbar."}
+          ? "Curaelis gives you a clear everyday health companion for a one-time purchase: a carefully built medication database, your own medication plan, saved reminders and emergency contacts — without ads or a subscription."
+          : "Curaelis gibt dir für einen einmaligen Kauf einen klaren Gesundheitsbegleiter für den Alltag: eine sorgfältig aufgebaute Medikamenten-Datenbank, deinen eigenen Medikamentenplan, gespeicherte Erinnerungen und Notfallkontakte – ohne Werbung und ohne Abo."}
       </Text>
+
+      <Box
+        marginTop="6"
+        padding="5"
+        borderRadius="2xl"
+        borderWidth="1px"
+        borderColor="teal.200"
+        background="linear-gradient(135deg, rgba(240,253,250,0.95), rgba(255,251,235,0.95))"
+      >
+        <Heading size="md">
+          {isEnglish ? "What the one-time price includes" : "Was im Einmalpreis enthalten ist"}
+        </Heading>
+
+        <List.Root marginTop="4" gap="2">
+          <List.Item>
+            {isEnglish
+              ? "A medication database for searching medications and active ingredients faster."
+              : "Eine Medikamenten-Datenbank, mit der du Medikamente und Wirkstoffe schneller finden kannst."}
+          </List.Item>
+          <List.Item>
+            {isEnglish
+              ? "Your own app entries: medication plan, reminders and emergency contacts."
+              : "Deine eigenen App-Einträge: Medikamentenplan, Erinnerungen und Notfallkontakte."}
+          </List.Item>
+          <List.Item>
+            {isEnglish
+              ? "Protected account storage via Firebase by Google Cloud for sign-in and saved app data."
+              : "Geschützte Konto-Speicherung über Firebase von Google Cloud für Anmeldung und gespeicherte App-Daten."}
+          </List.Item>
+          <List.Item>
+            {isEnglish
+              ? "Independent development, maintenance and technical operation — without advertising-based financing."
+              : "Unabhängige Entwicklung, Pflege und technischer Betrieb – ohne werbefinanzierte Nutzung."}
+          </List.Item>
+        </List.Root>
+
+        <Text marginTop="4" color="gray.700">
+          {isEnglish
+            ? "If needed, you can share existing information or files yourself from your device, for example by email to a doctor's office. Curaelis does not replace medical documentation and does not store a complete patient record — you decide what you enter and what you share."
+            : "Bei Bedarf kannst du vorhandene Informationen oder Dateien selbst über dein Gerät weiterleiten, zum Beispiel per Mail an eine Arztpraxis. Curaelis ersetzt keine ärztliche Dokumentation und speichert keine vollständige Patientenakte – du entscheidest, was du einträgst und was du teilst."}
+        </Text>
+      </Box>
 
       {!isNativeApp && (
         <Box className="about-install-card">

@@ -15,11 +15,20 @@ function AboutPage() {
     >
       <Heading>{isEnglish ? "About Curaelis" : "Über Curaelis"}</Heading>
 
-      <Text marginTop="4">
-        {isEnglish
-          ? "Curaelis gives you a clear everyday health companion for a one-time purchase: a carefully built medication database, your own medication plan, saved reminders and emergency contacts — without ads or a subscription."
-          : "Curaelis gibt dir für einen einmaligen Kauf einen klaren Gesundheitsbegleiter für den Alltag: eine sorgfältig aufgebaute Medikamenten-Datenbank, deinen eigenen Medikamentenplan, gespeicherte Erinnerungen und Notfallkontakte – ohne Werbung und ohne Abo."}
-      </Text>
+      <Box
+        marginTop="5"
+        padding="5"
+        borderRadius="2xl"
+        borderWidth="1px"
+        borderColor="teal.200"
+        background="linear-gradient(135deg, rgba(236,253,245,0.96), rgba(239,246,255,0.96))"
+      >
+        <Text fontSize={{ base: "md", md: "lg" }} color="gray.800">
+          {isEnglish
+            ? "Curaelis gives you a clear everyday health companion for a one-time purchase: a carefully built medication database, your own medication plan, saved reminders, health values with timeline and emergency contacts — without ads or a subscription."
+            : "Curaelis gibt dir für einen einmaligen Kauf einen klaren Gesundheitsbegleiter für den Alltag: eine sorgfältig aufgebaute Medikamenten-Datenbank, deinen eigenen Medikamentenplan, gespeicherte Erinnerungen, Gesundheitswerte mit Zeitleiste und Notfallkontakte – ohne Werbung und ohne Abo."}
+        </Text>
+      </Box>
 
       <Box
         marginTop="6"
@@ -43,6 +52,11 @@ function AboutPage() {
             {isEnglish
               ? "Your own app entries: medication plan, reminders and emergency contacts."
               : "Deine eigenen App-Einträge: Medikamentenplan, Erinnerungen und Notfallkontakte."}
+          </List.Item>
+          <List.Item>
+            {isEnglish
+              ? "Self-entered health values such as blood pressure, pulse and weight with a clear timeline."
+              : "Selbst eingetragene Gesundheitswerte wie Blutdruck, Puls und Gewicht mit übersichtlicher Zeitleiste."}
           </List.Item>
           <List.Item>
             {isEnglish

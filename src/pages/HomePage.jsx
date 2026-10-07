@@ -468,8 +468,8 @@ function HomePage() {
 
           <Text marginTop="3" color="gray.700" fontSize={{ base: "md", md: "lg" }}>
             {isEnglish
-              ? "Curaelis gives you a clear everyday health companion for a one-time purchase: a carefully built medication database, your own medication plan, saved reminders and emergency contacts — with protected account storage via Firebase by Google Cloud, without ads or a subscription."
-              : "Curaelis gibt dir für einen einmaligen Kauf einen klaren Gesundheitsbegleiter für den Alltag: eine sorgfältig aufgebaute Medikamenten-Datenbank, deinen eigenen Medikamentenplan, gespeicherte Erinnerungen und Notfallkontakte – mit geschützter Konto-Speicherung über Firebase von Google Cloud, ohne Werbung und ohne Abo."}
+              ? "Curaelis gives you a clear everyday health companion for a one-time purchase: a carefully built medication database, your own medication plan, saved reminders, health values with timeline and emergency contacts — with protected account storage via Firebase by Google Cloud, without ads or a subscription."
+              : "Curaelis gibt dir für einen einmaligen Kauf einen klaren Gesundheitsbegleiter für den Alltag: eine sorgfältig aufgebaute Medikamenten-Datenbank, deinen eigenen Medikamentenplan, gespeicherte Erinnerungen, Gesundheitswerte mit Zeitleiste und Notfallkontakte – mit geschützter Konto-Speicherung über Firebase von Google Cloud, ohne Werbung und ohne Abo."}
           </Text>
 
           <SimpleGrid columns={{ base: 1, md: 3 }} gap="4" marginTop="6">
@@ -490,8 +490,8 @@ function HomePage() {
               </Heading>
               <Text marginTop="2" color="gray.700">
                 {isEnglish
-                  ? "You can store your medication plan, reminders and emergency contacts under your account. Curaelis uses Firebase by Google Cloud for sign-in and protected storage."
-                  : "Du kannst deinen Medikamentenplan, Erinnerungen und Notfallkontakte unter deinem Konto speichern. Für Anmeldung und geschützte Speicherung nutzt Curaelis Firebase von Google Cloud."}
+                  ? "You can store your medication plan, reminders, emergency contacts and self-entered health values such as blood pressure under your account. Curaelis uses Firebase by Google Cloud for sign-in and protected storage."
+                  : "Du kannst deinen Medikamentenplan, Erinnerungen, Notfallkontakte und selbst eingetragene Gesundheitswerte wie Blutdruck unter deinem Konto speichern. Für Anmeldung und geschützte Speicherung nutzt Curaelis Firebase von Google Cloud."}
               </Text>
             </Box>
 
